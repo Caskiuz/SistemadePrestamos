@@ -1,0 +1,151 @@
+/* YoPresto Sidebar Styles */
+.side-menu {
+  left: 0;
+  width: 230px;
+  min-height: 40em;
+  background-color: #fff;
+  box-shadow: 1px 0 5px rgba(0,0,0,.1);
+  position: fixed;
+  padding: 15px 20px;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.main-content {
+  margin-left: 230px;
+  padding: 20px;
+  background-color: #eee;
+  min-height: 100vh;
+}
+
+.side-menu .company-logo {
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+.side-menu .company-logo:not(.custom) {
+  text-align: center;
+  border: 2px dashed #d0d0d0;
+  border-radius: 5px;
+}
+
+.side-menu .company-logo:not(.custom) .logo {
+  height: 90px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 80%;
+  filter: grayscale(100%);
+  opacity: .5;
+}
+
+.side-menu .menu {
+  border-top: 1px solid #ddd;
+  list-style: none;
+  padding: 10px;
+  margin: 0 -20px;
+}
+
+.side-menu li a {
+  color: #444;
+  display: block;
+  padding: 12px 20px;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+  letter-spacing: .03em;
+  border-radius: 3px;
+  margin-bottom: 1px;
+}
+
+.side-menu li a:hover {
+  background-color: #ddd;
+  text-decoration: none;
+}
+
+.side-menu li a.active {
+  font-weight: 500;
+  border-radius: 3px;
+  background-color: #2b98f2;
+  border: 1px solid #0e7fdc;
+  color: #fff;
+}
+
+.side-menu li i {
+  margin-right: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .side-menu {
+    left: -768px;
+    opacity: 0;
+    transition: .2s all ease-in-out;
+  }
+  
+  .side-menu.visible {
+    opacity: 1;
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* Estilos para vistas YoPresto */
+.yp-header {
+  padding: 12px 20px;
+  box-shadow: 0 3px 3px rgba(0,0,0,.1);
+  position: relative;
+  color: #fff;
+  background-color: #455A64;
+  margin-bottom: 15px;
+}
+
+.yp-header h1 {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 5px 0;
+}
+
+.yp-header h1 i {
+  margin-right: 6px;
+  vertical-align: middle;
+  width: 20px;
+  text-align: center;
+  float: left;
+}
+
+.yp-header h1 span {
+  display: block;
+  padding-left: 32px;
+}
+
+.yp-header.brown { background-color: #795548; }
+.yp-header.purple { background-color: #673AB7; }
+
+.nav-tabs {
+  border-bottom: 0;
+  margin: 20px -20px -15px;
+  background-color: #fff;
+}
+
+.nav-tabs li {
+  margin: 0;
+}
+
+.nav-tabs li.active {
+  border-bottom: 3px solid #2195d8;
+}
+
+.nav-tabs li a {
+  border-radius: 0;
+  border: 0;
+  color: #666;
+  margin: 0;
+}
+
+.nav-tabs li.active a {
+  color: #2195d8;
+}

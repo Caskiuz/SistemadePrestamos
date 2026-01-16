@@ -1,0 +1,4 @@
+Administrador
+admin@admin.com
+12345678:
+$2y$12$25.NBVVLfBVyVrlGkRSiduyYMFwDsjtp2K8APTmeQBME8l39g55ka
