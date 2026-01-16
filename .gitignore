@@ -1,1 +1,64 @@
-node_modules
+# Dependencies
+/node_modules
+/vendor
+
+# Environment
+.env
+.env.backup
+.env.production
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/bootstrap/cache/*
+!storage/app/.gitignore
+!storage/framework/.gitignore
+!storage/logs/.gitignore
+
+# Build
+/public/hot
+/public/storage
+/public/build
+
+# Testing
+.phpunit.result.cache
+/coverage
+
+# Archivos innecesarios
+/web-ejemplo
+/Http
+/Models
+/Providers
+*.zip
+*.sql
+*.exe
+/public/public
+/public/public_html
+/public/clientes-yo-presto
+loyo.png
+loyo2.png
+
+# Documentación local (opcional, puedes mantenerla)
+ANALISIS_YOPRESTO.md
+DOCUMENTACION.md
+ESTADO_IMPLEMENTACION.md
+FLUJO_INTEGRADO.md
+IMPLEMENTACION_CASHFLOW.md
+IMPLEMENTACION_FINAL.md
+LIMPIEZA_MOCK.md
+ROADMAP_COMPLETO.md
+ROADMAP.md
