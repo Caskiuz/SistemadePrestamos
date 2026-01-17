@@ -22,10 +22,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 # Copiar composer files primero
-COPY composer.json composer.lock ./
+COPY composer.json ./
 
-# Instalar dependencias sin scripts
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+# Actualizar dependencias para PHP 8.2 sin scripts
+RUN composer update --no-dev --optimize-autoloader --no-scripts
 
 # Copiar resto de archivos
 COPY . .
@@ -36,5 +36,5 @@ RUN chmod -R 777 storage bootstrap/cache
 # Puerto
 EXPOSE 8080
 
-# Comando de inicio (aquí sí ejecutamos los comandos Laravel)
+# Comando de inicio
 CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php -S 0.0.0.0:8080 -t public
