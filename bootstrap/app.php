@@ -15,10 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'rol.contable' => \App\Http\Middleware\RolContable::class,
         ]);
-        // Configurar sesiones para que funcionen correctamente
-        $middleware->web(append: [
-            \Illuminate\Session\Middleware\StartSession::class,
-        ]);
         // Desactivar CSRF temporalmente para solucionar error 419
         $middleware->validateCsrfTokens(except: [
             '/logear',
