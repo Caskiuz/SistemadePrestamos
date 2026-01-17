@@ -4,11 +4,11 @@ session_start();
 
 if ($_POST) {
     // Configuración de base de datos - usar getenv() en lugar de $_ENV
-    $host = getenv('DATABASE_HOST') ?: $_SERVER['DATABASE_HOST'] ?? 'localhost';
-    $dbname = getenv('DATABASE_NAME') ?: $_SERVER['DATABASE_NAME'] ?? 'hc_db';
-    $username = getenv('DATABASE_USER') ?: $_SERVER['DATABASE_USER'] ?? 'root';
-    $password = getenv('DATABASE_PASSWORD') ?: $_SERVER['DATABASE_PASSWORD'] ?? '';
-    $port = getenv('DATABASE_PORT') ?: $_SERVER['DATABASE_PORT'] ?? '5432';
+    $host = getenv('DB_HOST') ?: $_SERVER['DB_HOST'] ?? 'localhost';
+    $dbname = getenv('DB_DATABASE') ?: $_SERVER['DB_DATABASE'] ?? 'hc_db';
+    $username = getenv('DB_USERNAME') ?: $_SERVER['DB_USERNAME'] ?? 'root';
+    $password = getenv('DB_PASSWORD') ?: $_SERVER['DB_PASSWORD'] ?? '';
+    $port = getenv('DB_PORT') ?: $_SERVER['DB_PORT'] ?? '5432';
     
     try {
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";

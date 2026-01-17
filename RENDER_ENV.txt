@@ -11,11 +11,11 @@ ASSET_URL=https://sistemadeprestamos.onrender.com
 
 # Database PostgreSQL (Render)
 DB_CONNECTION=pgsql
-DB_HOST=${DATABASE_HOST}
+DB_HOST=dpg-d5lcfung127c738qlgkg-a
 DB_PORT=5432
-DB_DATABASE=${DATABASE_NAME}
-DB_USERNAME=${DATABASE_USER}
-DB_PASSWORD=${DATABASE_PASSWORD}
+DB_DATABASE=hc_db_oah9
+DB_USERNAME=hc_db_oah9_user
+DB_PASSWORD=plrMezfmYS0t8jFDVVJRdozQiAKRGfpg
 
 # Session & Cache
 SESSION_DRIVER=file
