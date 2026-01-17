@@ -18,7 +18,7 @@ DB_USERNAME=hc_db_oah9_user
 DB_PASSWORD=plrMezfmYS0t8jFDVVJRdozQiAKRGfpg
 
 # Session & Cache
-SESSION_DRIVER=file
+SESSION_DRIVER=database
 CACHE_STORE=database
 QUEUE_CONNECTION=database
 SESSION_SECURE_COOKIE=true
