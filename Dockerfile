@@ -22,8 +22,8 @@ WORKDIR /app
 # Copiar archivos
 COPY . .
 
-# Instalar dependencias
-RUN composer install --no-dev --optimize-autoloader
+# Actualizar dependencias para PHP 8.2
+RUN composer update --no-dev --optimize-autoloader
 
 # Permisos
 RUN chmod -R 777 storage bootstrap/cache
