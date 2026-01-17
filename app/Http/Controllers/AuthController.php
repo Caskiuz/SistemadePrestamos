@@ -18,19 +18,27 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $email = $request->input('email');
+        $password = $request->input('password');
         
-        if (Auth::attempt($credentials, true)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/home');
+        if (!$email || !$password) {
+            return back()->withErrors(['email' => 'Email y contraseña requeridos'])->withInput();
         }
         
-        return back()->withErrors([
-            'email' => 'Las credenciales no coinciden con nuestros registros.',
-        ])->withInput();
+        $user = \App\Models\User::where('email', $email)->first();
+        
+        if (!$user) {
+            return back()->withErrors(['email' => 'Usuario no encontrado'])->withInput();
+        }
+        
+        if (!\Hash::check($password, $user->password)) {
+            return back()->withErrors(['email' => 'Contraseña incorrecta'])->withInput();
+        }
+        
+        \Auth::login($user, true);
+        $request->session()->regenerate();
+        
+        return redirect('/home');
     }
 
     public function crearAdmin()

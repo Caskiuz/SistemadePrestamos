@@ -1,0 +1,31 @@
+APP_NAME=hcservicioindustrial
+APP_ENV=production
+APP_KEY=base64:G9L+XlUeHuOxXm5OWKS0wXHIRxgCGtcuuANWv8qAJfY=
+APP_DEBUG=false
+APP_URL=https://sistemadeprestamos.onrender.com
+
+# PostgreSQL Render
+DB_CONNECTION=pgsql
+DB_HOST=${{DATABASE_URL}}
+DB_DATABASE=${{PGDATABASE}}
+DB_USERNAME=${{PGUSER}}
+DB_PASSWORD=${{PGPASSWORD}}
+
+# Sesiones para HTTPS
+SESSION_DRIVER=file
+SESSION_LIFETIME=1440
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=.onrender.com
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=none
+
+# Configuración HTTPS
+FORCE_HTTPS=true
+ASSET_URL=https://sistemadeprestamos.onrender.com
+
+# Cache
+CACHE_STORE=file
+LOG_LEVEL=error
+QUEUE_CONNECTION=sync
