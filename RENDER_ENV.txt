@@ -5,6 +5,9 @@ APP_NAME=hcservicioindustrial
 APP_ENV=production
 APP_KEY=base64:G9L+XlUeHuOxXm5OWKS0wXHIRxgCGtcuuANWv8qAJfY=
 APP_DEBUG=false
+APP_URL=https://sistemadeprestamos.onrender.com
+FORCE_HTTPS=true
+ASSET_URL=https://sistemadeprestamos.onrender.com
 
 # Database PostgreSQL (Render)
 DB_CONNECTION=pgsql
@@ -18,6 +21,8 @@ DB_PASSWORD=${DATABASE_PASSWORD}
 SESSION_DRIVER=database
 CACHE_STORE=database
 QUEUE_CONNECTION=database
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
 
 # Logs
 LOG_CHANNEL=stack

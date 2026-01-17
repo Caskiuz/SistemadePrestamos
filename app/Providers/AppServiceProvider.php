@@ -25,5 +25,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('path.public', function() {
             return base_path('public_html');
         });
+        
+        // Force HTTPS in production
+        if (env('FORCE_HTTPS', false)) {
+            URL::forceScheme('https');
+        }
     }
 }
