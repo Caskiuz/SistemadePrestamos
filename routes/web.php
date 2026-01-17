@@ -51,6 +51,7 @@ Route::get('/run-migrations', function() {
         if (!$user) {
             \App\Models\User::create([
                 'name' => 'Admin',
+                'nombre' => 'Admin',
                 'email' => 'admin@admin.com',
                 'password' => \Hash::make('12345678'),
                 'rol' => 'Gerente',
@@ -77,6 +78,7 @@ Route::get('/setup', function() {
         if (!$user) {
             \App\Models\User::create([
                 'name' => 'Admin',
+                'nombre' => 'Admin',
                 'email' => 'admin@admin.com',
                 'password' => \Hash::make('12345678'),
                 'rol' => 'Gerente',
