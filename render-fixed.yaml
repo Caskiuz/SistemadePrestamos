@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: hc-servicios
+    env: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan config:clear
+      php artisan route:clear
+      php artisan view:clear
+      php artisan cache:clear
+      mkdir -p storage/framework/sessions
+      mkdir -p storage/framework/views
+      mkdir -p storage/framework/cache
+      mkdir -p storage/logs
+      chmod -R 775 storage
+      chmod -R 775 bootstrap/cache
+    startCommand: |
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan migrate --force
+      php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_NAME
+        value: hcservicioindustrial
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        sync: false
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_LIFETIME
+        value: 1440
+      - key: SESSION_SECURE_COOKIE
+        value: true
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_LEVEL
+        value: error
+
+databases:
+  - name: hc-mysql
+    databaseName: hc_servicios
+    user: hc_user

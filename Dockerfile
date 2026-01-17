@@ -8,12 +8,13 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libpq-dev \
+    default-mysql-client \
     zip \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP
-RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -37,4 +38,4 @@ RUN chmod -R 777 storage bootstrap/cache
 EXPOSE 8080
 
 # Comando de inicio
-CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php -S 0.0.0.0:8080 -t public
+CMD php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan cache:clear && mkdir -p storage/framework/sessions && mkdir -p storage/framework/views && mkdir -p storage/framework/cache && mkdir -p storage/logs && chmod -R 775 storage && chmod -R 775 bootstrap/cache && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan admin:create && php -S 0.0.0.0:8080 -t public

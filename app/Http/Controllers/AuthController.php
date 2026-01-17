@@ -18,36 +18,19 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
         
-        if (!$email || !$password) {
-            return back()->withErrors(['email' => 'Email y contraseña requeridos'])->withInput();
+        if (Auth::attempt($credentials, true)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/home');
         }
         
-        $user = \App\Models\User::where('email', $email)->first();
-        
-        if (!$user) {
-            return back()->withErrors(['email' => 'Usuario no encontrado: ' . $email])->withInput();
-        }
-        
-        if (!\Hash::check($password, $user->password)) {
-            return back()->withErrors(['email' => 'Contraseña incorrecta para: ' . $email])->withInput();
-        }
-        
-        // CONFIGURACIÓN ESPECIAL PARA RENDER
-        \Auth::login($user, true); // remember = true
-        
-        // Configurar sesión manualmente
-        $request->session()->regenerate();
-        $request->session()->put('auth.user_id', $user->id);
-        $request->session()->put('auth.logged_in', true);
-        $request->session()->save();
-        
-        // Forzar cookies de sesión
-        cookie()->queue('laravel_session', $request->session()->getId(), 120, '/', '.onrender.com', true, true);
-        
-        return redirect('/home');
+        return back()->withErrors([
+            'email' => 'Las credenciales no coinciden con nuestros registros.',
+        ])->withInput();
     }
 
     public function crearAdmin()
