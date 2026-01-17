@@ -14,7 +14,7 @@
         <h4>Inicio de sesión</h4>
         </div>
         <div class="card-body">
-        <form method="POST" action="/login-simple" class="needs-validation" novalidate="" id="loginForm">
+        <form method="POST" action="{{ route('logear') }}" class="needs-validation" novalidate="">
           @csrf
           <div class="form-group">
           <label for="email">Correo</label>
@@ -40,43 +40,6 @@
           </button>
           </div>
         </form>
-        
-        <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const errorDiv = document.querySelector('.alert-danger');
-            if (errorDiv) errorDiv.remove();
-            
-            fetch('/login-simple', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.redirect;
-                } else {
-                    const form = document.querySelector('.card-body');
-                    const alert = document.createElement('div');
-                    alert.className = 'alert alert-danger mt-2';
-                    alert.innerHTML = '<ul><li>' + data.error + '</li></ul>';
-                    form.appendChild(alert);
-                }
-            })
-            .catch(error => {
-                const form = document.querySelector('.card-body');
-                const alert = document.createElement('div');
-                alert.className = 'alert alert-danger mt-2';
-                alert.innerHTML = '<ul><li>Error de conexión</li></ul>';
-                form.appendChild(alert);
-            });
-        });
-        </script>
         <div>
           @if ($errors->any())
         <div class="alert alert-danger mt-2">
@@ -88,6 +51,25 @@
         </div>
       @endif
         </div>
+        
+        <script>
+        // Mostrar debug info en consola
+        @if(session('debug_info'))
+        console.log('=== LOGIN DEBUG ===');
+        console.log(@json(session('debug_info')));
+        console.log('==================');
+        @endif
+        
+        // Log cuando se envía el formulario
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log('=== FORM SUBMIT ===');
+            console.log('Email:', this.email.value);
+            console.log('Password length:', this.password.value.length);
+            console.log('Action:', this.action);
+            console.log('Method:', this.method);
+            console.log('==================');
+        });
+        </script>
         </div>
       </div>
       <div class="simple-footer">

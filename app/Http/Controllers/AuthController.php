@@ -18,24 +18,56 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        try {
-            $user = \App\Models\User::where('email', $request->email)->first();
-            if (!$user) {
-                return back()->withErrors(['email' => 'Usuario no encontrado'])->withInput();
-            }
-            if (!\Hash::check($request->password, $user->password)) {
-                return back()->withErrors(['email' => 'Contraseña incorrecta'])->withInput();
-            }
-
-            \Auth::login($user);
-            session()->regenerate();
-            session()->save();
-            
-            // REDIRECT DIRECTO SIN ROUTE
-            return redirect('/home');
-        } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'Error: ' . $e->getMessage()])->withInput();
+        // Log para consola del navegador
+        $debugInfo = [
+            'step' => 'inicio',
+            'email' => $request->input('email'),
+            'password_length' => strlen($request->input('password') ?? ''),
+            'session_id' => session()->getId(),
+            'csrf_token' => $request->session()->token()
+        ];
+        
+        $email = $request->input('email');
+        $password = $request->input('password');
+        
+        if (!$email || !$password) {
+            $debugInfo['step'] = 'validation_failed';
+            $debugInfo['error'] = 'Email y contraseña requeridos';
+            session()->flash('debug_info', $debugInfo);
+            return back()->withErrors(['email' => 'Email y contraseña requeridos'])->withInput();
         }
+        
+        $user = \App\Models\User::where('email', $email)->first();
+        $debugInfo['step'] = 'user_search';
+        $debugInfo['user_found'] = $user ? true : false;
+        
+        if (!$user) {
+            $debugInfo['error'] = 'Usuario no encontrado';
+            session()->flash('debug_info', $debugInfo);
+            return back()->withErrors(['email' => 'Usuario no encontrado: ' . $email])->withInput();
+        }
+        
+        $debugInfo['step'] = 'password_check';
+        $passwordValid = \Hash::check($password, $user->password);
+        $debugInfo['password_valid'] = $passwordValid;
+        
+        if (!$passwordValid) {
+            $debugInfo['error'] = 'Contraseña incorrecta';
+            session()->flash('debug_info', $debugInfo);
+            return back()->withErrors(['email' => 'Contraseña incorrecta para: ' . $email])->withInput();
+        }
+        
+        $debugInfo['step'] = 'login_attempt';
+        \Auth::login($user);
+        session()->regenerate();
+        session()->save();
+        
+        $debugInfo['step'] = 'login_success';
+        $debugInfo['auth_check'] = \Auth::check();
+        $debugInfo['auth_user_id'] = \Auth::id();
+        session()->flash('debug_info', $debugInfo);
+        
+        return redirect('/home');
     }
 
     public function crearAdmin()
