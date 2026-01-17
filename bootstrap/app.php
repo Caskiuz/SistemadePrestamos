@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'rol.contable' => \App\Http\Middleware\RolContable::class,
         ]);
+        // Desactivar CSRF temporalmente para solucionar error 419
+        $middleware->validateCsrfTokens(except: [
+            '/logear',
+            '/login-bypass'
+        ]);
         // Puedes agregar más middlewares personalizados aquí si lo necesitas
     })
     ->withExceptions(function (Exceptions $exceptions) {
