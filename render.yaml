@@ -2,29 +2,10 @@ services:
   - type: web
     name: hc-servicios
     env: php
-    buildCommand: "./build.sh"
-    startCommand: "php artisan migrate --force && php -S 0.0.0.0:$PORT -t public"
+    buildCommand: composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan db:seed --force
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
     envVars:
-      - key: APP_NAME
-        value: hcservicioindustrial
       - key: APP_ENV
         value: production
-      - key: APP_KEY
-        value: base64:G9L+XlUeHuOxXm5OWKS0wXHIRxgCGtcuuANWv8qAJfY=
       - key: APP_DEBUG
         value: false
-      - key: SESSION_DRIVER
-        value: database
-      - key: CACHE_STORE
-        value: database
-      - key: QUEUE_CONNECTION
-        value: database
-      - key: LOG_CHANNEL
-        value: stack
-      - key: LOG_LEVEL
-        value: error
-
-databases:
-  - name: hc-db
-    databaseName: hcservic
-    user: hcservic

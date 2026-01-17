@@ -8,6 +8,7 @@ APP_DEBUG=true
 APP_URL=https://sistemadeprestamos.onrender.com
 FORCE_HTTPS=true
 ASSET_URL=https://sistemadeprestamos.onrender.com
+DEPLOY_TOKEN=hc2025deploy
 
 # Database PostgreSQL (Render)
 DB_CONNECTION=pgsql

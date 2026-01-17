@@ -21,6 +21,7 @@ use App\Http\Controllers\ApartadoController;
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\EgresoController;
 use App\Http\Controllers\HistorialController;
+use App\Http\Controllers\DeployController;
 
 
 // Crear un usuario administrador, solo usar una vez
@@ -44,6 +45,9 @@ Route::get('/run-migrations', function() {
     \Artisan::call('migrate', ['--force' => true]);
     return 'Migraciones ejecutadas. <a href="/">Ir al login</a>';
 });
+
+// Endpoint para deployment (migraciones + seeders)
+Route::get('/deploy', [DeployController::class, 'migrate'])->name('deploy.migrate');
 
 // Ruta de debug para verificar tabla sessions
 Route::get('/debug-sessions', function() {
