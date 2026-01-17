@@ -18,48 +18,23 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        \Log::info('Login attempt', [
-            'email' => $request->email,
-            'ip' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'session_id' => $request->session()->getId(),
-            'csrf_token' => $request->session()->token()
-        ]);
-
         try {
-            $credenciales = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
-
-            $user = User::where('email', $request->email)->first();
+            $user = \App\Models\User::where('email', $request->email)->first();
             if (!$user) {
-                \Log::warning('Login failed: User not found', ['email' => $request->email]);
-                return back()->withErrors(['email' => 'Correo invalido.'])->withInput();
+                return back()->withErrors(['email' => 'Usuario no encontrado'])->withInput();
             }
-            if (!Hash::check($request->password, (string) $user->password)) {
-                \Log::warning('Login failed: Wrong password', ['email' => $request->email]);
-                return back()->withErrors(['email' => 'Contraseña incorrecta.'])->withInput();
+            if (!\Hash::check($request->password, $user->password)) {
+                return back()->withErrors(['email' => 'Contraseña incorrecta'])->withInput();
             }
-            // Remover verificación de campo 'activo' que puede no existir
-            // if (!$user->activo) {
-            //     \Log::warning('Login failed: Inactive user', ['email' => $request->email]);
-            //     return back()->withErrors(['email' => 'Usuario inactivo.'])->withInput();
-            // }
 
-            Auth::login($user);
-            $request->session()->regenerate();
-            $request->session()->save(); // Forzar guardado inmediato de sesión
+            \Auth::login($user);
+            session()->regenerate();
+            session()->save();
             
-            \Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
-
-            return to_route('dashboard.index');
+            // REDIRECT DIRECTO SIN ROUTE
+            return redirect('/home');
         } catch (\Exception $e) {
-            \Log::error('Login error', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return back()->withErrors(['email' => 'Error en el sistema: ' . $e->getMessage()])->withInput();
+            return back()->withErrors(['email' => 'Error: ' . $e->getMessage()])->withInput();
         }
     }
 
@@ -86,9 +61,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        
-
-        return to_route('login');
+        \Auth::logout();
+        return redirect('/');
     }
 }

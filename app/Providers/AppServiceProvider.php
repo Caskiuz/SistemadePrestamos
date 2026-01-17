@@ -33,21 +33,22 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
         
+// ELIMINAR AUTO-MIGRACION QUE CAUSA PROBLEMAS
         // Auto-migrate in production
-        if (env('APP_ENV') === 'production' && !app()->runningInConsole()) {
-            try {
-                if (!Schema::hasTable('migrations')) {
-                    Artisan::call('migrate:install');
-                }
-                Artisan::call('migrate', ['--force' => true]);
-                
-                // Run seeders only if users table is empty
-                if (Schema::hasTable('users') && \DB::table('users')->count() === 0) {
-                    Artisan::call('db:seed', ['--force' => true]);
-                }
-            } catch (\Exception $e) {
-                \Log::error('Auto-migration failed: ' . $e->getMessage());
-            }
-        }
+        // if (env('APP_ENV') === 'production' && !app()->runningInConsole()) {
+        //     try {
+        //         if (!Schema::hasTable('migrations')) {
+        //             Artisan::call('migrate:install');
+        //         }
+        //         Artisan::call('migrate', ['--force' => true]);
+        //         
+        //         // Run seeders only if users table is empty
+        //         if (Schema::hasTable('users') && \DB::table('users')->count() === 0) {
+        //             Artisan::call('db:seed', ['--force' => true]);
+        //         }
+        //     } catch (\Exception $e) {
+        //         \Log::error('Auto-migration failed: ' . $e->getMessage());
+        //     }
+        // }
     }
 }
