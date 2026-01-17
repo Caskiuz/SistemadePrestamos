@@ -4,7 +4,7 @@
 APP_NAME=hcservicioindustrial
 APP_ENV=production
 APP_KEY=base64:G9L+XlUeHuOxXm5OWKS0wXHIRxgCGtcuuANWv8qAJfY=
-APP_DEBUG=false
+APP_DEBUG=true
 APP_URL=https://sistemadeprestamos.onrender.com
 FORCE_HTTPS=true
 ASSET_URL=https://sistemadeprestamos.onrender.com

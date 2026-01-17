@@ -18,27 +18,47 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        $credenciales = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        \Log::info('Login attempt', [
+            'email' => $request->email,
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'session_id' => $request->session()->getId(),
+            'csrf_token' => $request->session()->token()
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            return back()->withErrors(['email' => 'Correo invalido.'])->withInput();
-        }
-        if (!Hash::check($request->password, (string) $user->password)) {
-            return back()->withErrors(['email' => 'Contraseña incorrecta.'])->withInput();
-        }
-        if (!$user->activo) {
-            return back()->withErrors(['email' => 'Usuario inactivo.'])->withInput();
-        }
+        try {
+            $credenciales = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                \Log::warning('Login failed: User not found', ['email' => $request->email]);
+                return back()->withErrors(['email' => 'Correo invalido.'])->withInput();
+            }
+            if (!Hash::check($request->password, (string) $user->password)) {
+                \Log::warning('Login failed: Wrong password', ['email' => $request->email]);
+                return back()->withErrors(['email' => 'Contraseña incorrecta.'])->withInput();
+            }
+            if (!$user->activo) {
+                \Log::warning('Login failed: Inactive user', ['email' => $request->email]);
+                return back()->withErrors(['email' => 'Usuario inactivo.'])->withInput();
+            }
 
-        return to_route('dashboard.index');
-       
+            Auth::login($user);
+            $request->session()->regenerate();
+            
+            \Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
+
+            return to_route('dashboard.index');
+        } catch (\Exception $e) {
+            \Log::error('Login error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()->withErrors(['email' => 'Error en el sistema: ' . $e->getMessage()])->withInput();
+        }
     }
 
     public function crearAdmin()

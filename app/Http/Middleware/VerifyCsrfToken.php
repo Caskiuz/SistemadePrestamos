@@ -12,7 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        // Puedes agregar rutas que quieras excluir de la verificación CSRF
-        // Por ejemplo: '/webhook/*'
+        '/logear'
     ];
 }
