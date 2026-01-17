@@ -1,0 +1,543 @@
+/* Estilos generales para la tabla */
+tbody td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+tr {
+    text-align: center;
+}
+
+/* Contenedor de filtros */
+.filters-container {
+    background: #121c47;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #02046e79;
+}
+
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-badge {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-badge:hover {
+    transform: translateY(-2px);
+}
+
+.active-filter {
+    background: #0d6efd !important;
+    color: white !important;
+}
+
+.volver-btn {
+    height: 40px;
+    min-width: 100px;
+}
+
+/* Contador de resultados */
+.results-count {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-left: 10px;
+}
+
+/* Estilos para tabla responsive tipo AdminLTE */
+@media (max-width: 768px) {
+    .filters-container {
+        padding: 0.75rem;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .filter-item {
+        width: 100%;
+        min-width: unset;
+    }
+
+    /* Oculta la tabla completa y muestra en modo card */
+    .table-responsive {
+        border: none;
+    }
+
+    .table-responsive table,
+    .table-responsive thead,
+    .table-responsive tbody,
+    .table-responsive tr {
+        display: block;
+        width: 100%;
+    }
+
+    /* Oculta las cabeceras en móvil */
+    .table-responsive table thead {
+        display: none;
+    }
+
+    /* Estilo para cada fila como card */
+    .table-responsive table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.5rem;
+        background: linear-gradient(145deg, #2c3e50, #1a252f);
+        color: #ecf0f1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    /* SOLO UNA CELDA VISIBLE INICIALMENTE */
+    .table-responsive table tbody td {
+        display: none;
+    }
+
+    /* Primera celda visible - Contiene todo */
+    .table-responsive table tbody td.mobile-main-cell {
+        display: block;
+        padding: 1rem;
+        position: relative;
+        background: #141536;
+    }
+
+    /* Contenedor principal móvil */
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* Información principal */
+    .mobile-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    /* Número del producto */
+    .product-number {
+        background: #3498db;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    /* Nombre del producto */
+    .product-name {
+        font-weight: 600;
+        font-size: 1rem;
+        color: white;
+        flex: 1;
+        text-align: left;
+    }
+
+    /* Botón de expandir */
+    .expand-btn {
+        background: #3498db;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.418);
+    }
+
+    .expand-btn:hover {
+        background: #2980b9;
+        transform: scale(1.05);
+    }
+
+    .expand-btn:focus {
+        outline: none;
+    }
+
+    /* Contenido expandido */
+    .mobile-details {
+        display: none;
+        background: #121c47;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid rgba(52, 152, 219, 0.3);
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Cuando la fila está expandida */
+    .table-responsive table tbody tr.expanded .mobile-details {
+        display: block;
+    }
+
+    /* Grid para los detalles */
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Item de detalle */
+    .detail-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        border-left: 3px solid #3498db;
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        color: #3498db;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .detail-value {
+        font-size: 0.9rem;
+        color: #ecf0f1;
+        font-weight: 500;
+    }
+
+    /* Estado especial */
+    .status-item {
+        grid-column: span 2;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .status-item .badge {
+        margin-top: 0.25rem;
+    }
+
+    /* Ajustar descripción para que ocupe todo el ancho */
+    .descripcion-item {
+        grid-column: span 2;
+    }
+
+    /* Imagen */
+    .image-item {
+        grid-column: span 2;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .img-thumbnail {
+        width: 80px !important;
+        height: 80px !important;
+        background: #34495e;
+        border: 2px solid rgba(52, 152, 219, 0.5);
+        border-radius: 8px;
+    }
+
+    /* Botones de acción móvil */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .action-buttons .btn {
+        min-height: 42px;
+        height: 42px;
+        padding: 0.5rem 0.25rem;
+        flex: 1;
+        min-width: 0;
+        transition: none !important;
+        transform: none !important;
+    }
+
+    .action-buttons form {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .action-buttons form .btn {
+        width: 100%;
+        margin: 0;
+    }
+
+    .action-buttons .btn i {
+        font-size: 0.85rem;
+        min-width: 20px;
+    }
+
+    .action-buttons .btn span {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .action-buttons .btn:hover,
+    .action-buttons .btn:active,
+    .action-buttons .btn:focus {
+        transform: none !important;
+        scale: 1 !important;
+    }
+
+    .action-buttons .btn {
+        box-sizing: border-box;
+        border: 2px solid transparent;
+    }
+
+    .action-buttons .btn:active {
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Badges */
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.5em 0.8em;
+        border-radius: 20px;
+    }
+
+    .badge.bg-success {
+        background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+    }
+
+    .badge.bg-secondary {
+        background: linear-gradient(135deg, #7f8c8d, #95a5a6) !important;
+    }
+
+    /* Precios con estilo especial */
+    .price {
+        font-weight: bold;
+        color: #2ecc71;
+    }
+
+    /* Animación */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Texto sin imagen */
+    .text-muted {
+        color: #95a5a6 !important;
+        font-style: italic;
+    }
+
+    /* Para cuando no hay productos */
+    .no-products-cell {
+        display: block !important;
+        text-align: center;
+        padding: 2rem !important;
+        background: #2c3e50;
+        color: #ecf0f1;
+    }
+}
+
+/* Estilos para escritorio */
+@media (min-width: 769px) {
+    /* Ocultar elementos móviles en desktop */
+    .mobile-main-cell {
+        display: none !important;
+    }
+
+    .table-responsive table tbody td {
+        display: table-cell;
+    }
+
+    .expand-btn {
+        display: none;
+    }
+}
+
+/* Asegurar que en desktop se vea normal */
+.table-responsive table {
+    width: 100%;
+}
+
+.table-responsive table td,
+.table-responsive table th {
+    display: table-cell;
+}
+
+/* Estilo para filas filtradas */
+.product-row {
+    transition: all 0.3s ease;
+}
+
+.hidden-row {
+    display: none !important;
+}
+/* PAGINACIÓN */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #121c47;
+    border-top: 1px solid #02046e79;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.pagination-info {
+    color: #ecf0f1;
+    font-size: 0.9rem;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.per-page-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.per-page-selector label {
+    color: #ecf0f1;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.per-page-selector select {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border: 1px solid #3498db;
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.per-page-selector select:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.page-btn {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border: 1px solid #34495e;
+    border-radius: 0.25rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+.page-btn.active {
+    background: #3498db;
+    border-color: #3498db;
+    font-weight: bold;
+}
+
+.page-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-btn.disabled:hover {
+    background: #2c3e50;
+    border-color: #34495e;
+}
+
+.nav-btn {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border: 1px solid #34495e;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+.nav-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.nav-btn.disabled:hover {
+    background: #2c3e50;
+    border-color: #34495e;
+}
+
+@media (max-width: 768px) {
+    .pagination-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .pagination-controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .per-page-selector {
+        justify-content: center;
+    }
+
+    .page-numbers {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
