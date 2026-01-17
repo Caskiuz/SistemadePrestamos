@@ -24,7 +24,7 @@ QUEUE_CONNECTION=database
 SESSION_SECURE_COOKIE=true
 SESSION_SAME_SITE=lax
 SESSION_LIFETIME=120
-SESSION_DOMAIN=.onrender.com
+SESSION_DOMAIN=sistemadeprestamos.onrender.com
 
 # Logs
 LOG_CHANNEL=stack
