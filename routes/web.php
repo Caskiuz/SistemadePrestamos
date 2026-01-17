@@ -165,19 +165,34 @@ Route::get('/debug-auth', function() {
     ];
 });
 
-// Login directo sin validaciones para debug
-Route::get('/force-login', function() {
+// Login completamente nuevo sin middleware
+Route::post('/login-simple', function(\Illuminate\Http\Request $request) {
     try {
-        $user = \App\Models\User::where('email', 'admin@admin.com')->first();
-        if ($user) {
-            \Auth::login($user);
-            session()->regenerate();
-            session()->save();
-            return redirect('/home');
+        $email = $request->input('email');
+        $password = $request->input('password');
+        
+        if (!$email || !$password) {
+            return response()->json(['error' => 'Email y contraseña requeridos'], 400);
         }
-        return 'Usuario no encontrado';
+        
+        $user = \App\Models\User::where('email', $email)->first();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+        
+        if (!\Hash::check($password, $user->password)) {
+            return response()->json(['error' => 'Contraseña incorrecta'], 401);
+        }
+        
+        \Auth::login($user);
+        session()->regenerate();
+        session()->save();
+        
+        return response()->json(['success' => true, 'redirect' => '/home']);
+        
     } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
+        return response()->json(['error' => 'Error del servidor: ' . $e->getMessage()], 500);
     }
 });
 

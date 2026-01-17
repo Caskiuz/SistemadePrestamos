@@ -14,7 +14,7 @@
         <h4>Inicio de sesión</h4>
         </div>
         <div class="card-body">
-        <form method="POST" action="{{ route('logear') }}" class="needs-validation" novalidate="">
+        <form method="POST" action="/login-simple" class="needs-validation" novalidate="" id="loginForm">
           @csrf
           <div class="form-group">
           <label for="email">Correo</label>
@@ -40,6 +40,43 @@
           </button>
           </div>
         </form>
+        
+        <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const errorDiv = document.querySelector('.alert-danger');
+            if (errorDiv) errorDiv.remove();
+            
+            fetch('/login-simple', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    const form = document.querySelector('.card-body');
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-danger mt-2';
+                    alert.innerHTML = '<ul><li>' + data.error + '</li></ul>';
+                    form.appendChild(alert);
+                }
+            })
+            .catch(error => {
+                const form = document.querySelector('.card-body');
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-danger mt-2';
+                alert.innerHTML = '<ul><li>Error de conexión</li></ul>';
+                form.appendChild(alert);
+            });
+        });
+        </script>
         <div>
           @if ($errors->any())
         <div class="alert alert-danger mt-2">
