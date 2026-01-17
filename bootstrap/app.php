@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'rol.contable' => \App\Http\Middleware\RolContable::class,
         ]);
         // Desactivar CSRF temporalmente para solucionar error 419
