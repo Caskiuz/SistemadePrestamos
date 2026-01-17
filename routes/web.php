@@ -30,6 +30,15 @@ Route::middleware(['web'])->group(function () {
     Route::post('/logear', [AuthController::class, 'logear'])->name('logear');
 });
 
+// Ruta para limpiar cache
+Route::get('/clear-cache', function() {
+    \Artisan::call('config:clear');
+    \Artisan::call('route:clear');
+    \Artisan::call('cache:clear');
+    \Artisan::call('view:clear');
+    return 'Cache limpiado. <a href="/">Ir al login</a>';
+});
+
 // Ruta de login sin middleware para bypass temporal
 Route::post('/login-bypass', function(\Illuminate\Http\Request $request) {
     $user = \App\Models\User::where('email', $request->email)->first();
