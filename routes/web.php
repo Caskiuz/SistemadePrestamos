@@ -64,33 +64,71 @@ Route::get('/run-migrations', function() {
     }
 });
 
-// Endpoint para deployment (migraciones + seeders)
-Route::get('/setup', function() {
+// Debug endpoint para verificar todo
+Route::get('/debug-all', function() {
     try {
         $output = [];
         
-        // Ejecutar migraciones
-        \Artisan::call('migrate', ['--force' => true]);
-        $output[] = 'Migraciones: ' . \Artisan::output();
-        
-        // Crear usuario admin
-        $user = \App\Models\User::where('email', 'admin@admin.com')->first();
-        if (!$user) {
-            \App\Models\User::create([
-                'name' => 'Admin',
-                'nombre' => 'Admin',
-                'email' => 'admin@admin.com',
-                'password' => \Hash::make('12345678'),
-                'rol' => 'Gerente',
-            ]);
-            $output[] = 'Usuario admin creado: admin@admin.com / 12345678';
-        } else {
-            $output[] = 'Usuario admin ya existe';
+        // Verificar conexión DB
+        $output[] = '=== DATABASE ===';
+        try {
+            \DB::connection()->getPdo();
+            $output[] = '✓ Database connected';
+        } catch (\Exception $e) {
+            $output[] = '✗ Database error: ' . $e->getMessage();
         }
         
-        return '<h2>Setup Completado</h2><pre>' . implode("\n", $output) . '</pre><br><a href="/">Ir al login</a>';
+        // Verificar tabla sessions
+        $output[] = '\n=== SESSIONS ===';
+        try {
+            if (\Schema::hasTable('sessions')) {
+                $sessionsCount = \DB::table('sessions')->count();
+                $output[] = '✓ Sessions table exists (' . $sessionsCount . ' records)';
+            } else {
+                $output[] = '✗ Sessions table missing';
+                \Artisan::call('session:table');
+                \Artisan::call('migrate', ['--force' => true]);
+                $output[] = '✓ Sessions table created';
+            }
+        } catch (\Exception $e) {
+            $output[] = '✗ Sessions error: ' . $e->getMessage();
+        }
+        
+        // Verificar usuarios
+        $output[] = '\n=== USERS ===';
+        try {
+            $users = \App\Models\User::all(['id', 'name', 'email', 'rol']);
+            $output[] = '✓ Users found: ' . $users->count();
+            foreach ($users as $user) {
+                $output[] = '  - ID: ' . $user->id . ', Email: ' . $user->email . ', Rol: ' . $user->rol;
+            }
+        } catch (\Exception $e) {
+            $output[] = '✗ Users error: ' . $e->getMessage();
+        }
+        
+        // Test login directo
+        $output[] = '\n=== LOGIN TEST ===';
+        try {
+            $user = \App\Models\User::where('email', 'admin@admin.com')->first();
+            if ($user && \Hash::check('12345678', $user->password)) {
+                $output[] = '✓ Login credentials valid';
+                \Auth::login($user);
+                if (\Auth::check()) {
+                    $output[] = '✓ Auth login successful';
+                    $output[] = '✓ Logged in as: ' . \Auth::user()->email;
+                } else {
+                    $output[] = '✗ Auth login failed';
+                }
+            } else {
+                $output[] = '✗ Invalid credentials';
+            }
+        } catch (\Exception $e) {
+            $output[] = '✗ Login test error: ' . $e->getMessage();
+        }
+        
+        return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Ir al login</a>';
     } catch (\Exception $e) {
-        return 'Error en setup: ' . $e->getMessage();
+        return 'Error general: ' . $e->getMessage();
     }
 });
 
@@ -127,15 +165,21 @@ Route::get('/debug-auth', function() {
     ];
 });
 
-// Ruta de login sin middleware para bypass temporal
-Route::post('/login-bypass', function(\Illuminate\Http\Request $request) {
-    $user = \App\Models\User::where('email', $request->email)->first();
-    if ($user && \Hash::check($request->password, $user->password)) {
-        \Auth::login($user);
-        return redirect('/home');
+// Login directo sin validaciones para debug
+Route::get('/force-login', function() {
+    try {
+        $user = \App\Models\User::where('email', 'admin@admin.com')->first();
+        if ($user) {
+            \Auth::login($user);
+            session()->regenerate();
+            session()->save();
+            return redirect('/home');
+        }
+        return 'Usuario no encontrado';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
     }
-    return back()->withErrors(['email' => 'Credenciales incorrectas']);
-})->name('login.bypass');
+});
 
 
 Route::middleware("auth")->group(function () {
