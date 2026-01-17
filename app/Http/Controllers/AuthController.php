@@ -63,15 +63,15 @@ class AuthController extends Controller
 
     public function crearAdmin()
     {
-        $usuario = User::where('email', 'Admin@gmail.com')->first();
+        $usuario = User::where('email', 'admin@gmail.com')->first();
 
 
         if (!$usuario) {
             User::create([
                 'name' => 'Administrador', // Para compatibilidad con migración default de Laravel
                 'nombre' => 'Administrador',
-                'email' => 'Admin@gmail.com',
-                'password' => Hash::make('Admin1234'),
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('12345678'),
                 'rol' => 'Gerente',
             ]);
 

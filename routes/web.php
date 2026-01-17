@@ -30,6 +30,9 @@ Route::middleware(['web'])->group(function () {
     Route::post('/logear', [AuthController::class, 'logear'])->name('logear');
 });
 
+// Ruta de login sin middleware para bypass temporal
+Route::post('/login-bypass', [AuthController::class, 'logear'])->name('login.bypass');
+
 
 Route::middleware("auth")->group(function () {
     Route::get('/home', [Dashboard::class, 'index'])->name('dashboard.index');
