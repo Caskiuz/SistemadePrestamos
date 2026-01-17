@@ -53,7 +53,7 @@ Route::get('/debug-auth', function() {
     $guard = \Auth::getDefaultDriver();
     
     // Verificar usuario en base de datos
-    $dbUser = \App\Models\User::where('email', 'admin@gmail.com')->first();
+    $dbUser = \App\Models\User::where('email', 'rijarwow@gmail.com')->first();
     
     return [
         'authenticated' => $check,

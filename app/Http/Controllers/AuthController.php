@@ -49,6 +49,7 @@ class AuthController extends Controller
 
             Auth::login($user);
             $request->session()->regenerate();
+            $request->session()->save(); // Forzar guardado inmediato de sesión
             
             \Log::info('Login successful', ['user_id' => $user->id, 'email' => $user->email]);
 
@@ -64,14 +65,14 @@ class AuthController extends Controller
 
     public function crearAdmin()
     {
-        $usuario = User::where('email', 'admin@gmail.com')->first();
+        $usuario = User::where('email', 'rijarwow@gmail.com')->first();
 
 
         if (!$usuario) {
             User::create([
-                'name' => 'Administrador', // Para compatibilidad con migración default de Laravel
-                'nombre' => 'Administrador',
-                'email' => 'admin@gmail.com',
+                'name' => 'Ricardo Agelvis', // Para compatibilidad con migración default de Laravel
+                'nombre' => 'Ricardo Agelvis',
+                'email' => 'rijarwow@gmail.com',
                 'password' => Hash::make('12345678'),
                 'rol' => 'Gerente',
             ]);
