@@ -18,54 +18,34 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        // Log para consola del navegador
-        $debugInfo = [
-            'step' => 'inicio',
-            'email' => $request->input('email'),
-            'password_length' => strlen($request->input('password') ?? ''),
-            'session_id' => session()->getId(),
-            'csrf_token' => $request->session()->token()
-        ];
-        
         $email = $request->input('email');
         $password = $request->input('password');
         
         if (!$email || !$password) {
-            $debugInfo['step'] = 'validation_failed';
-            $debugInfo['error'] = 'Email y contraseña requeridos';
-            session()->flash('debug_info', $debugInfo);
             return back()->withErrors(['email' => 'Email y contraseña requeridos'])->withInput();
         }
         
         $user = \App\Models\User::where('email', $email)->first();
-        $debugInfo['step'] = 'user_search';
-        $debugInfo['user_found'] = $user ? true : false;
         
         if (!$user) {
-            $debugInfo['error'] = 'Usuario no encontrado';
-            session()->flash('debug_info', $debugInfo);
             return back()->withErrors(['email' => 'Usuario no encontrado: ' . $email])->withInput();
         }
         
-        $debugInfo['step'] = 'password_check';
-        $passwordValid = \Hash::check($password, $user->password);
-        $debugInfo['password_valid'] = $passwordValid;
-        
-        if (!$passwordValid) {
-            $debugInfo['error'] = 'Contraseña incorrecta';
-            session()->flash('debug_info', $debugInfo);
+        if (!\Hash::check($password, $user->password)) {
             return back()->withErrors(['email' => 'Contraseña incorrecta para: ' . $email])->withInput();
         }
         
-        $debugInfo['step'] = 'login_attempt';
-        \Auth::login($user);
-        session()->regenerate();
-        session()->save();
+        // CONFIGURACIÓN ESPECIAL PARA RENDER
+        \Auth::login($user, true); // remember = true
         
-        $debugInfo['step'] = 'login_success';
-        $debugInfo['auth_check'] = \Auth::check();
-        $debugInfo['auth_user_id'] = \Auth::id();
-        session()->flash('debug_info', $debugInfo);
+        // Configurar sesión manualmente
+        $request->session()->regenerate();
+        $request->session()->put('auth.user_id', $user->id);
+        $request->session()->put('auth.logged_in', true);
+        $request->session()->save();
+        
+        // Forzar cookies de sesión
+        cookie()->queue('laravel_session', $request->session()->getId(), 120, '/', '.onrender.com', true, true);
         
         return redirect('/home');
     }
