@@ -52,13 +52,21 @@ Route::get('/debug-auth', function() {
     $id = \Auth::id();
     $guard = \Auth::getDefaultDriver();
     
+    // Verificar usuario en base de datos
+    $dbUser = \App\Models\User::where('email', 'admin@gmail.com')->first();
+    
     return [
         'authenticated' => $check,
         'user_id' => $id,
         'user' => $user,
         'guard' => $guard,
         'session_id' => session()->getId(),
-        'session_data' => session()->all()
+        'session_data' => session()->all(),
+        'db_user' => $dbUser ? [
+            'id' => $dbUser->id,
+            'email' => $dbUser->email,
+            'activo' => $dbUser->activo ?? 'campo no existe'
+        ] : 'no encontrado'
     ];
 });
 

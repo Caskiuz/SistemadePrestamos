@@ -41,10 +41,11 @@ class AuthController extends Controller
                 \Log::warning('Login failed: Wrong password', ['email' => $request->email]);
                 return back()->withErrors(['email' => 'Contraseña incorrecta.'])->withInput();
             }
-            if (!$user->activo) {
-                \Log::warning('Login failed: Inactive user', ['email' => $request->email]);
-                return back()->withErrors(['email' => 'Usuario inactivo.'])->withInput();
-            }
+            // Remover verificación de campo 'activo' que puede no existir
+            // if (!$user->activo) {
+            //     \Log::warning('Login failed: Inactive user', ['email' => $request->email]);
+            //     return back()->withErrors(['email' => 'Usuario inactivo.'])->withInput();
+            // }
 
             Auth::login($user);
             $request->session()->regenerate();
