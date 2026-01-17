@@ -42,12 +42,55 @@ Route::get('/clear-cache', function() {
 
 // Ruta para ejecutar migraciones
 Route::get('/run-migrations', function() {
-    \Artisan::call('migrate', ['--force' => true]);
-    return 'Migraciones ejecutadas. <a href="/">Ir al login</a>';
+    try {
+        \Artisan::call('migrate', ['--force' => true]);
+        $output = \Artisan::output();
+        
+        // Crear usuario admin si no existe
+        $user = \App\Models\User::where('email', 'admin@admin.com')->first();
+        if (!$user) {
+            \App\Models\User::create([
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password' => \Hash::make('12345678'),
+                'rol' => 'Gerente',
+            ]);
+        }
+        
+        return 'Migraciones ejecutadas y usuario admin creado.<br><pre>' . $output . '</pre><br><a href="/">Ir al login</a>';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
 });
 
 // Endpoint para deployment (migraciones + seeders)
-Route::get('/deploy', [DeployController::class, 'migrate'])->name('deploy.migrate');
+Route::get('/setup', function() {
+    try {
+        $output = [];
+        
+        // Ejecutar migraciones
+        \Artisan::call('migrate', ['--force' => true]);
+        $output[] = 'Migraciones: ' . \Artisan::output();
+        
+        // Crear usuario admin
+        $user = \App\Models\User::where('email', 'admin@admin.com')->first();
+        if (!$user) {
+            \App\Models\User::create([
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password' => \Hash::make('12345678'),
+                'rol' => 'Gerente',
+            ]);
+            $output[] = 'Usuario admin creado: admin@admin.com / 12345678';
+        } else {
+            $output[] = 'Usuario admin ya existe';
+        }
+        
+        return '<h2>Setup Completado</h2><pre>' . implode("\n", $output) . '</pre><br><a href="/">Ir al login</a>';
+    } catch (\Exception $e) {
+        return 'Error en setup: ' . $e->getMessage();
+    }
+});
 
 // Ruta de debug para verificar tabla sessions
 Route::get('/debug-sessions', function() {
