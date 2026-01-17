@@ -45,7 +45,15 @@ Route::get('/run-migrations', function() {
     return 'Migraciones ejecutadas. <a href="/">Ir al login</a>';
 });
 
-// Ruta de debug para verificar autenticación
+// Ruta de debug para verificar tabla sessions
+Route::get('/debug-sessions', function() {
+    try {
+        $sessions = \DB::table('sessions')->count();
+        return ['sessions_table_exists' => true, 'sessions_count' => $sessions];
+    } catch (\Exception $e) {
+        return ['sessions_table_exists' => false, 'error' => $e->getMessage()];
+    }
+});
 Route::get('/debug-auth', function() {
     $user = \Auth::user();
     $check = \Auth::check();
