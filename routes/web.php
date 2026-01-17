@@ -39,6 +39,12 @@ Route::get('/clear-cache', function() {
     return 'Cache limpiado. <a href="/">Ir al login</a>';
 });
 
+// Ruta para ejecutar migraciones
+Route::get('/run-migrations', function() {
+    \Artisan::call('migrate', ['--force' => true]);
+    return 'Migraciones ejecutadas. <a href="/">Ir al login</a>';
+});
+
 // Ruta de login sin middleware para bypass temporal
 Route::post('/login-bypass', function(\Illuminate\Http\Request $request) {
     $user = \App\Models\User::where('email', $request->email)->first();
