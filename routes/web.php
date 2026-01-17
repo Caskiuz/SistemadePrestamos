@@ -31,7 +31,14 @@ Route::middleware(['web'])->group(function () {
 });
 
 // Ruta de login sin middleware para bypass temporal
-Route::post('/login-bypass', [AuthController::class, 'logear'])->name('login.bypass');
+Route::post('/login-bypass', function(\Illuminate\Http\Request $request) {
+    $user = \App\Models\User::where('email', $request->email)->first();
+    if ($user && \Hash::check($request->password, $user->password)) {
+        \Auth::login($user);
+        return redirect('/home');
+    }
+    return back()->withErrors(['email' => 'Credenciales incorrectas']);
+})->name('login.bypass');
 
 
 Route::middleware("auth")->group(function () {
