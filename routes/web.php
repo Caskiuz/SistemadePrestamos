@@ -165,34 +165,66 @@ Route::get('/debug-auth', function() {
     ];
 });
 
-// Login completamente nuevo sin middleware
-Route::post('/login-simple', function(\Illuminate\Http\Request $request) {
+// TEST LOGIN - SIN REDIRECTS
+Route::post('/test-login', function(\Illuminate\Http\Request $request) {
+    $output = [];
+    $output[] = '=== TEST LOGIN DEBUG ===';
+    $output[] = 'Email: ' . $request->input('email');
+    $output[] = 'Password: ' . $request->input('password');
+    $output[] = 'Password Length: ' . strlen($request->input('password') ?? '');
+    
     try {
         $email = $request->input('email');
         $password = $request->input('password');
         
         if (!$email || !$password) {
-            return response()->json(['error' => 'Email y contraseña requeridos'], 400);
+            $output[] = 'ERROR: Email o contraseña vacíos';
+            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
         }
         
+        $output[] = 'Buscando usuario...';
         $user = \App\Models\User::where('email', $email)->first();
         
         if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            $output[] = 'ERROR: Usuario no encontrado';
+            $output[] = 'Usuarios disponibles:';
+            $users = \App\Models\User::all(['email']);
+            foreach ($users as $u) {
+                $output[] = '  - ' . $u->email;
+            }
+            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
         }
         
+        $output[] = 'Usuario encontrado: ' . $user->email;
+        $output[] = 'Verificando contraseña...';
+        
         if (!\Hash::check($password, $user->password)) {
-            return response()->json(['error' => 'Contraseña incorrecta'], 401);
+            $output[] = 'ERROR: Contraseña incorrecta';
+            $output[] = 'Hash en BD: ' . substr($user->password, 0, 20) . '...';
+            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
         }
+        
+        $output[] = 'Contraseña correcta!';
+        $output[] = 'Intentando login...';
         
         \Auth::login($user);
         session()->regenerate();
         session()->save();
         
-        return response()->json(['success' => true, 'redirect' => '/home']);
+        if (\Auth::check()) {
+            $output[] = 'LOGIN EXITOSO!';
+            $output[] = 'Usuario logueado: ' . \Auth::user()->email;
+            $output[] = 'Session ID: ' . session()->getId();
+            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/home">Ir al Dashboard</a>';
+        } else {
+            $output[] = 'ERROR: Login falló después de Auth::login()';
+            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
+        }
         
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error del servidor: ' . $e->getMessage()], 500);
+        $output[] = 'EXCEPCIÓN: ' . $e->getMessage();
+        $output[] = 'Trace: ' . $e->getTraceAsString();
+        return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
     }
 });
 

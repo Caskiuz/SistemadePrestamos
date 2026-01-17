@@ -14,7 +14,7 @@
         <h4>Inicio de sesión</h4>
         </div>
         <div class="card-body">
-        <form method="POST" action="{{ route('logear') }}" class="needs-validation" novalidate="">
+        <form method="POST" action="/test-login" class="needs-validation" novalidate="">
           @csrf
           <div class="form-group">
           <label for="email">Correo</label>
