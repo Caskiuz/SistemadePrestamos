@@ -45,6 +45,23 @@ Route::get('/run-migrations', function() {
     return 'Migraciones ejecutadas. <a href="/">Ir al login</a>';
 });
 
+// Ruta de debug para verificar autenticación
+Route::get('/debug-auth', function() {
+    $user = \Auth::user();
+    $check = \Auth::check();
+    $id = \Auth::id();
+    $guard = \Auth::getDefaultDriver();
+    
+    return [
+        'authenticated' => $check,
+        'user_id' => $id,
+        'user' => $user,
+        'guard' => $guard,
+        'session_id' => session()->getId(),
+        'session_data' => session()->all()
+    ];
+});
+
 // Ruta de login sin middleware para bypass temporal
 Route::post('/login-bypass', function(\Illuminate\Http\Request $request) {
     $user = \App\Models\User::where('email', $request->email)->first();
