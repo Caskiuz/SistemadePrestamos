@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zip \
     unzip \
-    default-mysql-client
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP
 RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
@@ -20,14 +21,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos
+# Copiar composer files primero
+COPY composer.json composer.lock ./
+
+# Instalar dependencias sin scripts
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Copiar resto de archivos
 COPY . .
-
-# Actualizar dependencias para PHP 8.2
-RUN composer update --no-dev --optimize-autoloader --no-scripts
-
-# Ejecutar scripts post-install manualmente
-RUN composer dump-autoload --optimize
 
 # Permisos
 RUN chmod -R 777 storage bootstrap/cache
@@ -35,5 +36,5 @@ RUN chmod -R 777 storage bootstrap/cache
 # Puerto
 EXPOSE 8080
 
-# Comando de inicio
-CMD php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php -S 0.0.0.0:8080 -t public
+# Comando de inicio (aquí sí ejecutamos los comandos Laravel)
+CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php -S 0.0.0.0:8080 -t public
