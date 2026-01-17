@@ -3,14 +3,16 @@
 session_start();
 
 if ($_POST) {
-    // Configuración de base de datos
-    $host = $_ENV['DATABASE_HOST'] ?? 'localhost';
-    $dbname = $_ENV['DATABASE_NAME'] ?? 'hc_db';
-    $username = $_ENV['DATABASE_USER'] ?? 'root';
-    $password = $_ENV['DATABASE_PASSWORD'] ?? '';
+    // Configuración de base de datos - usar getenv() en lugar de $_ENV
+    $host = getenv('DATABASE_HOST') ?: $_SERVER['DATABASE_HOST'] ?? 'localhost';
+    $dbname = getenv('DATABASE_NAME') ?: $_SERVER['DATABASE_NAME'] ?? 'hc_db';
+    $username = getenv('DATABASE_USER') ?: $_SERVER['DATABASE_USER'] ?? 'root';
+    $password = getenv('DATABASE_PASSWORD') ?: $_SERVER['DATABASE_PASSWORD'] ?? '';
+    $port = getenv('DATABASE_PORT') ?: $_SERVER['DATABASE_PORT'] ?? '5432';
     
     try {
-        $pdo = new PDO("pgsql:host=$host;dbname=$dbname", $username, $password);
+        $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+        $pdo = new PDO($dsn, $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $email = $_POST['email'];
@@ -23,13 +25,19 @@ if ($_POST) {
         if ($user && password_verify($pass, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
-            header('Location: /home');
+            echo '<script>alert("Login exitoso! Redirigiendo..."); window.location.href="/";</script>';
             exit;
         } else {
             $error = "Credenciales incorrectas";
         }
     } catch (Exception $e) {
         $error = "Error de conexión: " . $e->getMessage();
+        // Debug: mostrar variables de entorno
+        $error .= "<br><br>Debug info:<br>";
+        $error .= "HOST: " . ($host ?? 'null') . "<br>";
+        $error .= "DB: " . ($dbname ?? 'null') . "<br>";
+        $error .= "USER: " . ($username ?? 'null') . "<br>";
+        $error .= "PORT: " . ($port ?? 'null');
     }
 }
 ?>
