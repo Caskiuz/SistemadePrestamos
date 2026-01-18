@@ -9,29 +9,21 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LibroDiarioController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ConfiguracionController;
-use App\Http\Controllers\SeguridadController;
-use App\Http\Controllers\PdfController;
 use App\Http\Controllers\AlmacenController;
-use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ApartadoController;
-use App\Http\Controllers\IngresoController;
-use App\Http\Controllers\EgresoController;
 use App\Http\Controllers\HistorialController;
-use App\Http\Controllers\DeployController;
 
-
-// Crear un usuario administrador, solo usar una vez
+// Autenticación
 Route::middleware(['web'])->group(function () {
-    Route::get('/crear-admin', [AuthController::class, 'crearAdmin']);
     Route::get('/', [AuthController::class, 'index'])->name('login');
     Route::post('/logear', [AuthController::class, 'logear'])->name('logear');
 });
 
-// Ruta para limpiar cache
+// Utilidades de desarrollo
 Route::get('/clear-cache', function() {
     \Artisan::call('config:clear');
     \Artisan::call('route:clear');
@@ -40,13 +32,11 @@ Route::get('/clear-cache', function() {
     return 'Cache limpiado. <a href="/">Ir al login</a>';
 });
 
-// Ruta para ejecutar migraciones
 Route::get('/run-migrations', function() {
     try {
         \Artisan::call('migrate', ['--force' => true]);
         $output = \Artisan::output();
         
-        // Crear usuario admin si no existe
         $user = \App\Models\User::where('email', 'admin@admin.com')->first();
         if (!$user) {
             \App\Models\User::create([
@@ -61,159 +51,6 @@ Route::get('/run-migrations', function() {
         return 'Migraciones ejecutadas y usuario admin creado.<br><pre>' . $output . '</pre><br><a href="/">Ir al login</a>';
     } catch (\Exception $e) {
         return 'Error: ' . $e->getMessage();
-    }
-});
-
-// BYPASS COMPLETO - SIN MIDDLEWARE AUTH
-Route::get('/dashboard-bypass', function() {
-    // Login forzado
-    $user = \App\Models\User::where('email', 'admin@admin.com')->first();
-    if ($user) {
-        \Auth::login($user);
-        session()->regenerate();
-        session()->save();
-    }
-    
-    // Mostrar dashboard básico
-    return '
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>HC Servicios - Dashboard</title>
-        <meta charset="utf-8">
-        <style>
-            body { font-family: Arial; margin: 40px; background: #f5f5f5; }
-            .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .header { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 30px; }
-            .menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
-            .menu-item { background: #007bff; color: white; padding: 20px; text-align: center; border-radius: 5px; text-decoration: none; transition: background 0.3s; }
-            .menu-item:hover { background: #0056b3; }
-            .info { background: #e7f3ff; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1 class="header">🏭 HC Servicios Industrial - Dashboard</h1>
-            
-            <div class="info">
-                <strong>✅ Sistema funcionando correctamente</strong><br>
-                Usuario: ' . (\Auth::check() ? \Auth::user()->email : 'No autenticado') . '<br>
-                Fecha: ' . date('d/m/Y H:i:s') . '
-            </div>
-            
-            <div class="menu">
-                <a href="/clientes" class="menu-item">👥 Clientes</a>
-                <a href="/recepciones" class="menu-item">📋 Recepciones</a>
-                <a href="/equipos" class="menu-item">⚙️ Equipos</a>
-                <a href="/usuarios" class="menu-item">👤 Usuarios</a>
-                <a href="/cotizaciones" class="menu-item">💰 Cotizaciones</a>
-                <a href="/prestamos" class="menu-item">🏦 Préstamos</a>
-                <a href="/inventario" class="menu-item">📦 Inventario</a>
-                <a href="/reportes" class="menu-item">📊 Reportes</a>
-                <a href="/configuracion" class="menu-item">⚙️ Configuración</a>
-            </div>
-            
-            <div style="margin-top: 30px; text-align: center; color: #666;">
-                <small>Sistema de Gestión HC Servicios Industrial</small>
-            </div>
-        </div>
-    </body>
-    </html>';
-});
-
-// Ruta de debug para verificar tabla sessions
-Route::get('/debug-sessions', function() {
-    try {
-        $sessions = \DB::table('sessions')->count();
-        return ['sessions_table_exists' => true, 'sessions_count' => $sessions];
-    } catch (\Exception $e) {
-        return ['sessions_table_exists' => false, 'error' => $e->getMessage()];
-    }
-});
-Route::get('/debug-auth', function() {
-    $user = \Auth::user();
-    $check = \Auth::check();
-    $id = \Auth::id();
-    $guard = \Auth::getDefaultDriver();
-    
-    // Verificar usuario en base de datos
-    $dbUser = \App\Models\User::where('email', 'rijarwow@gmail.com')->first();
-    
-    return [
-        'authenticated' => $check,
-        'user_id' => $id,
-        'user' => $user,
-        'guard' => $guard,
-        'session_id' => session()->getId(),
-        'session_data' => session()->all(),
-        'db_user' => $dbUser ? [
-            'id' => $dbUser->id,
-            'email' => $dbUser->email,
-            'activo' => $dbUser->activo ?? 'campo no existe'
-        ] : 'no encontrado'
-    ];
-});
-
-// TEST LOGIN - SIN REDIRECTS
-Route::post('/test-login', function(\Illuminate\Http\Request $request) {
-    $output = [];
-    $output[] = '=== TEST LOGIN DEBUG ===';
-    $output[] = 'Email: ' . $request->input('email');
-    $output[] = 'Password: ' . $request->input('password');
-    $output[] = 'Password Length: ' . strlen($request->input('password') ?? '');
-    
-    try {
-        $email = $request->input('email');
-        $password = $request->input('password');
-        
-        if (!$email || !$password) {
-            $output[] = 'ERROR: Email o contraseña vacíos';
-            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
-        }
-        
-        $output[] = 'Buscando usuario...';
-        $user = \App\Models\User::where('email', $email)->first();
-        
-        if (!$user) {
-            $output[] = 'ERROR: Usuario no encontrado';
-            $output[] = 'Usuarios disponibles:';
-            $users = \App\Models\User::all(['email']);
-            foreach ($users as $u) {
-                $output[] = '  - ' . $u->email;
-            }
-            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
-        }
-        
-        $output[] = 'Usuario encontrado: ' . $user->email;
-        $output[] = 'Verificando contraseña...';
-        
-        if (!\Hash::check($password, $user->password)) {
-            $output[] = 'ERROR: Contraseña incorrecta';
-            $output[] = 'Hash en BD: ' . substr($user->password, 0, 20) . '...';
-            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
-        }
-        
-        $output[] = 'Contraseña correcta!';
-        $output[] = 'Intentando login...';
-        
-        \Auth::login($user);
-        session()->regenerate();
-        session()->save();
-        
-        if (\Auth::check()) {
-            $output[] = 'LOGIN EXITOSO!';
-            $output[] = 'Usuario logueado: ' . \Auth::user()->email;
-            $output[] = 'Session ID: ' . session()->getId();
-            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/home">Ir al Dashboard</a>';
-        } else {
-            $output[] = 'ERROR: Login falló después de Auth::login()';
-            return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
-        }
-        
-    } catch (\Exception $e) {
-        $output[] = 'EXCEPCIÓN: ' . $e->getMessage();
-        $output[] = 'Trace: ' . $e->getTraceAsString();
-        return '<pre>' . implode("\n", $output) . '</pre><br><a href="/">Volver</a>';
     }
 });
 
@@ -333,6 +170,8 @@ Route::prefix('inventario')->middleware('auth')->group(function () {
     Route::post('/', [ProductoController::class, 'store'])->name('inventario.store');
     Route::get('/{id}', [ProductoController::class, 'inventarioShow'])->name('inventario.show');
     Route::get('/{id}/edit', [ProductoController::class, 'edit'])->name('inventario.edit');
+    Route::put('/{id}', [ProductoController::class, 'update'])->name('inventario.update');
+    Route::delete('/{id}', [ProductoController::class, 'destroy'])->name('inventario.destroy');
 });
 
 // Préstamos / Empeños
@@ -397,12 +236,88 @@ Route::prefix('historial')->middleware('auth')->group(function () {
 Route::prefix('configuracion')->middleware('auth')->group(function () {
     Route::get('/', [ConfiguracionController::class, 'index'])->name('configuracion.index');
     Route::get('/empresa', [ConfiguracionController::class, 'empresa'])->name('configuracion.empresa');
-    Route::get('/sucursal', [ConfiguracionController::class, 'sucursal'])->name('configuracion.sucursal');
-    Route::get('/empleados', [ConfiguracionController::class, 'empleados'])->name('configuracion.empleados');
-    Route::get('/intereses', [ConfiguracionController::class, 'intereses'])->name('configuracion.intereses');
-    Route::get('/recibos', [ConfiguracionController::class, 'recibos'])->name('configuracion.recibos');
-    Route::get('/region', [ConfiguracionController::class, 'region'])->name('configuracion.region');
-    Route::get('/roles', [ConfiguracionController::class, 'roles'])->name('configuracion.roles');
+    Route::get('/prestamos', [ConfiguracionController::class, 'prestamos'])->name('configuracion.prestamos');
+    Route::get('/tarifas', [ConfiguracionController::class, 'tarifas'])->name('configuracion.tarifas');
+    Route::get('/notificaciones', [ConfiguracionController::class, 'notificaciones'])->name('configuracion.notificaciones');
+    Route::get('/sistema', [ConfiguracionController::class, 'sistema'])->name('configuracion.sistema');
+    Route::get('/seguridad', [ConfiguracionController::class, 'seguridad'])->name('configuracion.seguridad');
+    Route::get('/reportes', [ConfiguracionController::class, 'reportes'])->name('configuracion.reportes');
+    Route::put('/actualizar', [ConfiguracionController::class, 'actualizar'])->name('configuracion.actualizar');
+});
+
+// Notificaciones
+Route::prefix('notificaciones')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\NotificacionController::class, 'index'])->name('notificaciones.index');
+    Route::patch('/{id}/marcar-leida', [\App\Http\Controllers\NotificacionController::class, 'marcarLeida'])->name('notificaciones.marcar-leida');
+    Route::get('/alertas', [\App\Http\Controllers\NotificacionController::class, 'getAlertas'])->name('notificaciones.alertas');
+});
+
+// Renovaciones
+Route::prefix('renovaciones')->middleware('auth')->group(function () {
+    Route::post('/{prestamo}/renovar', [\App\Http\Controllers\RenovacionController::class, 'renovar'])->name('renovaciones.renovar');
+});
+
+// Tarifas y Comisiones
+Route::prefix('tarifas')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\TarifaController::class, 'index'])->name('tarifas.index');
+    Route::post('/', [\App\Http\Controllers\TarifaController::class, 'store'])->name('tarifas.store');
+    Route::post('/{prestamo}/aplicar-comision', [\App\Http\Controllers\TarifaController::class, 'aplicarComision'])->name('tarifas.aplicar-comision');
+});
+
+// Subastas
+Route::prefix('subastas')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\SubastaController::class, 'index'])->name('subastas.index');
+    Route::get('/create/{prestamo}', [\App\Http\Controllers\SubastaController::class, 'create'])->name('subastas.create');
+    Route::post('/', [\App\Http\Controllers\SubastaController::class, 'store'])->name('subastas.store');
+    Route::get('/{subasta}', [\App\Http\Controllers\SubastaController::class, 'show'])->name('subastas.show');
+    Route::post('/{subasta}/ofertar', [\App\Http\Controllers\SubastaController::class, 'ofertar'])->name('subastas.ofertar');
+    Route::post('/{subasta}/finalizar', [\App\Http\Controllers\SubastaController::class, 'finalizar'])->name('subastas.finalizar');
+});
+
+// Reportes Avanzados
+Route::prefix('reportes-avanzados')->middleware('auth')->group(function () {
+    Route::get('/rentabilidad', [\App\Http\Controllers\ReporteAvanzadoController::class, 'rentabilidad'])->name('reportes.rentabilidad');
+    Route::get('/riesgo-crediticio', [\App\Http\Controllers\ReporteAvanzadoController::class, 'riesgoCrediticio'])->name('reportes.riesgo-crediticio');
+    Route::get('/recuperacion', [\App\Http\Controllers\ReporteAvanzadoController::class, 'estadisticasRecuperacion'])->name('reportes.recuperacion');
+    Route::get('/flujo-efectivo', [\App\Http\Controllers\ReporteAvanzadoController::class, 'flujoEfectivo'])->name('reportes.flujo-efectivo');
+});
+
+// Transferencias entre Sucursales
+Route::prefix('transferencias')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\TransferenciaController::class, 'index'])->name('transferencias.index');
+    Route::get('/create', [\App\Http\Controllers\TransferenciaController::class, 'create'])->name('transferencias.create');
+    Route::post('/', [\App\Http\Controllers\TransferenciaController::class, 'store'])->name('transferencias.store');
+    Route::post('/{transferencia}/recibir', [\App\Http\Controllers\TransferenciaController::class, 'recibir'])->name('transferencias.recibir');
+    Route::get('/consolidado', [\App\Http\Controllers\TransferenciaController::class, 'consolidado'])->name('transferencias.consolidado');
+});
+
+// Verificaciones Externas
+Route::prefix('verificaciones')->middleware('auth')->group(function () {
+    Route::post('/{cliente}/identidad', [\App\Http\Controllers\VerificacionController::class, 'verificarIdentidad'])->name('verificaciones.identidad');
+    Route::post('/{cliente}/centrales-riesgo', [\App\Http\Controllers\VerificacionController::class, 'consultarCentrales'])->name('verificaciones.centrales');
+});
+
+// Garantías Adicionales
+Route::prefix('garantias')->middleware('auth')->group(function () {
+    Route::post('/{prestamo}/aval', [\App\Http\Controllers\GarantiaController::class, 'agregarAval'])->name('garantias.aval');
+    Route::post('/{prestamo}/seguro', [\App\Http\Controllers\GarantiaController::class, 'agregarSeguro'])->name('garantias.seguro');
+    Route::post('/{prestamo}/cruzada', [\App\Http\Controllers\GarantiaController::class, 'agregarCruzada'])->name('garantias.cruzada');
+});
+
+// Workflow y Aprobaciones
+Route::prefix('workflow')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\WorkflowController::class, 'index'])->name('workflows.index');
+    Route::post('/', [\App\Http\Controllers\WorkflowController::class, 'store'])->name('workflows.store');
+    Route::post('/{tipo}/{id}/solicitar-aprobacion', [\App\Http\Controllers\WorkflowController::class, 'solicitarAprobacion'])->name('workflows.solicitar');
+    Route::post('/aprobaciones/{id}/procesar', [\App\Http\Controllers\WorkflowController::class, 'aprobar'])->name('workflows.aprobar');
+    Route::get('/pendientes', [\App\Http\Controllers\WorkflowController::class, 'pendientes'])->name('workflows.pendientes');
+});
+
+// Backup y Seguridad
+Route::prefix('sistema')->middleware(['auth', 'rol.admin'])->group(function () {
+    Route::get('/backups', [\App\Http\Controllers\BackupController::class, 'index'])->name('sistema.backups');
+    Route::post('/backup/generar', [\App\Http\Controllers\BackupController::class, 'generar'])->name('sistema.backup.generar');
+    Route::get('/auditoria', [\App\Http\Controllers\AuditoriaController::class, 'index'])->name('sistema.auditoria');
 });
 
 // Sucursales / Almacenes (vista web)

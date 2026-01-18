@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->decimal('precio_venta', 12, 2)->nullable();
             $table->decimal('valuacion', 12, 2)->nullable();
             $table->decimal('avaluo', 12, 2)->nullable();
-            $table->enum('estado', ['disponible', 'empeñado', 'vendido', 'apartado', 'en_venta'])->default('disponible');
+            $table->enum('estado', ['disponible', 'empeñado', 'vendido', 'apartado', 'en_venta', 'liquidado', 'cancelado'])->default('disponible');
             $table->unsignedBigInteger('almacen_id');
             $table->foreign('almacen_id')->references('id')->on('almacenes')->onDelete('cascade');
             $table->string('foto')->nullable();

@@ -1,4 +1,4 @@
-# HC Servicios Industrial - Sistema de Gestión
+# Préstamos Santa Ana - Sistema de Gestión
 
 Sistema de gestión para préstamos, inventario y contabilidad.
 

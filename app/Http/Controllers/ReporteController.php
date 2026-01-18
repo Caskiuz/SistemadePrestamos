@@ -52,9 +52,19 @@ class ReporteController extends Controller
 
     public function prestamosVencidos()
     {
-        $prestamos = Prestamo::with(['cliente', 'productos'])
-            ->where('estado', 'activo')
+        // Solo actualizar si es necesario (optimizado)
+        $needsUpdate = Prestamo::where('estado', 'activo')
             ->whereDate('fecha_vencimiento', '<', now())
+            ->exists();
+            
+        if ($needsUpdate) {
+            Prestamo::where('estado', 'activo')
+                ->whereDate('fecha_vencimiento', '<', now())
+                ->update(['estado' => 'vencido']);
+        }
+            
+        $prestamos = Prestamo::with(['cliente', 'productos'])
+            ->where('estado', 'vencido')
             ->orderBy('fecha_vencimiento', 'desc')
             ->get();
         

@@ -10,31 +10,62 @@
     </h1>
 </header>
 
-<section class="content" style="background-color: #444 !important; padding: 30px !important;">
+<section class="content fade-in" style="background-color: #f5f6fa !important; padding: 15px !important;">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <div class="card" style="background: #2a2a2a; border: 1px solid #3a3a3a; padding: 20px;">
-                    <h5 style="color: #999; font-size: 14px; margin-bottom: 10px;">Préstamos Activos</h5>
-                    <h2 style="color: #fff; font-size: 32px; margin: 0;">${{ number_format($totalPrestamos, 2) }}</h2>
+        <div class="responsive-grid">
+            <div class="card-statistic-1">
+                <div class="card-icon bg-success">
+                    <i class="fa fa-money"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Préstamos Activos</h4>
+                    </div>
+                    <div class="card-body">
+                        ${{ number_format($totalPrestamos, 2) }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="card" style="background: #2a2a2a; border: 1px solid #3a3a3a; padding: 20px;">
-                    <h5 style="color: #999; font-size: 14px; margin-bottom: 10px;">Total Ventas</h5>
-                    <h2 style="color: #fff; font-size: 32px; margin: 0;">${{ number_format($totalVentas, 2) }}</h2>
+            
+            <div class="card-statistic-1">
+                <div class="card-icon bg-info">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Total Ventas</h4>
+                    </div>
+                    <div class="card-body">
+                        ${{ number_format($totalVentas, 2) }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="card" style="background: #2a2a2a; border: 1px solid #3a3a3a; padding: 20px;">
-                    <h5 style="color: #999; font-size: 14px; margin-bottom: 10px;">Total Compras</h5>
-                    <h2 style="color: #fff; font-size: 32px; margin: 0;">${{ number_format($totalCompras, 2) }}</h2>
+            
+            <div class="card-statistic-1">
+                <div class="card-icon bg-warning">
+                    <i class="fa fa-shopping-bag"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Total Compras</h4>
+                    </div>
+                    <div class="card-body">
+                        ${{ number_format($totalCompras, 2) }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="card" style="background: #2a2a2a; border: 1px solid #3a3a3a; padding: 20px;">
-                    <h5 style="color: #999; font-size: 14px; margin-bottom: 10px;">Saldo en Caja</h5>
-                    <h2 style="color: {{ $saldoCaja >= 0 ? '#4CAF50' : '#f44336' }}; font-size: 32px; margin: 0;">${{ number_format($saldoCaja, 2) }}</h2>
+            
+            <div class="card-statistic-1">
+                <div class="card-icon" style="background-color: {{ $saldoCaja >= 0 ? '#4CAF50' : '#f44336' }}">
+                    <i class="fa fa-bank"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Saldo en Caja</h4>
+                    </div>
+                    <div class="card-body" style="color: {{ $saldoCaja >= 0 ? '#4CAF50' : '#f44336' }}">
+                        ${{ number_format($saldoCaja, 2) }}
+                    </div>
                 </div>
             </div>
         </div>

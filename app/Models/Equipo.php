@@ -38,6 +38,7 @@ class Equipo extends Model
     protected $fillable = [
         'recepcion_id',
         'cliente_id',
+        'almacen_id',
         'nombre',
         'tipo',
         'marca',
@@ -57,6 +58,12 @@ class Equipo extends Model
         'partes_faltantes',
         'observaciones',
     ];
+
+    // Relación con Almacén
+    public function almacen()
+    {
+        return $this->belongsTo(Almacen::class);
+    }
 
     // Relación con Cliente
     public function cliente()

@@ -1,0 +1,331 @@
+/* ===== RESPONSIVE GLOBAL STYLES - SANTA ANA THEME ===== */
+
+/* Variables CSS - Tema Rojo, Blanco y Negro */
+:root {
+    --primary-color: #dc2626;
+    --secondary-color: #1f2937;
+    --success-color: #dc2626;
+    --danger-color: #dc2626;
+    --warning-color: #dc2626;
+    --info-color: #374151;
+    --light-color: #ffffff;
+    --dark-color: #111827;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(220, 38, 38, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Reset y Base */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9fafb;
+    line-height: 1.6;
+    color: var(--dark-color);
+}
+
+/* ===== LAYOUT RESPONSIVE ===== */
+
+/* Container principal */
+.main-content {
+    padding: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f9fafb;
+}
+
+/* Grid responsive para tarjetas */
+.responsive-grid {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* ===== TARJETAS OPTIMIZADAS - TEMA SANTA ANA ===== */
+.card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(31, 41, 55, 0.1);
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: var(--transition);
+    border-left: 4px solid var(--primary-color);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.15);
+}
+
+/* Tarjetas de estadísticas más compactas */
+.card-statistic-1 {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(31, 41, 55, 0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    min-height: 80px;
+    transition: var(--transition);
+    border-left: 4px solid var(--primary-color);
+}
+
+.card-statistic-1:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.15);
+}
+
+.card-statistic-1 .card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+    color: white;
+}
+
+.card-statistic-1 .card-wrap {
+    flex: 1;
+}
+
+.card-statistic-1 .card-header h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.card-statistic-1 .card-body {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Móviles (hasta 768px) */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+        background-color: #f9fafb;
+    }
+    
+    /* Grid de 1 columna en móvil */
+    .responsive-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    /* Tarjetas más compactas */
+    .card-statistic-1 {
+        padding: 12px;
+        min-height: 70px;
+    }
+    
+    .card-statistic-1 .card-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+    }
+    
+    .card-statistic-1 .card-body {
+        font-size: 20px;
+    }
+    
+    .card-statistic-1 .card-header h4 {
+        font-size: 12px;
+    }
+    
+    /* Tablas responsive */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table {
+        min-width: 600px;
+    }
+    
+    /* Botones más grandes para touch */
+    .btn {
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: var(--border-radius);
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    /* Formularios responsive */
+    .form-control {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: var(--border-radius);
+        border: 2px solid #e5e7eb;
+        width: 100%;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
+}
+
+/* Tablets (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .responsive-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .card-statistic-1 {
+        padding: 15px;
+    }
+}
+
+/* Desktop (1025px+) */
+@media (min-width: 1025px) {
+    .responsive-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+/* ===== NAVEGACIÓN RESPONSIVE - TEMA SANTA ANA ===== */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%);
+    box-shadow: 0 2px 10px rgba(220, 38, 38, 0.2);
+    padding: 10px 15px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+/* ===== UTILIDADES RESPONSIVE ===== */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 1.5rem; }
+
+/* ===== COLORES DE BOTONES - TEMA SANTA ANA ===== */
+.btn-primary { 
+    background: linear-gradient(135deg, var(--primary-color) 0%, #b91c1c 100%);
+    color: white;
+    border: none;
+}
+.btn-success { 
+    background: linear-gradient(135deg, var(--primary-color) 0%, #b91c1c 100%);
+    color: white;
+    border: none;
+}
+.btn-danger { 
+    background: linear-gradient(135deg, var(--primary-color) 0%, #991b1b 100%);
+    color: white;
+    border: none;
+}
+.btn-warning { 
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-color) 100%);
+    color: white;
+    border: none;
+}
+.btn-info { 
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-color) 100%);
+    color: white;
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+/* ===== COLORES DE ICONOS ===== */
+.bg-primary { background: linear-gradient(135deg, var(--primary-color) 0%, #b91c1c 100%); }
+.bg-success { background: linear-gradient(135deg, var(--primary-color) 0%, #b91c1c 100%); }
+.bg-danger { background: linear-gradient(135deg, var(--primary-color) 0%, #991b1b 100%); }
+.bg-warning { background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-color) 100%); }
+.bg-info { background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-color) 100%); }
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ===== TABLAS TEMA SANTA ANA ===== */
+.table {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(31, 41, 55, 0.1);
+}
+
+.table thead {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #b91c1c 100%);
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(220, 38, 38, 0.05);
+}
+
+/* ===== ALERTAS TEMA SANTA ANA ===== */
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #b91c1c 100%);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+    color: white;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-color) 100%);
+    color: white;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #374151 100%);
+    color: white;
+}

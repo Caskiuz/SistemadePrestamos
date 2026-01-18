@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>HC SERVICIOS INDUSTRIAL</title>
+    <title>PRÉSTAMOS SANTA ANA</title>
     <link rel="icon" href="{{ asset('img/logoICO.ico') }}" type="image/x-icon">
 
+    <!-- CSS Responsive Global -->
+    <link rel="stylesheet" href="{{ asset('css/responsive-global.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/mobile-components.css') }}">
+    
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('dist/assets/modules/bootstrap/css/bootstrap.min.css') }}">
     <!-- FontAwesome 4.4.0 igual que YoPresto -->
@@ -40,23 +44,97 @@
     <link rel="stylesheet" href="{{ asset('css/yopresto-sidebar.css') }}">
     <!-- YoPresto Global CSS -->
     <link rel="stylesheet" href="{{ asset('css/yopresto-global.css') }}">
-    <!-- Start GA -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-94034622-3');
-    </script>
-    <!-- /END GA -->
+    <!-- Sidebar Override CSS -->
+    <link rel="stylesheet" href="{{ asset('css/sidebar-override.css') }}">
+    <!-- Reportes Responsive CSS -->
+    <link rel="stylesheet" href="{{ asset('css/reportes-responsive.css') }}">
+    
+    <style>
+    /* Mobile-first responsive navbar */
+    .navbar-yopresto {
+        background: linear-gradient(135deg, #ffffff 0%, #dc2626 50%, #111827 100%);
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(220, 38, 38, 0.2);
+        border-bottom: 2px solid #dc2626;
+    }
+    
+    .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 4px;
+        transition: background 0.3s;
+    }
+    
+    .menu-toggle:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    /* Mobile styles */
+    @media (max-width: 768px) {
+        .menu-toggle {
+            display: block;
+        }
+        
+        .side-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            height: calc(100vh - 70px);
+            z-index: 999;
+            overflow-y: auto;
+            background-color: #ffffff;
+        }
+        
+        .side-menu.active {
+            transform: translateX(0);
+        }
+        
+        .main-content {
+            margin-left: 0 !important;
+            padding: 10px;
+            margin-top: 70px;
+        }
+        
+        .navbar-user .user-name {
+            display: none;
+        }
+    }
+    
+    /* Tablet styles */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .main-content {
+            padding: 15px;
+        }
+    }
+    </style>
 </head>
 
 <body>
     <!-- Navbar YoPresto -->
     <nav class="navbar-yopresto">
-        <div class="navbar-brand">
-            <img src="{{ asset('clientes-yo-presto/logo-white.png') }}" alt="YoPresto" style="height: 30px;">
+        <div class="d-flex align-items-center">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="navbar-brand ml-2">
+                <img src="{{ asset('images/prestamos-santana-neon.svg') }}" alt="Préstamos Santa Ana" style="height: 40px;">
+            </div>
         </div>
         <div class="navbar-user">
             <span class="user-icon"><i class="fa fa-user"></i></span>
@@ -66,11 +144,6 @@
             </a>
         </div>
     </nav>
-
-    <!-- Mobile Menu Toggle -->
-    <button class="menu-toggle" onclick="toggleMenu()">
-        <i class="fa fa-bars"></i>
-    </button>
 
     <div id="app">
         <div class="main-wrapper main-wrapper-1">
@@ -102,6 +175,14 @@
             if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
                 sidebar.classList.remove('active');
             }
+        }
+    });
+    
+    // Responsive behavior on window resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.querySelector('.side-menu');
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('active');
         }
     });
     </script>

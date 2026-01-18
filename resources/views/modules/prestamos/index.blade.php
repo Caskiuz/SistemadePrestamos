@@ -113,6 +113,80 @@
 .input-group .input-group-append .btn {
     border-left: none;
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+    
+    .nav-tabs li {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .nav-tabs li a {
+        padding: 8px 4px;
+        font-size: 12px;
+        text-align: center;
+    }
+    
+    .list-group-item {
+        padding: 15px;
+    }
+    
+    .list-group-item .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .list-group-item h5 {
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+    
+    .list-group-item .badge {
+        margin-top: 5px;
+        align-self: flex-end;
+    }
+    
+    .list-group-item p {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .list-group-item small {
+        font-size: 12px;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-tabs li a {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+    
+    .list-group-item h5 small {
+        display: block;
+        margin-left: 0 !important;
+        margin-top: 3px;
+    }
+    
+    .list-group-item p strong {
+        display: block;
+        margin-bottom: 2px;
+    }
+    
+    .list-group-item p .ml-3 {
+        margin-left: 0 !important;
+    }
+}
 </style>
 @endpush
 

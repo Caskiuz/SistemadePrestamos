@@ -33,22 +33,23 @@ class HistorialController extends Controller
                 $statusLabel = 'vendidas';
         }
 
-        // Búsqueda
+        // Búsqueda segura
         if ($q) {
             $query->where(function($query) use ($q) {
-                $query->where('nombre', 'like', "%{$q}%")
-                      ->orWhere('descripcion', 'like', "%{$q}%")
-                      ->orWhere('folio', 'like', "%{$q}%");
+                $searchTerm = '%' . addslashes($q) . '%';
+                $query->where('nombre', 'like', $searchTerm)
+                      ->orWhere('descripcion', 'like', $searchTerm)
+                      ->orWhere('numero_serie', 'like', $searchTerm);
             });
         }
 
-        $prendas = $query->orderBy('updated_at', 'desc')->get()->map(function($prenda) use ($status) {
+        $prendas = $query->with('almacen')->orderBy('updated_at', 'desc')->get()->map(function($prenda) use ($status) {
             return [
-                'folio' => $prenda->folio ?? 'N/A',
-                'descripcion' => $prenda->nombre . ' - ' . $prenda->descripcion,
+                'folio' => $prenda->numero_serie ?? $prenda->id,
+                'descripcion' => $prenda->nombre . ($prenda->descripcion ? ' - ' . $prenda->descripcion : ''),
                 'fecha_formateada' => $prenda->updated_at->format('d M Y'),
                 'hora_formateada' => $prenda->updated_at->format('h:i A'),
-                'monto_formateado' => '$' . number_format($prenda->precio_venta ?? $prenda->precio, 2),
+                'monto_formateado' => '$' . number_format($prenda->precio_venta ?? $prenda->valuacion ?? 0, 2),
                 'tipo_label' => ucfirst($status === 'sold' ? 'Vendido' : ($status === 'settled' ? 'Liquidado' : 'Cancelado')),
                 'color' => $status === 'sold' ? '#4CAF50' : ($status === 'settled' ? '#2196F3' : '#F44336'),
             ];

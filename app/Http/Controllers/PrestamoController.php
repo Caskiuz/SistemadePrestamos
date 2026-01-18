@@ -10,6 +10,7 @@ use App\Models\Almacen;
 use App\Models\Interes;
 use App\Models\Pago;
 use App\Models\PrestamoOperacion;
+use App\Helpers\FotoHelper;
 
 class PrestamoController extends Controller
 {
@@ -48,13 +49,13 @@ class PrestamoController extends Controller
     public function store(Request $request) {
         $validated = $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
+            'almacen_id' => 'required|exists:almacenes,id',
             'fecha_prestamo' => 'required|date',
             'prendas' => 'required|array|min:1',
         ]);
 
-        $almacen = Almacen::first();
-        $interes = $request->interes_id ? Interes::find($request->interes_id) : null;
-        $interes_mensual = $interes ? $interes->porcentaje : 0;
+        $almacen = Almacen::findOrFail($validated['almacen_id']);
+        $interes_mensual = 10; // Interés fijo del 10%
         
         // Calcular monto total de valuaciones
         $monto_total = 0;
@@ -68,8 +69,8 @@ class PrestamoController extends Controller
 
         $prestamo = Prestamo::create([
             'cliente_id' => $validated['cliente_id'],
-            'almacen_id' => $almacen->id,
-            'interes_id' => $request->interes_id,
+            'almacen_id' => $validated['almacen_id'],
+            'interes_id' => null, // No usar categorías de interés
             'monto' => $monto_total,
             'interes_mensual' => $interes_mensual,
             'monto_total' => $monto_con_interes,
@@ -100,7 +101,7 @@ class PrestamoController extends Controller
             'detalles' => 'Préstamo #' . $prestamo->id . ' - ' . $prestamo->cliente->nombre,
             'monto' => $monto_total,
             'tipo_movimiento' => 'salida',
-            'branch_id' => $almacen->id
+            'branch_id' => $validated['almacen_id']
         ]);
 
         // Registrar intereses generados
@@ -127,14 +128,26 @@ class PrestamoController extends Controller
                 'avaluo' => $prendaData['avaluo'] ?? null,
                 'valuacion' => $prendaData['valuacion'],
                 'estado' => 'empeñado',
-                'almacen_id' => $almacen->id,
+                'almacen_id' => $validated['almacen_id'],
             ]);
+            
+            // Subir fotos si existen
+            if (isset($prendaData['fotos']) && is_array($prendaData['fotos'])) {
+                $rutasFotos = FotoHelper::subirMultiplesFotos($prendaData['fotos'], 'equipos_fotos');
+                
+                foreach ($rutasFotos as $ruta) {
+                    \App\Models\FotoEquipo::create([
+                        'equipo_id' => $producto->id,
+                        'ruta' => $ruta,
+                    ]);
+                }
+            }
             
             $prestamo->productos()->attach($producto->id, ['valuacion' => $prendaData['valuacion']]);
         }
 
         return redirect()->route('prestamos.show', $prestamo->id)
-            ->with('success', 'Préstamo registrado exitosamente');
+            ->with('success', 'Préstamo registrado exitosamente con fotos');
     }
 
     public function show($id) {

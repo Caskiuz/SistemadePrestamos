@@ -1,0 +1,297 @@
+/* RESPONSIVE GLOBAL PARA REPORTES - PRÉSTAMOS SANTA ANA */
+
+/* Base responsive styles */
+.cashflow-page,
+.report-page {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Headers responsive */
+.yp-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.yp-header h1 {
+    font-size: 20px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.yp-header h2 {
+    font-size: 16px;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Toolbar responsive */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tool-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 150px;
+}
+
+.group-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+
+.save-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+/* Tables responsive */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table {
+    margin-bottom: 0;
+    min-width: 600px;
+}
+
+.table th,
+.table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table .total {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Cards responsive */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* Navigation tabs responsive */
+.nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.nav-tabs li {
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-tabs li a {
+    display: block;
+    padding: 12px 8px;
+    text-align: center;
+    color: #6c757d;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs li.active a {
+    color: #dc2626;
+    border-bottom-color: #dc2626;
+    font-weight: 600;
+}
+
+.nav-tabs li a:hover {
+    color: #dc2626;
+    background-color: #f8f9fa;
+}
+
+/* Search and filters responsive */
+.search-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.search-filters .form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Buttons responsive */
+.btn-group-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-responsive {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+/* MOBILE STYLES */
+@media (max-width: 768px) {
+    .yp-header {
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .yp-header h1 {
+        font-size: 18px;
+    }
+    
+    .yp-header h2 {
+        font-size: 14px;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .tool-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .save-buttons {
+        width: 100%;
+        justify-content: stretch;
+    }
+    
+    .save-buttons .btn {
+        flex: 1;
+    }
+    
+    .table-responsive {
+        font-size: 12px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+    
+    .nav-tabs li a {
+        padding: 10px 4px;
+        font-size: 12px;
+    }
+    
+    .search-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .search-filters .form-group {
+        min-width: auto;
+    }
+    
+    .btn-group-responsive {
+        flex-direction: column;
+    }
+    
+    .btn-responsive {
+        min-width: auto;
+    }
+}
+
+/* SMALL MOBILE STYLES */
+@media (max-width: 480px) {
+    .yp-header {
+        padding: 8px 10px;
+    }
+    
+    .yp-header h1 {
+        font-size: 16px;
+    }
+    
+    .yp-header h2 {
+        font-size: 12px;
+    }
+    
+    .toolbar {
+        padding: 10px;
+    }
+    
+    .table {
+        font-size: 11px;
+        min-width: 500px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+    
+    .nav-tabs li a {
+        padding: 8px 2px;
+        font-size: 11px;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+}
+
+/* PRINT STYLES */
+@media print {
+    .toolbar,
+    .save-buttons,
+    .btn {
+        display: none !important;
+    }
+    
+    .yp-header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 20px;
+    }
+    
+    .table {
+        font-size: 12px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 4px;
+        border: 1px solid #000;
+    }
+}

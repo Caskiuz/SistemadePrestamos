@@ -51,6 +51,14 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     @if($prestamo->estado === 'activo')
+                    <!-- Botón Renovar -->
+                    <button onclick="mostrarModalRenovacion()" class="btn btn-sm btn-info" title="Renovar préstamo">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                    <!-- Botón Aplicar Comisión -->
+                    <button onclick="mostrarModalComision()" class="btn btn-sm btn-warning" title="Aplicar comisión">
+                        <i class="fa fa-percent"></i>
+                    </button>
                     <button onclick="if(confirm('¿Aplicar descuento?')) document.getElementById('formDescuento').style.display='block'" class="btn btn-sm btn-warning" title="Aplicar descuento">
                         <i class="fa fa-minus-circle"></i>
                     </button>
@@ -66,6 +74,11 @@
                             <i class="fa fa-tag"></i>
                         </button>
                     </form>
+                    @elseif($prestamo->estado === 'expirado')
+                    <!-- Botón Crear Subasta -->
+                    <a href="{{ route('subastas.create', $prestamo->id) }}" class="btn btn-sm btn-primary" title="Crear subasta">
+                        <i class="fa fa-gavel"></i> Subastar
+                    </a>
                     @endif
                     <a href="{{ route('prestamos.pdf', $prestamo->id) }}" class="btn btn-sm btn-primary" title="Boleta">
                         <i class="fa fa-file-text"></i>
@@ -198,6 +211,53 @@
     </div>
 </div>
 
+<!-- Modal de Renovación -->
+<div id="modalRenovacion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; min-width: 400px;">
+        <h4>Renovar Préstamo</h4>
+        <form action="{{ route('renovaciones.renovar', $prestamo->id) }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label>Intereses Pagados</label>
+                <input type="number" name="intereses_pagados" step="0.01" class="form-control" value="{{ $prestamo->monto_total - $prestamo->monto }}" required>
+            </div>
+            <div class="form-group">
+                <label>Días de Extensión</label>
+                <input type="number" name="dias_extension" class="form-control" value="30" min="1" max="365" required>
+            </div>
+            <div class="form-group">
+                <label>Observaciones</label>
+                <textarea name="observaciones" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Renovar</button>
+            <button type="button" onclick="cerrarModalRenovacion()" class="btn btn-secondary">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Comisión -->
+<div id="modalComision" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; min-width: 400px;">
+        <h4>Aplicar Comisión</h4>
+        <form action="{{ route('tarifas.aplicar-comision', $prestamo->id) }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label>Tipo de Comisión</label>
+                <select name="tarifa_id" class="form-control" required>
+                    <option value="">Seleccionar...</option>
+                    <!-- Aquí se cargarían las tarifas disponibles -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Concepto</label>
+                <input type="text" name="concepto" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Aplicar</button>
+            <button type="button" onclick="cerrarModalComision()" class="btn btn-secondary">Cancelar</button>
+        </form>
+    </div>
+</div>
+
 <script>
 document.getElementById('mainActionBtn').addEventListener('click', function() {
     const subActions = document.getElementById('subActions');
@@ -232,6 +292,22 @@ function mostrarModalPago(tipo) {
 
 function cerrarModalPago() {
     document.getElementById('modalPago').style.display = 'none';
+}
+
+function mostrarModalRenovacion() {
+    document.getElementById('modalRenovacion').style.display = 'block';
+}
+
+function cerrarModalRenovacion() {
+    document.getElementById('modalRenovacion').style.display = 'none';
+}
+
+function mostrarModalComision() {
+    document.getElementById('modalComision').style.display = 'block';
+}
+
+function cerrarModalComision() {
+    document.getElementById('modalComision').style.display = 'none';
 }
 </script>
 @endsection

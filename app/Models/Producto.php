@@ -39,4 +39,19 @@ class Producto extends Model
                     ->withPivot('valuacion')
                     ->withTimestamps();
     }
+
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
+
+    public function compras()
+    {
+        return $this->hasMany(Compra::class);
+    }
+
+    public function apartados()
+    {
+        return $this->hasMany(Apartado::class);
+    }
 }

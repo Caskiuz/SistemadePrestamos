@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
             return base_path('public_html');
         });
         
-        // CONFIGURACIÓN HTTPS PARA RENDER
-        if (env('APP_ENV') === 'production') {
+        // CONFIGURACIÓN HTTPS PARA RENDER Y TÚNELES
+        if (env('APP_ENV') === 'production' || request()->isSecure() || request()->header('X-Forwarded-Proto') === 'https') {
             URL::forceScheme('https');
             $this->app['request']->server->set('HTTPS', true);
         }

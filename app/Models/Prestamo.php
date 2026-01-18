@@ -64,6 +64,41 @@ class Prestamo extends Model
         return $this->hasMany(PrestamoOperacion::class)->orderBy('created_at', 'asc');
     }
 
+    public function notificaciones()
+    {
+        return $this->hasMany(Notificacion::class);
+    }
+
+    public function renovaciones()
+    {
+        return $this->hasMany(Renovacion::class, 'prestamo_original_id');
+    }
+
+    public function comisiones()
+    {
+        return $this->hasMany(Comision::class);
+    }
+
+    public function subasta()
+    {
+        return $this->hasOne(Subasta::class);
+    }
+
+    public function avales()
+    {
+        return $this->hasMany(Aval::class);
+    }
+
+    public function seguros()
+    {
+        return $this->hasMany(SeguroPrenda::class);
+    }
+
+    public function garantiasCruzadas()
+    {
+        return $this->hasMany(GarantiaCruzada::class, 'prestamo_principal_id');
+    }
+
     // Generar folio automático
     protected static function boot()
     {

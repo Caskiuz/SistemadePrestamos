@@ -32,39 +32,97 @@
     </section>
     
     <section class="content">
-        <table class="table table-striped card">
-            <thead>
-                <tr>
-                    <th>Stock</th>
-                    <th>Fecha de venta</th>
-                    <th>Cliente</th>
-                    <th>Prenda</th>
-                    <th class="text-right">Precio de venta</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $totalVenta = 0; @endphp
-                @forelse($ventas as $venta)
-                    @php $totalVenta += $venta->monto; @endphp
+        <div class="table-responsive">
+            <table class="table table-striped card">
+                <thead>
                     <tr>
-                        <td>{{ $venta->producto->id }}</td>
-                        <td>{{ \Carbon\Carbon::parse($venta->fecha_venta)->format('d/m/Y') }}</td>
-                        <td>{{ $venta->cliente->nombre }}</td>
-                        <td>{{ $venta->producto->nombre }}</td>
-                        <td class="text-right">${{ number_format($venta->monto, 2) }}</td>
+                        <th>Stock</th>
+                        <th>Fecha de venta</th>
+                        <th>Cliente</th>
+                        <th>Prenda</th>
+                        <th class="text-right">Precio de venta</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="text-center">No hay ventas registradas</td>
+                </thead>
+                <tbody>
+                    @php $totalVenta = 0; @endphp
+                    @forelse($ventas as $venta)
+                        @php $totalVenta += $venta->monto; @endphp
+                        <tr>
+                            <td>{{ $venta->producto->id }}</td>
+                            <td>{{ \Carbon\Carbon::parse($venta->fecha_venta)->format('d/m/Y') }}</td>
+                            <td>{{ $venta->cliente->nombre }}</td>
+                            <td>{{ $venta->producto->nombre }}</td>
+                            <td class="text-right">${{ number_format($venta->monto, 2) }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No hay ventas registradas</td>
+                        </tr>
+                    @endforelse
+                    <tr class="total">
+                        <td>Totales</td>
+                        <td colspan="3">{{ $ventas->count() }}</td>
+                        <td class="text-right">${{ number_format($totalVenta, 2) }}</td>
                     </tr>
-                @endforelse
-                <tr class="total">
-                    <td>Totales</td>
-                    <td colspan="3">{{ $ventas->count() }}</td>
-                    <td class="text-right">${{ number_format($totalVenta, 2) }}</td>
-                </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </section>
 </div>
+
+<style>
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .tool-group {
+        width: 100%;
+    }
+    
+    .save-buttons {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .save-buttons .btn {
+        flex: 1;
+    }
+    
+    .table-responsive {
+        font-size: 12px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 4px;
+        white-space: nowrap;
+    }
+    
+    .yp-header h1 {
+        font-size: 18px;
+    }
+    
+    .yp-header h2 {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .table {
+        font-size: 11px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 6px 2px;
+    }
+    
+    .toolbar {
+        padding: 10px;
+    }
+}
+</style>
 @endsection

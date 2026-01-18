@@ -1,42 +1,208 @@
 @extends('layouts.main')
-@section('contenido')
-<div class="section-header bg-primary text-white rounded shadow-sm py-3 px-4 mb-4 align-items-center d-flex justify-content-between">
-    <h1 class="mb-0" style="font-weight: 700; letter-spacing: 1px;"><i class="fas fa-cogs mr-2"></i>Configuración avanzada</h1>
-</div>
-<div class="section-body">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light border-bottom-0">
-                    <h4 class="mb-0" style="font-size:21px; color:#151414"><i class="fas fa-sliders-h mr-2"></i>Configuración de empresa, sucursal, empleados, intereses, recibos, región, roles y seguridad</h4>
+
+@section('content')
+<div class="main-content fade-in">
+    <section class="section">
+        <div class="section-header">
+            <h1>Panel de Configuración</h1>
+            <div class="section-header-breadcrumb">
+                <span class="badge badge-primary">Solo Gerentes</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Configuración de Empresa -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-primary">
+                        <i class="fa fa-building"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Empresa</h4>
+                        </div>
+                        <div class="card-body">
+                            Información corporativa
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.empresa') }}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.empresa') }}" class="btn btn-block btn-lg btn-info shadow-sm"><i class="fas fa-building mr-2"></i> Empresa</a>
+            </div>
+
+            <!-- Configuración de Préstamos -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-success">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Préstamos</h4>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.sucursal') }}" class="btn btn-block btn-lg btn-primary shadow-sm"><i class="fas fa-warehouse mr-2"></i> Sucursal</a>
+                        <div class="card-body">
+                            Tasas e intereses
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.empleados') }}" class="btn btn-block btn-lg btn-success shadow-sm"><i class="fas fa-user-tie mr-2"></i> Empleados</a>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.prestamos') }}" class="btn btn-success btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.intereses') }}" class="btn btn-block btn-lg btn-warning shadow-sm"><i class="fas fa-percent mr-2"></i> Intereses</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Tarifas -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-warning">
+                        <i class="fa fa-percent"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Tarifas</h4>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.recibos') }}" class="btn btn-block btn-lg btn-secondary shadow-sm"><i class="fas fa-file-invoice mr-2"></i> Recibos</a>
+                        <div class="card-body">
+                            Comisiones y cargos
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.region') }}" class="btn btn-block btn-lg btn-info shadow-sm"><i class="fas fa-globe-americas mr-2"></i> Región</a>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.tarifas') }}" class="btn btn-warning btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('configuracion.roles') }}" class="btn btn-block btn-lg btn-dark shadow-sm"><i class="fas fa-user-shield mr-2"></i> Roles y Seguridad</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Notificaciones -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-info">
+                        <i class="fa fa-bell"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Notificaciones</h4>
+                        </div>
+                        <div class="card-body">
+                            Alertas y avisos
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.notificaciones') }}" class="btn btn-info btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Sucursales -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-secondary">
+                        <i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Sucursales</h4>
+                        </div>
+                        <div class="card-body">
+                            Almacenes y ubicaciones
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ route('almacenes.index') }}" class="btn btn-secondary btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración del Sistema -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-dark">
+                        <i class="fa fa-server"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Sistema</h4>
+                        </div>
+                        <div class="card-body">
+                            Configuración general
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.sistema') }}" class="btn btn-dark btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Seguridad -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-danger">
+                        <i class="fa fa-shield"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Seguridad</h4>
+                        </div>
+                        <div class="card-body">
+                            Acceso y auditoría
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.seguridad') }}" class="btn btn-danger btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración de Reportes -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-purple">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Reportes</h4>
+                        </div>
+                        <div class="card-body">
+                            Formatos y automatización
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ route('configuracion.reportes') }}" class="btn btn-purple btn-sm">
+                                <i class="fa fa-cog"></i> Configurar
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
+<style>
+.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: #fff;
+}
+.btn-purple:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+    color: #fff;
+}
+.bg-purple {
+    background-color: #6f42c1 !important;
+}
+</style>
 @endsection

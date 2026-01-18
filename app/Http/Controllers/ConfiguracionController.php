@@ -3,47 +3,81 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Configuracion;
 use App\Models\Almacen;
-use App\Models\Empleado;
-use App\Models\Interes;
+use App\Models\User;
 
 class ConfiguracionController extends Controller
 {
-    public function index() {
+    private function verificarGerente()
+    {
+        if (!auth()->check() || auth()->user()->rol !== 'Gerente') {
+            abort(403, 'Acceso denegado. Solo gerentes pueden acceder a la configuración.');
+        }
+    }
+
+    public function index()
+    {
+        $this->verificarGerente();
         return view('modules.configuracion.index');
     }
 
-    public function empresa() {
-        $almacenes = Almacen::all();
-        $empleados = Empleado::all();
-        $intereses = Interes::all();
-        return view('modules.configuracion.empresa', compact('almacenes', 'empleados', 'intereses'));
+    public function empresa()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'empresa')->get()->keyBy('clave');
+        return view('modules.configuracion.empresa', compact('configuraciones'));
     }
 
-    public function sucursal() {
-        $almacenes = Almacen::all();
-        return view('modules.configuracion.sucursal', compact('almacenes'));
+    public function prestamos()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'prestamos')->get()->keyBy('clave');
+        return view('modules.configuracion.prestamos', compact('configuraciones'));
     }
 
-    public function empleados() {
-        $empleados = Empleado::all();
-        return view('modules.configuracion.empleados', compact('empleados'));
+    public function tarifas()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'tarifas')->get()->keyBy('clave');
+        return view('modules.configuracion.tarifas', compact('configuraciones'));
     }
 
-    public function intereses() {
-        $intereses = Interes::all();
-        return view('modules.configuracion.intereses', compact('intereses'));
+    public function notificaciones()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'notificaciones')->get()->keyBy('clave');
+        return view('modules.configuracion.notificaciones', compact('configuraciones'));
     }
 
-    public function recibos() {
-        return view('modules.configuracion.recibos');
+    public function sistema()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'sistema')->get()->keyBy('clave');
+        return view('modules.configuracion.sistema', compact('configuraciones'));
     }
 
-    public function region() {
-        return view('modules.configuracion.region');
+    public function seguridad()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'seguridad')->get()->keyBy('clave');
+        return view('modules.configuracion.seguridad', compact('configuraciones'));
     }
 
-    public function roles() {
-        return view('modules.configuracion.roles');
+    public function reportes()
+    {
+        $this->verificarGerente();
+        $configuraciones = Configuracion::where('categoria', 'reportes')->get()->keyBy('clave');
+        return view('modules.configuracion.reportes', compact('configuraciones'));
+    }
+
+    public function actualizar(Request $request)
+    {
+        $this->verificarGerente();
+        foreach ($request->except(['_token', '_method']) as $clave => $valor) {
+            Configuracion::where('clave', $clave)->update(['valor' => $valor]);
+        }
+
+        return redirect()->back()->with('success', 'Configuración actualizada exitosamente');
     }
 }

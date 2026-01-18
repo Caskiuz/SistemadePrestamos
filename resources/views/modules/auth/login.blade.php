@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
         <div class="login-brand">
-          <img src="{{ asset('img/logo.jpeg') }}" alt="HC Servicios Logo" width="300">
+          <img src="{{ asset('images/santa-ana-logo.jpeg') }}" alt="Préstamos Santa Ana Logo" width="200" style="border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);">
         </div>
         <div class="card card-secondary">
           <div class="card-header">
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="simple-footer">
-          Copyright &copy; Design By Software Production
+          Copyright &copy; Préstamos Santa Ana - Sistema de Gestión
         </div>
       </div>
     </div>

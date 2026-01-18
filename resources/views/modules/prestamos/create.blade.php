@@ -16,23 +16,21 @@
         <input type="hidden" name="cliente_id" value="{{ $cliente_id ?? '' }}">
         
         <div style="max-width: 800px; margin: 0 auto;">
-            <!-- Categoría -->
+            <!-- Selector de Almacén -->
             <div style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                    <label style="color: white;">Categoría</label>
-                    <a href="#" onclick="alert('Funcionalidad de editar categorías en desarrollo'); return false;" style="color: #2196f3; text-decoration: none; font-size: 14px;">Editar categorías</a>
-                </div>
-                <select name="interes_id" id="interes_id" class="form-control" onchange="actualizarResumen()" style="background: #2c2c2c; color: white; border: 1px solid #444; padding: 10px;">
-                    @foreach($intereses as $interes)
-                        <option value="{{ $interes->id }}" data-porcentaje="{{ $interes->porcentaje }}" {{ $interes->nombre == 'General' || $interes->porcentaje == 10 ? 'selected' : '' }}>{{ $interes->nombre }}</option>
-                    @endforeach
+                <label style="color: white; display: block; margin-bottom: 5px;">Almacén</label>
+                <select name="almacen_id" id="almacen_id" class="form-control" style="background: #2c2c2c; color: white; border: 1px solid #444; padding: 10px;" required>
+                    <option value="">Seleccione un almacén...</option>
+                    <option value="1">Santa Ana - Paurito (Av Paurito frente a la línea 59 roja)</option>
+                    <option value="2">Santa Ana - Las Américas (Av Las Américas a lado del mercado paraíso)</option>
+                    <option value="3">Santa Ana - El Fuerte (Av El Fuerte diagonal mercado el fuerte)</option>
                 </select>
             </div>
 
             <!-- Resumen -->
             <div style="margin-bottom: 20px; padding: 15px; background: #2c2c2c; border-radius: 4px;">
                 <div style="color: #2196f3; font-weight: bold; margin-bottom: 5px;">Resumen</div>
-                <div id="resumenInteres" style="color: white; font-size: 14px;"></div>
+                <div id="resumenInteres" style="color: white; font-size: 14px;">10% de interés mensual durante 1 mes</div>
             </div>
 
             <!-- Fecha -->
@@ -135,6 +133,31 @@ function cambiarTipoPrenda(id, tipo) {
                 <label style="color: white; display: block; margin-bottom: 5px;">Observaciones</label>
                 <textarea name="prendas[${id}][observaciones]" placeholder="Estado actual, marcas de deterioro, defectos." class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px; min-height: 80px;"></textarea>
             </div>
+            
+            <!-- Sistema de subida de fotos -->
+            <div style="margin-bottom: 15px;">
+                <label style="color: white; display: block; margin-bottom: 10px;">Fotos del Artículo</label>
+                <div class="foto-upload-area" id="fotoUploadArea${id}" style="border: 2px dashed #dc2626; border-radius: 8px; padding: 30px; text-align: center; background: #2c2c2c; cursor: pointer; margin-bottom: 10px;">
+                    <i class="fa fa-camera" style="font-size: 36px; color: #dc2626; margin-bottom: 10px;"></i>
+                    <div style="color: white; margin-bottom: 5px;">Subir Fotos</div>
+                    <div style="color: #999; font-size: 12px;">Desde PC, galería o cámara</div>
+                    <input type="file" id="fotoInput${id}" name="prendas[${id}][fotos][]" multiple accept="image/*" capture="environment" style="display: none;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button type="button" onclick="document.getElementById('fotoInput${id}').click();" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-folder-open"></i> Galería
+                    </button>
+                    <button type="button" onclick="abrirCamara(${id})" style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-camera"></i> Cámara
+                    </button>
+                </div>
+                <div class="fotos-preview" id="fotosPreview${id}" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;"></div>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Avalúo</label>
+                <input type="number" name="prendas[${id}][avaluo]" step="0.01" placeholder="Valor comercial del artículo" class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;">
+            </div>
             <div style="margin-bottom: 10px;">
                 <label style="color: white; display: block; margin-bottom: 5px;">Valuación</label>
                 <input type="number" name="prendas[${id}][valuacion]" step="0.01" class="form-control valuacion" onchange="calcularTotal()" placeholder="Monto a prestar por esta prenda" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;" required>
@@ -160,6 +183,27 @@ function cambiarTipoPrenda(id, tipo) {
                 <label style="color: white; display: block; margin-bottom: 5px;">Observaciones</label>
                 <textarea name="prendas[${id}][observaciones]" placeholder="Estado actual, marcas de deterioro, defectos." class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px; min-height: 80px;"></textarea>
             </div>
+            
+            <!-- Sistema de subida de fotos -->
+            <div style="margin-bottom: 15px;">
+                <label style="color: white; display: block; margin-bottom: 10px;">Fotos de la Joya</label>
+                <div class="foto-upload-area" id="fotoUploadArea${id}" style="border: 2px dashed #dc2626; border-radius: 8px; padding: 30px; text-align: center; background: #2c2c2c; cursor: pointer; margin-bottom: 10px;">
+                    <i class="fa fa-camera" style="font-size: 36px; color: #dc2626; margin-bottom: 10px;"></i>
+                    <div style="color: white; margin-bottom: 5px;">Subir Fotos</div>
+                    <div style="color: #999; font-size: 12px;">Desde PC, galería o cámara</div>
+                    <input type="file" id="fotoInput${id}" name="prendas[${id}][fotos][]" multiple accept="image/*" capture="environment" style="display: none;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button type="button" onclick="document.getElementById('fotoInput${id}').click();" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-folder-open"></i> Galería
+                    </button>
+                    <button type="button" onclick="abrirCamara(${id})" style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-camera"></i> Cámara
+                    </button>
+                </div>
+                <div class="fotos-preview" id="fotosPreview${id}" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;"></div>
+            </div>
+            
             <div style="margin-bottom: 10px;">
                 <label style="color: white; display: block; margin-bottom: 5px;">Avalúo</label>
                 <input type="number" name="prendas[${id}][avaluo]" step="0.01" placeholder="Valor de apreciación de la prenda" class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;">
@@ -195,6 +239,27 @@ function cambiarTipoPrenda(id, tipo) {
                 <label style="color: white; display: block; margin-bottom: 5px;">Observaciones</label>
                 <textarea name="prendas[${id}][observaciones]" placeholder="Estado actual, marcas de deterioro, defectos." class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px; min-height: 80px;"></textarea>
             </div>
+            
+            <!-- Sistema de subida de fotos -->
+            <div style="margin-bottom: 15px;">
+                <label style="color: white; display: block; margin-bottom: 10px;">Fotos del Vehículo</label>
+                <div class="foto-upload-area" id="fotoUploadArea${id}" style="border: 2px dashed #dc2626; border-radius: 8px; padding: 30px; text-align: center; background: #2c2c2c; cursor: pointer; margin-bottom: 10px;">
+                    <i class="fa fa-camera" style="font-size: 36px; color: #dc2626; margin-bottom: 10px;"></i>
+                    <div style="color: white; margin-bottom: 5px;">Subir Fotos</div>
+                    <div style="color: #999; font-size: 12px;">Desde PC, galería o cámara</div>
+                    <input type="file" id="fotoInput${id}" name="prendas[${id}][fotos][]" multiple accept="image/*" capture="environment" style="display: none;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button type="button" onclick="document.getElementById('fotoInput${id}').click();" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-folder-open"></i> Galería
+                    </button>
+                    <button type="button" onclick="abrirCamara(${id})" style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-camera"></i> Cámara
+                    </button>
+                </div>
+                <div class="fotos-preview" id="fotosPreview${id}" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;"></div>
+            </div>
+            
             <div style="margin-bottom: 10px;">
                 <label style="color: white; display: block; margin-bottom: 5px;">Avalúo</label>
                 <input type="number" name="prendas[${id}][avaluo]" step="0.01" placeholder="Valor de apreciación de la prenda" class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;">
@@ -207,6 +272,11 @@ function cambiarTipoPrenda(id, tipo) {
     }
     
     camposDiv.innerHTML = html;
+    
+    // Configurar eventos de subida de fotos
+    if (tipo) {
+        configurarSubidaFotos(id);
+    }
 }
 
 function calcularTotal() {
@@ -217,9 +287,8 @@ function calcularTotal() {
     });
     document.getElementById('montoTotal').textContent = '$' + total.toFixed(2);
     
-    // Calcular interés
-    const selectInteres = document.getElementById('interes_id');
-    const porcentaje = parseFloat(selectInteres.options[selectInteres.selectedIndex].dataset.porcentaje) || 0;
+    // Calcular interés fijo del 10%
+    const porcentaje = 10;
     const interes = total * (porcentaje / 100);
     const totalConInteres = total + interes;
     
@@ -230,8 +299,7 @@ function calcularTotal() {
 }
 
 function actualizarResumen() {
-    const selectInteres = document.getElementById('interes_id');
-    const porcentaje = parseFloat(selectInteres.options[selectInteres.selectedIndex].dataset.porcentaje) || 0;
+    const porcentaje = 10; // Interés fijo del 10%
     const fechaPrestamo = document.getElementById('fecha_prestamo').value;
     
     if (fechaPrestamo) {
@@ -256,5 +324,82 @@ window.addEventListener('load', function() {
     agregarPrenda();
     actualizarResumen();
 });
+
+// Funciones para manejo de fotos
+function configurarSubidaFotos(id) {
+    const uploadArea = document.getElementById('fotoUploadArea' + id);
+    const fotoInput = document.getElementById('fotoInput' + id);
+    
+    if (!uploadArea || !fotoInput) return;
+    
+    // Click en área de upload
+    uploadArea.addEventListener('click', function() {
+        fotoInput.click();
+    });
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#991b1b';
+        uploadArea.style.backgroundColor = '#3c2c2c';
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#dc2626';
+        uploadArea.style.backgroundColor = '#2c2c2c';
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#dc2626';
+        uploadArea.style.backgroundColor = '#2c2c2c';
+        const files = e.dataTransfer.files;
+        procesarArchivos(id, files);
+    });
+    
+    // Input file change
+    fotoInput.addEventListener('change', function(e) {
+        procesarArchivos(id, e.target.files);
+    });
+}
+
+function procesarArchivos(id, files) {
+    for (let file of files) {
+        if (file.type.startsWith('image/')) {
+            mostrarPreview(id, file);
+        }
+    }
+}
+
+function mostrarPreview(id, file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById('fotosPreview' + id);
+        
+        const item = document.createElement('div');
+        item.style.cssText = 'position: relative; border-radius: 4px; overflow: hidden; background: #1e1e1e;';
+        item.innerHTML = `
+            <img src="${e.target.result}" style="width: 100%; height: 80px; object-fit: cover;">
+            <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 2px; right: 2px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center;">
+                ×
+            </button>
+        `;
+        
+        preview.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+}
+
+function abrirCamara(id) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.capture = 'environment'; // Cámara trasera en móvil
+    input.onchange = function(e) {
+        procesarArchivos(id, e.target.files);
+    };
+    input.click();
+}
 </script>
 @endsection

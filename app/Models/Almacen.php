@@ -15,4 +15,28 @@ class Almacen extends Model
         'nombre',
         'direccion',
     ];
+
+    // Relación con Equipos
+    public function equipos()
+    {
+        return $this->hasMany(Equipo::class);
+    }
+
+    // Relación con Productos
+    public function productos()
+    {
+        return $this->hasMany(Producto::class);
+    }
+
+    // Relación con Compras
+    public function compras()
+    {
+        return $this->hasMany(Compra::class);
+    }
+
+    // Relación con Ventas
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
 }

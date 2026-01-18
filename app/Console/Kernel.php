@@ -7,18 +7,27 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     */
-    protected function schedule(Schedule $schedule): void
+    protected $commands = [
+        Commands\GenerarNotificaciones::class,
+        Commands\GenerarBackup::class,
+    ];
+
+    protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Generar notificaciones diariamente a las 8:00 AM
+        $schedule->command('notificaciones:generar')
+                 ->dailyAt('08:00');
+
+        // Backup automático diario a las 2:00 AM
+        $schedule->command('backup:generar --tipo=automatico')
+                 ->dailyAt('02:00');
+
+        // Limpiar logs antiguos semanalmente
+        $schedule->command('log:clear')
+                 ->weekly();
     }
 
-    /**
-     * Register the commands for the application.
-     */
-    protected function commands(): void
+    protected function commands()
     {
         $this->load(__DIR__.'/Commands');
         require base_path('routes/console.php');
