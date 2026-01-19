@@ -1,8 +1,9 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="cashflow-page">
-    @include('reportes.cashflow.header')
+<x-mobile-header title="Flujo de Caja" backUrl="{{ route('reportes.index') }}" />
+
+<div class="mobile-content">
     @include('reportes.cashflow.toolbar')
     @include('reportes.cashflow.table')
 </div>

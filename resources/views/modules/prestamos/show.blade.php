@@ -57,13 +57,46 @@
             </div>
             @if($producto->fotos->count() > 0)
             <div class="fotos-mini">
-                @foreach($producto->fotos->take(3) as $foto)
-                    @if(file_exists(public_path($foto->ruta)))
-                    <img src="{{ asset($foto->ruta) }}" onclick="mostrarImagenCompleta('{{ asset($foto->ruta) }}', '{{ $producto->nombre }}')">
+                @php $fotosReales = 0; @endphp
+                @foreach($producto->fotos as $foto)
+                    @php
+                        $rutaFoto = $foto->ruta;
+                        $rutaFoto = str_replace(['\\', '//'], '/', $rutaFoto);
+                        if (!str_starts_with($rutaFoto, 'fotos/')) {
+                            $rutaFoto = 'fotos/' . basename($rutaFoto);
+                        }
+                        $archivoExiste = file_exists(public_path($rutaFoto));
+                        if ($archivoExiste) $fotosReales++;
+                    @endphp
+                    @if($archivoExiste)
+                    <div class="foto-container">
+                        <img src="{{ asset($rutaFoto) }}" 
+                             onclick="mostrarImagenCompleta('{{ asset($rutaFoto) }}', '{{ $producto->nombre }}')"
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; cursor: pointer;">
+                        <button onclick="eliminarFoto({{ $foto->id }}, event)" 
+                                class="delete-btn"
+                                title="Eliminar foto">
+                            ×
+                        </button>
+                    </div>
                     @endif
                 @endforeach
-                @if($producto->fotos->count() > 3)
-                <div class="more-photos">+{{ $producto->fotos->count() - 3 }}</div>
+                
+                @if($fotosReales == 0)
+                    @php
+                        $tipo = strtolower($producto->tipo ?? 'articulo');
+                        $svgMap = [
+                            'joya' => 'joya.svg', 'joyas' => 'joya.svg',
+                            'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
+                            'garrafa' => 'garrafa.svg', 'garrafas' => 'garrafa.svg',
+                            'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
+                            'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
+                        ];
+                        $svg = $svgMap[$tipo] ?? 'articulo.svg';
+                    @endphp
+                    <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" 
+                         style="width: 50px; height: 50px; object-fit: contain; border-radius: 8px;">
+                    <span style="color: #999; font-style: italic; font-size: 14px;">{{ ucfirst($producto->tipo) }}</span>
                 @endif
             </div>
             @else
@@ -271,6 +304,50 @@
     display: flex;
     gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
+}
+
+.foto-container {
+    position: relative;
+    display: inline-block;
+}
+
+.foto-container {
+    position: relative;
+    display: inline-block;
+}
+
+.foto-container:hover .delete-btn {
+    opacity: 1;
+    visibility: visible;
+}
+
+.delete-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+    transform: scale(1.1);
 }
 
 .fotos-mini img {
@@ -872,7 +949,9 @@ function mostrarPreviewModal(file) {
     reader.readAsDataURL(file);
 }
 
-function eliminarFoto(fotoId) {
+function eliminarFoto(fotoId, event) {
+    event.stopPropagation(); // Evitar que se abra la imagen
+    
     if (confirm('¿Estás seguro de que quieres eliminar esta foto?')) {
         fetch(`/prestamos/fotos/${fotoId}`, {
             method: 'DELETE',
@@ -884,7 +963,13 @@ function eliminarFoto(fotoId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                // Eliminar el contenedor de la foto del DOM inmediatamente
+                const fotoContainer = event.target.closest('.foto-container');
+                if (fotoContainer) {
+                    fotoContainer.remove();
+                }
+                // Opcional: recargar después de un momento para actualizar contadores
+                setTimeout(() => location.reload(), 500);
             } else {
                 alert('Error: ' + (data.message || 'No se pudo eliminar la foto'));
             }
@@ -898,7 +983,7 @@ function eliminarFoto(fotoId) {
 
 function limpiarFotosRotas(productoId) {
     if (confirm('¿Estás seguro de que quieres limpiar todos los registros de fotos que no tienen archivo físico?')) {
-        fetch(`/prestamos/productos/${productoId}/limpiar-fotos-rotas`, {
+        fetch(`/limpiar-fotos-producto/${productoId}`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -908,6 +993,7 @@ function limpiarFotosRotas(productoId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                alert(`Limpieza completada: ${data.message}`);
                 location.reload();
             } else {
                 alert('Error: ' + (data.message || 'No se pudieron limpiar las fotos'));

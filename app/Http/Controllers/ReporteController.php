@@ -19,12 +19,54 @@ class ReporteController extends Controller
 
     public function summary()
     {
-        $totalPrestamos = Prestamo::where('estado', 'activo')->sum('monto');
-        $totalVentas = Venta::sum('monto');
-        $totalCompras = Compra::sum('monto');
-        $saldoCaja = CashFlow::sum(\DB::raw('CASE WHEN tipo_movimiento = "entrada" THEN monto ELSE -monto END'));
-        
-        return view('modules.reportes.summary', compact('totalPrestamos', 'totalVentas', 'totalCompras', 'saldoCaja'));
+        try {
+            // Datos de caja
+            $totalCaja = CashFlow::sum(\DB::raw('CASE WHEN tipo_movimiento = "entrada" THEN monto ELSE -monto END')) ?? 0;
+            $ingresosDia = CashFlow::where('tipo_movimiento', 'entrada')
+                ->whereDate('fecha', today())
+                ->sum('monto') ?? 0;
+            $egresosDia = CashFlow::where('tipo_movimiento', 'salida')
+                ->whereDate('fecha', today())
+                ->sum('monto') ?? 0;
+            
+            // Datos de préstamos
+            $prestamosActivos = Prestamo::where('estado', 'activo')->count();
+            $prestamosVencidos = Prestamo::where('estado', 'vencido')->count();
+            $totalPrestado = Prestamo::whereIn('estado', ['activo', 'vencido'])->sum('monto') ?? 0;
+            
+            // Datos de inventario
+            $prendasEmpenadas = \DB::table('prestamo_producto')
+                ->join('prestamos', 'prestamo_producto.prestamo_id', '=', 'prestamos.id')
+                ->whereIn('prestamos.estado', ['activo', 'vencido'])
+                ->count();
+            $prendasVenta = \DB::table('productos')
+                ->where('estado', 'forSale')
+                ->count();
+            $valorInventario = \DB::table('productos')
+                ->whereIn('estado', ['forSale', 'loan'])
+                ->sum('valuacion') ?? 0;
+            
+            return view('modules.reportes.summary', compact(
+                'totalCaja', 'ingresosDia', 'egresosDia',
+                'prestamosActivos', 'prestamosVencidos', 'totalPrestado',
+                'prendasEmpenadas', 'prendasVenta', 'valorInventario'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Error en reportes/summary: ' . $e->getMessage());
+            
+            // Valores por defecto en caso de error
+            return view('modules.reportes.summary', [
+                'totalCaja' => 0,
+                'ingresosDia' => 0,
+                'egresosDia' => 0,
+                'prestamosActivos' => 0,
+                'prestamosVencidos' => 0,
+                'totalPrestado' => 0,
+                'prendasEmpenadas' => 0,
+                'prendasVenta' => 0,
+                'valorInventario' => 0
+            ]);
+        }
     }
 
     public function prestamosVigentes()

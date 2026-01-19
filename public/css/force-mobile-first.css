@@ -1,0 +1,142 @@
+/* FORZAR DISEÑO MOBILE-FIRST EN TODO EL SISTEMA */
+
+/* Ocultar elementos legacy en móvil */
+@media (max-width: 768px) {
+    .main-content .section-header,
+    .main-content .section,
+    .cashflow-page .yp-header,
+    .cashflow-page .toolbar,
+    .table-responsive,
+    .row .col-12 .card,
+    .row .col-md-6,
+    .row .col-md-4,
+    .btn-group,
+    .section-body .row {
+        display: none !important;
+    }
+}
+
+/* Aplicar estructura mobile-first automáticamente */
+body:not(.mobile-applied) .main-content {
+    padding: 0 !important;
+    margin-left: 0 !important;
+}
+
+/* Inyectar mobile-header automáticamente */
+.main-content:not(.has-mobile-header)::before {
+    content: "";
+    display: block;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: var(--spacing-lg);
+    margin: calc(var(--spacing-xl) * -1) calc(var(--spacing-xl) * -1) var(--spacing-xl) calc(var(--spacing-xl) * -1);
+    box-shadow: var(--shadow);
+}
+
+/* Convertir contenido legacy a mobile-content */
+.main-content > *:not(.mobile-header):not(.mobile-content) {
+    padding: 0 var(--spacing-sm) !important;
+}
+
+/* Aplicar estilos de card-mobile a elementos legacy */
+.card:not(.card-mobile),
+.section:not(.mobile-content) {
+    background: white !important;
+    border-radius: var(--border-radius-lg) !important;
+    padding: var(--spacing-xl) !important;
+    margin-bottom: var(--spacing-xl) !important;
+    box-shadow: var(--shadow) !important;
+    border: 1px solid var(--gray-100) !important;
+}
+
+/* Convertir botones legacy a btn-mobile */
+.btn:not(.btn-mobile) {
+    padding: 12px 20px !important;
+    border-radius: var(--border-radius) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--spacing-sm) !important;
+    min-height: 44px !important;
+}
+
+/* Aplicar estilos de status-badge */
+.badge:not(.status-badge) {
+    padding: 6px 12px !important;
+    border-radius: var(--border-radius-xl) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Convertir formularios legacy */
+.form-group:not(.mobile-content .form-group) {
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.form-control:not(.mobile-content .form-control) {
+    padding: var(--spacing-lg) !important;
+    border-radius: var(--border-radius) !important;
+    border: 1px solid var(--gray-300) !important;
+    font-size: 16px !important;
+}
+
+/* Aplicar grid de acciones automáticamente */
+.btn-group:not(.mobile-content .btn-group) {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: var(--spacing-md) !important;
+}
+
+/* Forzar mobile-first en tablas */
+@media (max-width: 768px) {
+    .table-responsive {
+        display: none !important;
+    }
+    
+    /* Crear lista mobile automáticamente */
+    .table-responsive::after {
+        content: "Vista móvil no disponible. Actualizar a diseño mobile-first.";
+        display: block;
+        padding: 40px;
+        text-align: center;
+        background: var(--gray-50);
+        border-radius: var(--border-radius);
+        color: var(--gray-500);
+    }
+}
+
+/* Aplicar empty-state automáticamente */
+.empty-message:not(.empty-state) {
+    text-align: center !important;
+    padding: 60px var(--spacing-xl) !important;
+    color: var(--gray-500) !important;
+}
+
+/* Convertir modales legacy */
+.modal-content:not(.modal-content-mobile) {
+    border-radius: var(--border-radius-lg) !important;
+    padding: var(--spacing-2xl) !important;
+}
+
+/* Aplicar variables CSS globalmente */
+* {
+    --primary-color: #dc2626;
+    --primary-dark: #991b1b;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-500: #6b7280;
+    --gray-800: #1f2937;
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 20px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --spacing-sm: 8px;
+    --spacing-lg: 16px;
+    --spacing-xl: 20px;
+    --spacing-2xl: 24px;
+}

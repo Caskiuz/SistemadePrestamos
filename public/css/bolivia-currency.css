@@ -1,0 +1,170 @@
+/* Bolivia Currency Global Styles */
+
+/* Reemplazar símbolos $ por Bs usando CSS */
+.currency-symbol::before {
+    content: "Bs ";
+}
+
+/* Ocultar símbolos $ existentes y reemplazar con Bs */
+.currency-usd {
+    position: relative;
+}
+
+.currency-usd::before {
+    content: "Bs ";
+    position: absolute;
+    left: 0;
+}
+
+.currency-usd .dollar-sign {
+    display: none;
+}
+
+/* Estilos específicos para diferentes contextos */
+
+/* Tablas de reportes */
+.table th:contains("$"),
+.table td:contains("$") {
+    position: relative;
+}
+
+/* Formularios de configuración */
+.form-group label:contains("$")::after {
+    content: " (Bs)";
+    color: var(--gray-600);
+    font-weight: normal;
+}
+
+/* Reemplazar texto específico usando CSS */
+.precio-label::after {
+    content: " (Bs)";
+}
+
+/* Ocultar símbolos $ y mostrar Bs */
+.currency-container {
+    position: relative;
+}
+
+.currency-container .dollar::before {
+    content: "Bs ";
+}
+
+.currency-container .dollar-symbol {
+    display: none;
+}
+
+/* Estilos para campos de entrada de moneda */
+.currency-input::before {
+    content: "Bs ";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-600);
+    font-weight: 500;
+    z-index: 1;
+}
+
+.currency-input input {
+    padding-left: 35px;
+}
+
+/* Estilos para mostrar montos */
+.amount-display::before {
+    content: "Bs ";
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Reemplazos específicos para módulos */
+
+/* Préstamos */
+.prestamo-monto::before {
+    content: "Bs ";
+}
+
+/* Compras */
+.compra-precio::before {
+    content: "Bs ";
+}
+
+/* Ventas */
+.venta-precio::before {
+    content: "Bs ";
+}
+
+/* Apartados */
+.apartado-anticipo::before {
+    content: "Bs ";
+}
+
+/* Configuración */
+.config-monto::before {
+    content: "Bs ";
+}
+
+/* Reportes */
+.reporte-total::before {
+    content: "Bs ";
+}
+
+/* Contabilidad */
+.contabilidad-monto::before {
+    content: "Bs ";
+}
+
+/* Inventario */
+.inventario-precio::before {
+    content: "Bs ";
+}
+
+/* Estilos para badges de moneda */
+.badge-currency::before {
+    content: "Bs ";
+}
+
+/* Estilos para totales */
+.total-amount::before {
+    content: "Bs ";
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .currency-input::before {
+        left: 8px;
+        font-size: 14px;
+    }
+    
+    .currency-input input {
+        padding-left: 30px;
+    }
+}
+
+/* Utility classes para aplicar fácilmente */
+.bs-currency::before {
+    content: "Bs ";
+}
+
+.hide-dollar .dollar-sign,
+.hide-dollar .currency-dollar {
+    display: none;
+}
+
+/* Específico para elementos que ya tienen formatCurrency */
+.formatted-currency {
+    position: relative;
+}
+
+.formatted-currency::before {
+    content: "Bs ";
+}
+
+/* Para elementos con texto que contiene $ */
+[data-currency="usd"]::before {
+    content: "Bs ";
+}
+
+[data-currency="usd"] .dollar-symbol {
+    display: none;
+}

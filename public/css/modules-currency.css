@@ -1,0 +1,263 @@
+/* CSS específico para módulos de Reportes y Configuración */
+
+/* ===== MÓDULO REPORTES ===== */
+
+/* Reportes - Flujo de Caja */
+.cashflow-page .currency-symbol::before,
+.cashflow-page .amount::before,
+.cashflow-page .total::before {
+    content: "Bs ";
+    font-weight: 600;
+}
+
+/* Reportes - Ventas */
+.ventas-page .precio-compra::before,
+.ventas-page .precio-venta::before,
+.ventas-page .ganancia::before {
+    content: "Bs ";
+}
+
+/* Reportes - Compras */
+.compras-page .precio-compra::before,
+.compras-page .precio-venta::before {
+    content: "Bs ";
+}
+
+/* Reportes - Apartados */
+.apartados-page .anticipo::before,
+.apartados-page .saldo::before {
+    content: "Bs ";
+}
+
+/* Reportes - Préstamos */
+.prestamos-vigentes .monto::before,
+.prestamos-vencidos .monto::before,
+.prestamos-expirados .monto::before,
+.prestamos-liquidados .monto::before {
+    content: "Bs ";
+}
+
+/* Reportes - Inventario */
+.inventario-page .valuacion::before,
+.inventario-page .precio::before {
+    content: "Bs ";
+}
+
+/* ===== MÓDULO CONFIGURACIÓN ===== */
+
+/* Configuración - Empresa */
+.config-empresa .monto-field::before {
+    content: "Bs ";
+}
+
+/* Configuración - Préstamos */
+.config-prestamos .form-group label:contains("Monto")::after {
+    content: " (Bs)";
+    color: #6b7280;
+}
+
+/* Configuración - Tarifas */
+.config-tarifas .tarifa-monto::before,
+.config-tarifas .comision::before {
+    content: "Bs ";
+}
+
+/* Configuración - Sistema */
+.config-sistema .limite-monto::before {
+    content: "Bs ";
+}
+
+/* ===== SUBMÓDULOS ESPECÍFICOS ===== */
+
+/* Contabilidad - Ingresos */
+.ingresos-page .subtotal::before,
+.ingresos-page .descuento::before,
+.ingresos-page .total::before {
+    content: "Bs ";
+}
+
+/* Contabilidad - Egresos */
+.egresos-page .subtotal::before,
+.egresos-page .descuento::before,
+.egresos-page .total::before {
+    content: "Bs ";
+}
+
+/* Contabilidad - Sueldos */
+.sueldos-page .sueldo-base::before,
+.sueldos-page .bonificacion::before,
+.sueldos-page .descuento::before,
+.sueldos-page .total-sueldo::before {
+    content: "Bs ";
+}
+
+/* Contabilidad - Libro Diario */
+.libro-diario .debe::before,
+.libro-diario .haber::before {
+    content: "Bs ";
+}
+
+/* ===== TABLAS ESPECÍFICAS ===== */
+
+/* Tablas de reportes */
+.table-reportes th:nth-child(n):contains("$"),
+.table-reportes td:nth-child(n) .currency {
+    position: relative;
+}
+
+.table-reportes .currency::before {
+    content: "Bs ";
+}
+
+/* Tablas de configuración */
+.table-config .monto-cell::before {
+    content: "Bs ";
+}
+
+/* ===== FORMULARIOS ESPECÍFICOS ===== */
+
+/* Formularios de reportes */
+.form-reporte .currency-input {
+    position: relative;
+}
+
+.form-reporte .currency-input::before {
+    content: "Bs ";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-weight: 500;
+    z-index: 1;
+}
+
+.form-reporte .currency-input input {
+    padding-left: 35px;
+}
+
+/* Formularios de configuración */
+.form-config .currency-field {
+    position: relative;
+}
+
+.form-config .currency-field::before {
+    content: "Bs ";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-weight: 500;
+    z-index: 1;
+}
+
+.form-config .currency-field input {
+    padding-left: 35px;
+}
+
+/* ===== MODALES ESPECÍFICOS ===== */
+
+/* Modal de depósito/retiro/gasto */
+.modal .currency-modal .form-control[name="monto"] {
+    padding-left: 35px;
+}
+
+.modal .currency-modal .form-group:has(input[name="monto"])::before {
+    content: "Bs ";
+    position: absolute;
+    left: 25px;
+    top: 65%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-weight: 500;
+    z-index: 10;
+}
+
+/* ===== BADGES Y ETIQUETAS ===== */
+
+/* Badges de moneda */
+.badge-currency,
+.badge-monto,
+.badge-precio {
+    position: relative;
+}
+
+.badge-currency::before,
+.badge-monto::before,
+.badge-precio::before {
+    content: "Bs ";
+}
+
+/* ===== CARDS Y ESTADÍSTICAS ===== */
+
+/* Cards de estadísticas */
+.card-statistic .card-body:contains("$") {
+    position: relative;
+}
+
+.card-statistic .currency-stat::before {
+    content: "Bs ";
+    font-weight: bold;
+}
+
+/* ===== RESPONSIVE ESPECÍFICO ===== */
+
+@media (max-width: 768px) {
+    /* Ajustes para móvil */
+    .form-reporte .currency-input::before,
+    .form-config .currency-field::before {
+        left: 8px;
+        font-size: 14px;
+    }
+    
+    .form-reporte .currency-input input,
+    .form-config .currency-field input {
+        padding-left: 30px;
+    }
+    
+    /* Tablas responsive */
+    .table-responsive .currency::before {
+        font-size: 12px;
+    }
+}
+
+/* ===== CLASES UTILITARIAS ===== */
+
+/* Para aplicar manualmente */
+.bs-prefix::before {
+    content: "Bs ";
+}
+
+.hide-dollar-symbol .dollar,
+.hide-dollar-symbol .currency-usd {
+    display: none;
+}
+
+/* Para elementos que ya tienen formatCurrency pero necesitan override */
+.force-bs-currency::before {
+    content: "Bs " !important;
+}
+
+/* ===== ESPECÍFICO PARA DOCUMENTACIÓN ===== */
+
+/* Si la documentación también necesita el cambio */
+.documentacion-page .ejemplo-monto::before,
+.documentacion-page .precio-ejemplo::before {
+    content: "Bs ";
+}
+
+/* ===== OVERRIDES IMPORTANTES ===== */
+
+/* Para asegurar que se aplique sobre otros estilos */
+[data-currency="boliviano"]::before,
+.bolivia-currency::before {
+    content: "Bs " !important;
+    color: inherit !important;
+}
+
+/* Ocultar símbolos $ existentes cuando se aplica la clase */
+.bolivia-currency .dollar-sign,
+.bolivia-currency .usd-symbol {
+    display: none !important;
+}

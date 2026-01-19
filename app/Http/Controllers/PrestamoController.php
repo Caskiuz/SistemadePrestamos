@@ -353,7 +353,6 @@ class PrestamoController extends Controller
     public function subirFotos(Request $request, $productoId)
     {
         try {
-            // Log para debugging
             \Log::info('Subiendo fotos para producto: ' . $productoId);
             \Log::info('Archivos recibidos: ' . count($request->file('fotos', [])));
             
@@ -367,8 +366,6 @@ class PrestamoController extends Controller
             if ($request->hasFile('fotos')) {
                 foreach ($request->file('fotos') as $foto) {
                     \Log::info('Procesando foto: ' . $foto->getClientOriginalName());
-                    \Log::info('Tamaño: ' . $foto->getSize() . ' bytes');
-                    \Log::info('Tipo MIME: ' . $foto->getMimeType());
                     
                     // Generar nombre único
                     $extension = $foto->getClientOriginalExtension() ?: 'jpg';
@@ -382,14 +379,14 @@ class PrestamoController extends Controller
                     
                     $foto->move($destinoPath, $nombreArchivo);
                     
-                    // Guardar en base de datos con ruta simple
+                    // Guardar en base de datos con ruta correcta
                     \App\Models\FotoEquipo::create([
                         'equipo_id' => $producto->id,
                         'ruta' => 'fotos/' . $nombreArchivo,
                     ]);
                     
                     $fotosSubidas++;
-                    \Log::info('Foto guardada exitosamente: ' . $nombreArchivo);
+                    \Log::info('Foto guardada exitosamente: fotos/' . $nombreArchivo);
                 }
             }
 
@@ -399,7 +396,8 @@ class PrestamoController extends Controller
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true, 
-                    'message' => "Se subieron {$fotosSubidas} fotos exitosamente"
+                    'message' => "Se subieron {$fotosSubidas} fotos exitosamente",
+                    'fotos_count' => $fotosSubidas
                 ]);
             }
 
@@ -436,18 +434,27 @@ class PrestamoController extends Controller
         try {
             $foto = \App\Models\FotoEquipo::findOrFail($fotoId);
             
-            // Intentar eliminar el archivo físico
+            // Eliminar el archivo físico
             $rutaArchivo = public_path($foto->ruta);
             if (file_exists($rutaArchivo)) {
                 unlink($rutaArchivo);
+                \Log::info('Archivo físico eliminado: ' . $rutaArchivo);
             }
             
             // Eliminar registro de base de datos
             $foto->delete();
+            \Log::info('Registro de foto eliminado de BD: ' . $fotoId);
 
-            return response()->json(['success' => true, 'message' => 'Foto eliminada exitosamente']);
+            return response()->json([
+                'success' => true, 
+                'message' => 'Foto eliminada exitosamente'
+            ]);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error al eliminar la foto'], 500);
+            \Log::error('Error al eliminar foto: ' . $e->getMessage());
+            return response()->json([
+                'success' => false, 
+                'message' => 'Error al eliminar la foto: ' . $e->getMessage()
+            ], 500);
         }
     }
 

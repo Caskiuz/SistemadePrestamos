@@ -172,6 +172,8 @@ Route::prefix('inventario')->middleware('auth')->group(function () {
     Route::get('/{id}/edit', [ProductoController::class, 'edit'])->name('inventario.edit');
     Route::put('/{id}', [ProductoController::class, 'update'])->name('inventario.update');
     Route::delete('/{id}', [ProductoController::class, 'destroy'])->name('inventario.destroy');
+    Route::post('/{id}/foto', [ProductoController::class, 'subirFoto'])->name('inventario.foto.subir');
+    Route::delete('/{id}/foto', [ProductoController::class, 'eliminarFoto'])->name('inventario.foto.eliminar');
 });
 
 // Préstamos / Empeños
@@ -359,3 +361,71 @@ Route::prefix('dashboard-avanzado')->middleware('auth')->group(function () {
 Route::prefix('documentacion')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\DocumentacionController::class, 'index'])->name('documentacion.index');
 });
+
+// Ruta temporal de diagnóstico
+Route::get('/diagnostico-fotos', function() {
+    $output = "=== DIAGNÓSTICO DE FOTOS ===\n\n";
+    
+    $output .= "1. Fotos en base de datos:\n";
+    $fotos = \App\Models\FotoEquipo::all();
+    foreach($fotos as $foto) {
+        $output .= "ID: {$foto->id} | Producto: {$foto->equipo_id} | Ruta: {$foto->ruta}\n";
+        $rutaCompleta = public_path($foto->ruta);
+        $output .= "   Archivo existe: " . (file_exists($rutaCompleta) ? "SÍ" : "NO") . "\n";
+        $output .= "   Ruta completa: {$rutaCompleta}\n\n";
+    }
+    
+    $output .= "2. Productos con fotos:\n";
+    $productos = \App\Models\Producto::with('fotos')->get();
+    foreach($productos as $producto) {
+        if($producto->fotos->count() > 0) {
+            $output .= "Producto ID: {$producto->id} | Nombre: {$producto->nombre} | Fotos: {$producto->fotos->count()}\n";
+        }
+    }
+    
+    $output .= "\n3. Archivos físicos en public/fotos:\n";
+    $archivos = glob(public_path('fotos/*'));
+    foreach($archivos as $archivo) {
+        if(is_file($archivo)) {
+            $output .= basename($archivo) . " (" . filesize($archivo) . " bytes)\n";
+        }
+    }
+    
+    return '<pre>' . $output . '</pre>';
+})->middleware('auth');
+
+// Limpiar fotos rotas
+Route::get('/limpiar-fotos', function() {
+    $eliminadas = 0;
+    $fotos = \App\Models\FotoEquipo::all();
+    
+    foreach($fotos as $foto) {
+        $rutaCompleta = public_path($foto->ruta);
+        if (!file_exists($rutaCompleta)) {
+            $foto->delete();
+            $eliminadas++;
+        }
+    }
+    
+    return "<h3>Limpieza completada</h3><p>Se eliminaron {$eliminadas} registros de fotos sin archivo físico.</p><a href='/diagnostico-fotos'>Ver diagnóstico</a><br><a href='/prestamos'>Ir a préstamos</a>";
+})->middleware('auth');
+
+// Limpiar fotos de un producto específico
+Route::post('/limpiar-fotos-producto/{id}', function($id) {
+    $eliminadas = 0;
+    $fotos = \App\Models\FotoEquipo::where('equipo_id', $id)->get();
+    
+    foreach($fotos as $foto) {
+        $rutaCompleta = public_path($foto->ruta);
+        if (!file_exists($rutaCompleta)) {
+            $foto->delete();
+            $eliminadas++;
+        }
+    }
+    
+    return response()->json([
+        'success' => true,
+        'message' => "Se eliminaron {$eliminadas} registros de fotos rotas",
+        'eliminadas' => $eliminadas
+    ]);
+})->middleware('auth');

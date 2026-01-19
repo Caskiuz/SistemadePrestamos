@@ -66,6 +66,11 @@
     @endif
 </div>
 
+<!-- Botón Flotante (FAB) -->
+<div class="fab" onclick="openModal()">
+    <i class="fa fa-plus"></i>
+</div>
+
 <!-- Modal Nuevo Cliente -->
 <div id="modalCliente" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
     <div style="background: #2c3e50; color: white; width: 90%; max-width: 600px; border-radius: 8px; max-height: 90vh; overflow-y: auto;">
@@ -102,24 +107,8 @@
                 <input type="text" name="numero_documento" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Número de documento">
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Correo electrónico</label>
-                <input type="email" name="email" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="correo@ejemplo.com">
-            </div>
-            <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono principal</label>
                 <input type="tel" name="telefono_1" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Teléfono principal">
-            </div>
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono secundario</label>
-                <input type="tel" name="telefono_2" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Teléfono secundario (opcional)">
-            </div>
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono adicional</label>
-                <input type="tel" name="telefono_3" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Teléfono adicional (opcional)">
-            </div>
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Ciudad</label>
-                <input type="text" name="ciudad" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Ciudad" value="Santa Cruz">
             </div>
             <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 5px; font-size: 14px;">Dirección</label>
@@ -179,6 +168,63 @@
     margin-top: 30px;
     display: flex;
     justify-content: center;
+}
+
+/* Botón Flotante (FAB) */
+.fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    animation: fabPulse 2s infinite;
+}
+
+.fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+.fab i {
+    color: white;
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.fab:hover i {
+    transform: rotate(90deg);
+}
+
+@keyframes fabPulse {
+    0% {
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4), 0 0 0 0 rgba(220, 38, 38, 0.7);
+    }
+    70% {
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4), 0 0 0 10px rgba(220, 38, 38, 0);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4), 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .fab {
+        bottom: 80px; /* Evitar conflicto con navegación móvil */
+    }
 }
 </style>
 

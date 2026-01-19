@@ -1,0 +1,99 @@
+/* Aplicar diseño global de préstamos a todos los submódulos */
+
+/* ===== SUBMÓDULOS DE CONFIGURACIÓN ===== */
+.modules-configuracion-empresa,
+.modules-configuracion-prestamos,
+.modules-configuracion-tarifas,
+.modules-configuracion-sistema,
+.modules-configuracion-seguridad,
+.modules-configuracion-notificaciones,
+.modules-configuracion-reportes {
+    /* Aplicar estructura mobile-first */
+}
+
+/* ===== SUBMÓDULOS DE REPORTES ===== */
+.modules-reportes-cashflow,
+.modules-reportes-prestamos,
+.modules-reportes-inventario,
+.modules-reportes-ventas,
+.modules-reportes-compras,
+.modules-reportes-apartados {
+    /* Aplicar estructura mobile-first */
+}
+
+/* ===== SUBMÓDULOS DE CONTABILIDAD ===== */
+.modules-contabilidad-ingresos,
+.modules-contabilidad-egresos,
+.modules-contabilidad-sueldos,
+.modules-contabilidad-libro-diario {
+    /* Aplicar estructura mobile-first */
+}
+
+/* ===== SUBMÓDULOS DE SISTEMA ===== */
+.modules-sistema-auditoria,
+.modules-sistema-backups,
+.modules-sistema-usuarios {
+    /* Aplicar estructura mobile-first */
+}
+
+/* ===== DOCUMENTACIÓN ===== */
+.modules-documentacion-index {
+    /* Aplicar estructura mobile-first */
+}
+
+/* Forzar aplicación de componentes globales a todos los submódulos */
+body:not(.prestamos-applied) .main-content {
+    /* Aplicar estilos de préstamos globalmente */
+}
+
+/* Aplicar mobile-header a submódulos que no lo tienen */
+.legacy-header {
+    display: none;
+}
+
+.legacy-content {
+    padding: 0;
+}
+
+/* Convertir tablas legacy a cards mobile */
+.legacy-table-wrapper {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .legacy-table-wrapper {
+        display: none !important;
+    }
+    
+    .mobile-cards-replacement {
+        display: block !important;
+    }
+}
+
+/* Aplicar filtros horizontales donde falten */
+.add-horizontal-filters::before {
+    content: "";
+    display: block;
+    /* Insertar filtros horizontales */
+}
+
+/* Aplicar search-box donde falte */
+.add-search-box::before {
+    content: "";
+    display: block;
+    /* Insertar search box */
+}
+
+/* Aplicar empty-state donde falte */
+.add-empty-state::before {
+    content: "";
+    display: block;
+    /* Insertar empty state */
+}
+
+/* Aplicar action-grid donde falte */
+.add-action-grid::before {
+    content: "";
+    display: block;
+    /* Insertar action grid */
+}

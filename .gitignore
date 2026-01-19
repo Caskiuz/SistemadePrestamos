@@ -1,48 +1,59 @@
-# Archivos de fotos y uploads
-/public/fotos/*
-!/public/fotos/.gitkeep
-
-# Documentos grandes
-/public/documentos/*
-!/public/documentos/.gitkeep
-
-# App móvil (repositorio separado)
-/mobile-app/
-
-# Archivos grandes y ejecutables
-*.rar
-*.zip
-*.exe
-*.msi
-
-# Logs
-/storage/logs/*
-!/storage/logs/.gitignore
-
-# Cache
-/bootstrap/cache/*
-!/bootstrap/cache/.gitignore
-
-# Vendor
-/vendor/
-
-# Node modules
-/node_modules/
-
-# Environment
+# Laravel
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
 .env
 .env.backup
 .env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
 
 # IDE
-.vscode/
-.idea/
+/.vscode
+/.idea
 *.swp
 *.swo
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# SQL files
-*.sql
+# Logs
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# Compiled assets
+/public/css/app.css
+/public/js/app.js
+/public/mix-manifest.json
+
+# Cache
+/bootstrap/cache/*.php
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+
+# Uploads (keep structure but ignore files)
+/public/fotos/*
+!/public/fotos/.gitkeep
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+
+# Testing
+/coverage
+/.phpunit.cache
+
+# Deployment
+/public_html

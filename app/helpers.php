@@ -1,7 +1,9 @@
 <?php
 
+require_once __DIR__ . '/Helpers/BoliviaHelper.php';
+
 if (!function_exists('formatCurrency')) {
     function formatCurrency($amount) {
-        return '$' . number_format($amount, 2, '.', ',');
+        return formatBs($amount);
     }
 }

@@ -46,24 +46,57 @@
                 
                 <div class="prenda-info">
                     @if($producto->fotos && $producto->fotos->count() > 0)
-                    <div class="prenda-image">
-                        <img src="{{ asset($producto->fotos->first()->ruta) }}" alt="{{ $producto->nombre }}">
-                    </div>
+                        @php $fotoReal = null; @endphp
+                        @foreach($producto->fotos as $foto)
+                            @php
+                                $rutaFoto = $foto->ruta;
+                                $rutaFoto = str_replace(['\\', '//'], '/', $rutaFoto);
+                                if (!str_starts_with($rutaFoto, 'fotos/')) {
+                                    $rutaFoto = 'fotos/' . basename($rutaFoto);
+                                }
+                                $archivoExiste = file_exists(public_path($rutaFoto));
+                                if ($archivoExiste && !$fotoReal) {
+                                    $fotoReal = $rutaFoto;
+                                    break;
+                                }
+                            @endphp
+                        @endforeach
+                        
+                        @if($fotoReal)
+                            <div class="prenda-image">
+                                <img src="{{ asset($fotoReal) }}" alt="{{ $producto->nombre }}">
+                            </div>
+                        @else
+                            <div class="prenda-image">
+                                @php
+                                    $tipo = strtolower($producto->tipo ?? 'articulo');
+                                    $svgMap = [
+                                        'joya' => 'joya.svg', 'joyas' => 'joya.svg',
+                                        'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
+                                        'garrafa' => 'garrafa.svg', 'garrafas' => 'garrafa.svg',
+                                        'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
+                                        'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
+                                    ];
+                                    $svg = $svgMap[$tipo] ?? 'articulo.svg';
+                                @endphp
+                                <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" class="svg-icon">
+                            </div>
+                        @endif
                     @else
-                    <div class="prenda-image">
-                        @php
-                            $tipo = strtolower($producto->tipo ?? 'articulo');
-                            $svgMap = [
-                                'joya' => 'joya.svg', 'joyas' => 'joya.svg',
-                                'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
-                                'garrafa' => 'garrafa.svg', 'garrafas' => 'garrafa.svg',
-                                'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
-                                'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
-                            ];
-                            $svg = isset($svgMap[$tipo]) ? $svgMap[$tipo] : 'articulo.svg';
-                        @endphp
-                        <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" class="svg-icon">
-                    </div>
+                        <div class="prenda-image">
+                            @php
+                                $tipo = strtolower($producto->tipo ?? 'articulo');
+                                $svgMap = [
+                                    'joya' => 'joya.svg', 'joyas' => 'joya.svg',
+                                    'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
+                                    'garrafa' => 'garrafa.svg', 'garrafas' => 'garrafa.svg',
+                                    'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
+                                    'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
+                                ];
+                                $svg = $svgMap[$tipo] ?? 'articulo.svg';
+                            @endphp
+                            <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" class="svg-icon">
+                        </div>
                     @endif
                     
                     <div class="prenda-details">

@@ -53,6 +53,14 @@
     <link rel="stylesheet" href="{{ asset('css/sidebar-override.css') }}">
     <!-- Reportes Responsive CSS -->
     <link rel="stylesheet" href="{{ asset('css/reportes-responsive.css') }}">
+    <!-- Bolivia Currency CSS -->
+    <link rel="stylesheet" href="{{ asset('css/bolivia-currency.css') }}">
+    <!-- Modules Currency CSS -->
+    <link rel="stylesheet" href="{{ asset('css/modules-currency.css') }}">
+    <!-- Submodules Global CSS -->
+    <link rel="stylesheet" href="{{ asset('css/submodules-global.css') }}">
+    <!-- Force Mobile First CSS -->
+    <link rel="stylesheet" href="{{ asset('css/force-mobile-first.css') }}">
     
     <style>
     /* Mobile-first responsive navbar */
@@ -396,6 +404,11 @@
     <!-- Template JS File -->
     <script src="{{ asset(path: 'dist/assets/js/scripts.js') }}"></script>
     <script src="{{ asset(path: 'dist/assets/js/custom.js') }}"></script>
+    
+    <!-- Bolivia Currency JS -->
+    <script src="{{ asset('js/bolivia-currency.js') }}"></script>
+    <!-- Auto Mobile First JS -->
+    <script src="{{ asset('js/auto-mobile-first.js') }}"></script></script>
 
     <!-- Swet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

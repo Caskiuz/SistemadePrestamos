@@ -60,13 +60,38 @@
                 <div class="prendas-preview">
                     <span class="prendas-label">Prendas:</span>
                     <div class="prendas-list">
+                        @php $hayFotosReales = false; @endphp
                         @foreach($prestamo->productos->take(3) as $producto)
+                        @php
+                            $tienefotos = false;
+                            if($producto->fotos->count() > 0) {
+                                foreach($producto->fotos as $foto) {
+                                    $rutaFoto = str_replace(['\\', '//'], '/', $foto->ruta);
+                                    if (!str_starts_with($rutaFoto, 'fotos/')) {
+                                        $rutaFoto = 'fotos/' . basename($rutaFoto);
+                                    }
+                                    if(file_exists(public_path($rutaFoto))) {
+                                        $tienefotos = true;
+                                        $hayFotosReales = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        @endphp
                         <div class="prenda-item">
-                            @if($producto->fotos->count() > 0)
-                            <img src="{{ asset($producto->fotos->first()->ruta) }}" alt="{{ $producto->nombre }}">
+                            @if($tienefotos)
+                            @php
+                                $foto = $producto->fotos->first();
+                                $rutaFoto = str_replace(['\\', '//'], '/', $foto->ruta);
+                                if (!str_starts_with($rutaFoto, 'fotos/')) {
+                                    $rutaFoto = 'fotos/' . basename($rutaFoto);
+                                }
+                            @endphp
+                            <img src="{{ asset($rutaFoto) }}" alt="{{ $producto->nombre }}" 
+                                 style="width: 24px; height: 24px; object-fit: cover; border-radius: 4px;">
                             @else
                             @php
-                                $tipo = strtolower($producto->tipo);
+                                $tipo = strtolower($producto->tipo ?? 'articulo');
                                 $svgMap = [
                                     'joya' => 'joya.svg', 'joyas' => 'joya.svg',
                                     'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
@@ -74,7 +99,7 @@
                                     'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
                                     'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
                                 ];
-                                $svg = isset($svgMap[$tipo]) ? $svgMap[$tipo] : 'articulo.svg';
+                                $svg = $svgMap[$tipo] ?? 'articulo.svg';
                             @endphp
                             <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" class="svg-icon">
                             @endif
