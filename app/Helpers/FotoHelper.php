@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class FotoHelper
 {
@@ -11,18 +12,10 @@ class FotoHelper
         // Generar nombre único
         $nombreArchivo = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
         
-        // Ruta completa
-        $rutaCompleta = public_path($carpeta);
+        // Guardar en storage/app/public
+        $ruta = $foto->storeAs($carpeta, $nombreArchivo, 'public');
         
-        // Crear directorio si no existe
-        if (!file_exists($rutaCompleta)) {
-            mkdir($rutaCompleta, 0755, true);
-        }
-        
-        // Mover archivo
-        $foto->move($rutaCompleta, $nombreArchivo);
-        
-        return $carpeta . '/' . $nombreArchivo;
+        return $ruta;
     }
     
     public static function subirMultiplesFotos(array $fotos, string $carpeta = 'equipos_fotos'): array
@@ -40,17 +33,11 @@ class FotoHelper
     
     public static function eliminarFoto(string $ruta): bool
     {
-        $rutaCompleta = public_path($ruta);
-        
-        if (file_exists($rutaCompleta)) {
-            return unlink($rutaCompleta);
-        }
-        
-        return false;
+        return Storage::disk('public')->delete($ruta);
     }
     
     public static function obtenerUrlFoto(string $ruta): string
     {
-        return asset($ruta);
+        return asset('storage/' . $ruta);
     }
 }

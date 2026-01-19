@@ -12,10 +12,11 @@ class ConfiguracionSeeder extends Seeder
         $configuraciones = [
             // Empresa
             ['clave' => 'empresa_nombre', 'valor' => 'Préstamos Santa Ana', 'categoria' => 'empresa', 'descripcion' => 'Nombre de la empresa'],
-            ['clave' => 'empresa_direccion', 'valor' => 'Av. Principal, Santa Ana', 'categoria' => 'empresa', 'descripcion' => 'Dirección principal'],
-            ['clave' => 'empresa_telefono', 'valor' => '+58 424-000-0000', 'categoria' => 'empresa', 'descripcion' => 'Teléfono principal'],
+            ['clave' => 'empresa_direccion', 'valor' => 'Santa Ana, Bolivia', 'categoria' => 'empresa', 'descripcion' => 'Dirección principal'],
+            ['clave' => 'empresa_telefono', 'valor' => '+591 2-000-0000', 'categoria' => 'empresa', 'descripcion' => 'Teléfono principal'],
             ['clave' => 'empresa_email', 'valor' => 'info@prestamossantaana.com', 'categoria' => 'empresa', 'descripcion' => 'Email corporativo'],
-            ['clave' => 'empresa_rif', 'valor' => 'J-12345678-9', 'categoria' => 'empresa', 'descripcion' => 'RIF de la empresa'],
+            ['clave' => 'empresa_nit', 'valor' => '1234567890', 'categoria' => 'empresa', 'descripcion' => 'NIT de la empresa'],
+            ['clave' => 'empresa_pais', 'valor' => 'Bolivia', 'categoria' => 'empresa', 'descripcion' => 'País de operación'],
             
             // Préstamos
             ['clave' => 'prestamo_interes_mensual', 'valor' => '10', 'tipo' => 'number', 'categoria' => 'prestamos', 'descripcion' => 'Tasa de interés mensual (%)'],
@@ -37,8 +38,10 @@ class ConfiguracionSeeder extends Seeder
             
             // Sistema
             ['clave' => 'sistema_backup_frecuencia', 'valor' => 'diario', 'categoria' => 'sistema', 'descripcion' => 'Frecuencia de backup automático'],
-            ['clave' => 'sistema_zona_horaria', 'valor' => 'America/Caracas', 'categoria' => 'sistema', 'descripcion' => 'Zona horaria del sistema'],
-            ['clave' => 'sistema_moneda', 'valor' => 'USD', 'categoria' => 'sistema', 'descripcion' => 'Moneda del sistema'],
+            ['clave' => 'sistema_zona_horaria', 'valor' => 'America/La_Paz', 'categoria' => 'sistema', 'descripcion' => 'Zona horaria del sistema'],
+            ['clave' => 'sistema_moneda', 'valor' => 'BOB', 'categoria' => 'sistema', 'descripcion' => 'Moneda del sistema'],
+            ['clave' => 'sistema_moneda_simbolo', 'valor' => 'Bs.', 'categoria' => 'sistema', 'descripcion' => 'Símbolo de la moneda'],
+            ['clave' => 'sistema_pais', 'valor' => 'Bolivia', 'categoria' => 'sistema', 'descripcion' => 'País del sistema'],
             ['clave' => 'sistema_tiempo_sesion', 'valor' => '120', 'tipo' => 'number', 'categoria' => 'sistema', 'descripcion' => 'Tiempo de sesión en minutos'],
             
             // Seguridad

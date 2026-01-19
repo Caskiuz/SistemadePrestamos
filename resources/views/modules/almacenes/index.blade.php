@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('contenido')
+@section('content')
 <div class="section-header bg-primary text-white rounded shadow-sm py-3 px-4 mb-4 align-items-center d-flex justify-content-between">
     <h1 class="mb-0" style="font-weight: 700; letter-spacing: 1px;"><i class="fas fa-warehouse mr-2"></i>Sucursales / Almacenes</h1>
     <a href="{{ route('almacenes.create') }}" class="btn btn-success btn-lg shadow-sm"><i class="fas fa-plus"></i> Nueva Sucursal/Almacén</a>

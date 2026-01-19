@@ -27,7 +27,7 @@
                         <tr>
                             <td><span class="font-weight-bold">{{ $apartado->cliente->nombre }}</span></td>
                             <td>{{ $apartado->producto->nombre }}</td>
-                            <td><span class="badge badge-info">${{ $apartado->anticipo }}</span></td>
+                            <td><span class="badge badge-info">{{ formatCurrency($apartado->anticipo ) }}</span></td>
                             <td>{{ $apartado->vencimiento }}</td>
                             <td>
                                 <span class="badge {{ $apartado->estado == 'Vigente' ? 'badge-success' : 'badge-secondary' }}">{{ $apartado->estado }}</span>

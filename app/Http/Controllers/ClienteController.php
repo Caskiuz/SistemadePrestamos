@@ -20,9 +20,10 @@ class ClienteController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        // Filtro por cumpleaños
+        // Filtro por cumpleaños - deshabilitado (columna no existe)
         if ($request->filter === 'birthday') {
-            $query->whereMonth('fecha_nacimiento', now()->month);
+            // $query->whereMonth('fecha_nacimiento', now()->month);
+            // Por ahora no filtrar por cumpleaños hasta agregar la columna
         }
 
         // Filtro por inactividad
@@ -42,7 +43,7 @@ class ClienteController extends Controller
         }
 
         $clientes = $query->paginate(10);
-        // Usar la nueva vista Blade adaptada
+        // Usar la vista principal de clientes
         return view('modules.clientes.yo-presto.index', compact('clientes'));
     }
 
@@ -52,13 +53,45 @@ class ClienteController extends Controller
 
     public function store(Request $request) {
         $data = $request->all();
+        
+        // Validar y asignar valores por defecto
+        if (empty($data['tipo'])) {
+            $data['tipo'] = 'PERSONA';
+        }
+        
         if (empty($data['tipo_documento'])) {
             $data['tipo_documento'] = 'CI';
         }
-        if (empty($data['numero_documento'])) {
-            $data['numero_documento'] = 'S/N';
+        
+        // Asegurar que tipo_documento sea válido
+        $tiposValidos = ['CI', 'NIT', 'PASAPORTE', 'OTRO'];
+        if (!in_array($data['tipo_documento'], $tiposValidos)) {
+            $data['tipo_documento'] = 'CI';
         }
+        
+        if (empty($data['numero_documento'])) {
+            $data['numero_documento'] = 'S/N-' . time();
+        }
+        
+        // Asegurar que todos los campos requeridos tengan valores
+        $data['telefono_1'] = $data['telefono_1'] ?? '';
+        $data['telefono_2'] = $data['telefono_2'] ?? '';
+        $data['telefono_3'] = $data['telefono_3'] ?? '';
+        $data['direccion'] = $data['direccion'] ?? '';
+        $data['email'] = $data['email'] ?? '';
+        $data['ciudad'] = $data['ciudad'] ?? 'Santa Cruz';
+        
         $cliente = Cliente::create($data);
+        
+        // Si es petición AJAX, retornar JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'cliente' => $cliente,
+                'message' => 'Cliente creado exitosamente'
+            ]);
+        }
+        
         return redirect()->route('clientes.index')->with('success', 'Cliente creado exitosamente');
     }
 
@@ -77,9 +110,26 @@ class ClienteController extends Controller
     public function update(Request $request, $id) {
         $cliente = Cliente::findOrFail($id);
         $data = $request->all();
+        
+        // Validar y limpiar datos
+        if (empty($data['tipo'])) {
+            $data['tipo'] = 'PERSONA';
+        }
+        
         if (empty($data['tipo_documento'])) {
             $data['tipo_documento'] = 'CI';
         }
+        
+        // Asegurar que tipo_documento sea válido
+        $tiposValidos = ['CI', 'NIT', 'PASAPORTE', 'OTRO'];
+        if (!in_array($data['tipo_documento'], $tiposValidos)) {
+            $data['tipo_documento'] = 'CI';
+        }
+        
+        if (empty($data['numero_documento'])) {
+            $data['numero_documento'] = 'S/N-' . time();
+        }
+        
         $cliente->update($data);
         return redirect()->route('clientes.index')->with('success', 'Cliente actualizado exitosamente');
     }

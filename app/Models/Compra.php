@@ -17,6 +17,7 @@ class Compra extends Model
         'monto',
         'fecha_compra',
         'estado',
+        'tipo_compra',
         'observaciones',
     ];
 

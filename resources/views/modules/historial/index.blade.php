@@ -1,34 +1,23 @@
 @extends('layouts.main')
 
 @section('content')
-<header class="yp-header purple">
-    <h1>
-        <i class="fa fa-clock-o"></i>
-        <span>Historial de prendas</span>
-    </h1>
-    <ul class="nav nav-tabs">
-        <li class="{{ $status === 'sold' ? 'active' : '' }}">
-            <a href="{{ route('historial.index', ['status' => 'sold']) }}">Vendidos</a>
-        </li>
-        <li class="{{ $status === 'settled' ? 'active' : '' }}">
-            <a href="{{ route('historial.index', ['status' => 'settled']) }}">Liquidados</a>
-        </li>
-        <li class="{{ $status === 'cancelled' ? 'active' : '' }}">
-            <a href="{{ route('historial.index', ['status' => 'cancelled']) }}">Cancelados</a>
-        </li>
-    </ul>
-</header>
+<x-mobile-header title="Historial de prendas" />
 
-<section class="content">
-    <form class="input-group search" method="GET" action="{{ route('historial.index') }}">
-        <input type="hidden" name="status" value="{{ $status }}">
-        <input type="search" class="search-query form-control" placeholder="Buscar" name="q" value="{{ request('q') }}">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="submit">
-                <i class="glyphicon glyphicon-search"></i>
-            </button>
-        </span>
-    </form>
+<x-horizontal-filters 
+    :filters="[
+        'sold' => ['label' => 'Vendidos'],
+        'settled' => ['label' => 'Liquidados'],
+        'cancelled' => ['label' => 'Cancelados']
+    ]"
+    :current-filter="$status"
+    route="historial.index"
+    parameter="status" />
+
+<div class="mobile-content">
+    <x-search-box 
+        placeholder="Buscar"
+        route="historial.index"
+        :value="request('q')" />
 
     @if(request('q'))
         <h6 class="query-label">Resultados de la búsqueda "{{ request('q') }}" de prendas {{ $statusLabel }}</h6>
@@ -36,106 +25,82 @@
         <h6 class="query-label">Todas las prendas {{ $statusLabel }}</h6>
     @endif
 
-    <ul class="items search-results">
+    <div class="list-mobile">
         @forelse($prendas as $prenda)
-            <li>
-                <div class="card">
-                    <div class="contract" style="background-color: {{ $prenda->color ?? '#9C27B0' }};">
-                        {{ $prenda->folio ?? 'N/A' }}
+            <div class="list-item">
+                <div class="list-item-header">
+                    <div>
+                        <h4 class="list-item-title">{{ $prenda->descripcion }}</h4>
+                        <span class="list-item-subtitle">{{ $prenda->fecha_formateada }} - {{ $prenda->hora_formateada }}</span>
                     </div>
-                    <div class="info">
-                        <h4>{{ $prenda->descripcion }}</h4>
-                        <h5>
-                            <i class="fa fa-calendar"></i> {{ $prenda->fecha_formateada }}
-                            <i class="fa fa-clock-o"></i> {{ $prenda->hora_formateada }}
-                        </h5>
+                    <div class="status-badge" style="background-color: {{ $prenda->color ?? '#9C27B0' }};">
+                        {{ $prenda->tipo_label }}
                     </div>
-                    <div class="money">
-                        <h5 class="status">{{ $prenda->monto_formateado }}</h5>
-                    </div>
-                    <span class="tag" style="background-color: {{ $prenda->color ?? '#9C27B0' }};">{{ $prenda->tipo_label }}</span>
                 </div>
-            </li>
+                
+                <div class="prestamo-amounts">
+                    <div class="amount-item">
+                        <span class="label">Folio:</span>
+                        <span class="value">{{ $prenda->folio ?? 'N/A' }}</span>
+                    </div>
+                    <div class="amount-item">
+                        <span class="label">Monto:</span>
+                        <span class="value">{{ $prenda->monto_formateado }}</span>
+                    </div>
+                </div>
+            </div>
         @empty
-            <li>No se encontraron resultados</li>
+            <div class="empty-state">
+                <i class="fa fa-info-circle"></i>
+                <h4>No se encontraron resultados</h4>
+                <p>No hay prendas {{ $statusLabel }} para mostrar</p>
+            </div>
         @endforelse
-    </ul>
-</section>
+    </div>
+</div>
 @endsection
 
 @push('styles')
 <style>
-.search-results {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.query-label {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-bottom: 15px;
+    text-transform: uppercase;
 }
 
-.search-results li {
-    margin-bottom: 10px;
+.prestamo-amounts {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
 }
 
-.search-results .card {
-    position: relative;
-    padding: 0;
-    overflow: hidden;
+.amount-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.search-results .contract {
-    float: left;
-    width: 90px;
-    height: 70px;
-    line-height: 70px;
-    text-align: center;
-    color: white;
+.amount-item .label {
+    font-size: 12px;
+    color: var(--gray-500);
     font-weight: 500;
 }
 
-.search-results .info {
-    padding: 10px 10px 10px 100px;
+.amount-item .value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
 }
 
-.search-results .info h4 {
-    margin: 0 0 5px;
-    font-size: 15px;
-    color: #666;
-}
-
-.search-results .info h5 {
-    margin: 0;
-    color: #888;
-    font-size: 13px;
-    font-weight: normal;
-}
-
-.search-results .info h5 i {
-    margin-right: 5px;
-    margin-left: 10px;
-}
-
-.search-results .info h5 i:first-child {
-    margin-left: 0;
-}
-
-.search-results .money {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
-.search-results .money .status {
-    color: #888;
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
     font-size: 12px;
-    margin: 0;
-}
-
-.search-results .tag {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    font-weight: 600;
+    text-transform: uppercase;
     color: white;
-    font-size: 10px;
-    padding: 1px 8px;
 }
 </style>
 @endpush

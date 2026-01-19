@@ -18,6 +18,11 @@ class FotoEquipo extends Model
     {
         return $this->belongsTo(Equipo::class);
     }
+    
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, 'equipo_id', 'id');
+    }
     public function recepcion()
     {
         return $this->belongsTo(Recepcion::class);

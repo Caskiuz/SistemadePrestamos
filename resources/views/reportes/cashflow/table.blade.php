@@ -31,7 +31,7 @@
                 <tr class="summary">
                     <td colspan="2"></td>
                     <td colspan="4">Fondo inicial</td>
-                    <td class="text-right">${{ number_format($fondo_inicial ?? 0, 2) }}</td>
+                    <td class="text-right">{{ formatCurrency($fondo_inicial ?? 0) }}</td>
                 </tr>
                 
                 @php $saldo = $fondo_inicial ?? 0; @endphp
@@ -49,12 +49,12 @@
                         <td>{{ $entry->concepto }}</td>
                         <td>{{ $entry->detalles }}</td>
                         @if($entry->tipo_movimiento == 'entrada')
-                            <td class="text-right" colspan="2">${{ number_format($entry->monto, 2) }}</td>
-                            <td class="text-right" colspan="1">${{ number_format($saldo, 2) }}</td>
+                            <td class="text-right" colspan="2">{{ formatCurrency($entry->monto) }}</td>
+                            <td class="text-right" colspan="1">{{ formatCurrency($saldo) }}</td>
                         @else
                             <td class="text-right" colspan="1"></td>
-                            <td class="text-right" colspan="1">${{ number_format($entry->monto, 2) }}</td>
-                            <td class="text-right" colspan="1">${{ number_format($saldo, 2) }}</td>
+                            <td class="text-right" colspan="1">{{ formatCurrency($entry->monto) }}</td>
+                            <td class="text-right" colspan="1">{{ formatCurrency($saldo) }}</td>
                         @endif
                     </tr>
                 @endforeach
@@ -62,7 +62,7 @@
                 <tr class="summary">
                     <td colspan="2"></td>
                     <td colspan="4">Disponible en caja</td>
-                    <td class="text-right">${{ number_format($saldo, 2) }}</td>
+                    <td class="text-right">{{ formatCurrency($saldo) }}</td>
                 </tr>
             </tbody>
         </table>

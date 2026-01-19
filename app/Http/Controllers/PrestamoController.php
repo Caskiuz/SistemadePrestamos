@@ -11,11 +11,15 @@ use App\Models\Interes;
 use App\Models\Pago;
 use App\Models\PrestamoOperacion;
 use App\Helpers\FotoHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PrestamoController extends Controller
 {
     public function index(Request $request) {
-        $query = Prestamo::with(['cliente', 'almacen', 'productos']);
+        $query = Prestamo::with(['cliente', 'almacen', 'productos.fotos']);
+        
+        // Actualizar estados automáticamente antes de mostrar
+        $this->actualizarEstadosAutomaticos();
         
         if ($request->status) {
             $query->where('estado', $request->status);
@@ -55,7 +59,23 @@ class PrestamoController extends Controller
         ]);
 
         $almacen = Almacen::findOrFail($validated['almacen_id']);
-        $interes_mensual = 10; // Interés fijo del 10%
+        $interes_mensual = 10; // Interés por defecto del 10%
+        
+        // Verificar si hay vehículos con interés personalizado
+        $tieneVehiculos = false;
+        $interesVehiculo = 10;
+        foreach ($request->prendas as $prendaData) {
+            if (isset($prendaData['tipo']) && $prendaData['tipo'] === 'vehiculo' && isset($prendaData['interes_personalizado'])) {
+                $tieneVehiculos = true;
+                $interesVehiculo = floatval($prendaData['interes_personalizado']);
+                break;
+            }
+        }
+        
+        // Usar interés personalizado si hay vehículos
+        if ($tieneVehiculos) {
+            $interes_mensual = $interesVehiculo;
+        }
         
         // Calcular monto total de valuaciones
         $monto_total = 0;
@@ -127,6 +147,7 @@ class PrestamoController extends Controller
                 'quilates' => $prendaData['quilates'] ?? null,
                 'avaluo' => $prendaData['avaluo'] ?? null,
                 'valuacion' => $prendaData['valuacion'],
+                'interes_personalizado' => $prendaData['interes_personalizado'] ?? null,
                 'estado' => 'empeñado',
                 'almacen_id' => $validated['almacen_id'],
             ]);
@@ -151,7 +172,7 @@ class PrestamoController extends Controller
     }
 
     public function show($id) {
-        $prestamo = Prestamo::with(['cliente', 'productos', 'almacen', 'interes', 'pagos', 'operaciones.usuario'])->findOrFail($id);
+        $prestamo = Prestamo::with(['cliente', 'productos.fotos', 'almacen', 'interes', 'pagos', 'operaciones.usuario'])->findOrFail($id);
         return view('modules.prestamos.show', compact('prestamo'));
     }
 
@@ -159,6 +180,20 @@ class PrestamoController extends Controller
         $prestamo = Prestamo::with(['cliente', 'productos', 'almacen'])->findOrFail($id);
         $pdf = Pdf::loadView('modules.prestamos.pdf', compact('prestamo'));
         return $pdf->download('boleta-' . $prestamo->folio . '.pdf');
+    }
+
+    public function contrato($id) {
+        $prestamo = Prestamo::with(['cliente', 'productos', 'almacen'])->findOrFail($id);
+        $pdf = Pdf::loadView('modules.prestamos.contrato', compact('prestamo'));
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->stream('Documento_Privado_Compra_Prestamo_' . $prestamo->id . '.pdf');
+    }
+
+    public function contratoDownload($id) {
+        $prestamo = Prestamo::with(['cliente', 'productos', 'almacen'])->findOrFail($id);
+        $pdf = Pdf::loadView('modules.prestamos.contrato', compact('prestamo'));
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->download('Documento_Privado_Compra_Prestamo_' . $prestamo->id . '.pdf');
     }
 
     public function registrarPago(Request $request, $id) {
@@ -300,8 +335,143 @@ class PrestamoController extends Controller
             'descripcion' => 'Descuento aplicado'
         ]);
 
+        // Registrar descuento en flujo de caja
+        \App\Models\CashFlow::create([
+            'fecha' => now(),
+            'usuario_id' => auth()->id(),
+            'concepto' => 'Descuento aplicado',
+            'detalles' => 'Descuento en préstamo #' . $prestamo->id,
+            'monto' => $validated['monto'],
+            'tipo_movimiento' => 'salida',
+            'branch_id' => $prestamo->almacen_id
+        ]);
+
         return redirect()->route('prestamos.show', $prestamo->id)
             ->with('success', 'Descuento aplicado');
+    }
+
+    public function subirFotos(Request $request, $productoId)
+    {
+        try {
+            // Log para debugging
+            \Log::info('Subiendo fotos para producto: ' . $productoId);
+            \Log::info('Archivos recibidos: ' . count($request->file('fotos', [])));
+            
+            $request->validate([
+                'fotos.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240' // 10MB para cámara
+            ]);
+
+            $producto = Producto::findOrFail($productoId);
+            $fotosSubidas = 0;
+            
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $foto) {
+                    \Log::info('Procesando foto: ' . $foto->getClientOriginalName());
+                    \Log::info('Tamaño: ' . $foto->getSize() . ' bytes');
+                    \Log::info('Tipo MIME: ' . $foto->getMimeType());
+                    
+                    // Generar nombre único
+                    $extension = $foto->getClientOriginalExtension() ?: 'jpg';
+                    $nombreArchivo = 'foto_' . $productoId . '_' . time() . '_' . uniqid() . '.' . $extension;
+                    
+                    // Mover archivo directamente a public/fotos
+                    $destinoPath = public_path('fotos');
+                    if (!file_exists($destinoPath)) {
+                        mkdir($destinoPath, 0755, true);
+                    }
+                    
+                    $foto->move($destinoPath, $nombreArchivo);
+                    
+                    // Guardar en base de datos con ruta simple
+                    \App\Models\FotoEquipo::create([
+                        'equipo_id' => $producto->id,
+                        'ruta' => 'fotos/' . $nombreArchivo,
+                    ]);
+                    
+                    $fotosSubidas++;
+                    \Log::info('Foto guardada exitosamente: ' . $nombreArchivo);
+                }
+            }
+
+            \Log::info('Fotos subidas exitosamente: ' . $fotosSubidas);
+            
+            // Respuesta JSON para AJAX
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true, 
+                    'message' => "Se subieron {$fotosSubidas} fotos exitosamente"
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Fotos subidas exitosamente');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = $e->validator->errors()->all();
+            \Log::error('Error de validación: ' . implode(', ', $errors));
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Error de validación: ' . implode(', ', $errors)
+                ], 422);
+            }
+            
+            return redirect()->back()->with('error', 'Error de validación: ' . implode(', ', $errors));
+        } catch (\Exception $e) {
+            \Log::error('Error al subir fotos: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Error al subir fotos: ' . $e->getMessage()
+                ], 500);
+            }
+            
+            return redirect()->back()->with('error', 'Error al subir fotos: ' . $e->getMessage());
+        }
+    }
+
+    public function eliminarFoto($fotoId)
+    {
+        try {
+            $foto = \App\Models\FotoEquipo::findOrFail($fotoId);
+            
+            // Intentar eliminar el archivo físico
+            $rutaArchivo = public_path($foto->ruta);
+            if (file_exists($rutaArchivo)) {
+                unlink($rutaArchivo);
+            }
+            
+            // Eliminar registro de base de datos
+            $foto->delete();
+
+            return response()->json(['success' => true, 'message' => 'Foto eliminada exitosamente']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al eliminar la foto'], 500);
+        }
+    }
+
+    public function limpiarFotosRotas($productoId)
+    {
+        try {
+            $producto = Producto::findOrFail($productoId);
+            $fotosEliminadas = 0;
+            
+            foreach ($producto->fotos as $foto) {
+                $rutaArchivo = public_path($foto->ruta);
+                if (!file_exists($rutaArchivo)) {
+                    $foto->delete();
+                    $fotosEliminadas++;
+                }
+            }
+
+            return response()->json([
+                'success' => true, 
+                'message' => "Se eliminaron {$fotosEliminadas} registros de fotos sin archivo físico"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al limpiar fotos'], 500);
+        }
     }
 
     public function update(Request $request, $id) {
@@ -313,5 +483,24 @@ class PrestamoController extends Controller
     public function destroy($id) {
         Prestamo::destroy($id);
         return response()->json(null, 204);
+    }
+
+    /**
+     * Actualiza automáticamente los estados de los préstamos según las fechas
+     */
+    private function actualizarEstadosAutomaticos()
+    {
+        $hoy = now()->format('Y-m-d');
+        
+        // Cambiar préstamos activos a vencidos si pasó la fecha de vencimiento
+        Prestamo::where('estado', 'activo')
+            ->where('fecha_vencimiento', '<', $hoy)
+            ->update(['estado' => 'vencido']);
+        
+        // Cambiar préstamos vencidos a expirados después de 30 días de vencimiento
+        $fechaExpiracion = now()->subDays(30)->format('Y-m-d');
+        Prestamo::where('estado', 'vencido')
+            ->where('fecha_vencimiento', '<', $fechaExpiracion)
+            ->update(['estado' => 'expirado']);
     }
 }

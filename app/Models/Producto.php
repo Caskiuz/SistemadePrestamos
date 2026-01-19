@@ -54,4 +54,9 @@ class Producto extends Model
     {
         return $this->hasMany(Apartado::class);
     }
+
+    public function fotos()
+    {
+        return $this->hasMany(FotoEquipo::class, 'equipo_id', 'id');
+    }
 }

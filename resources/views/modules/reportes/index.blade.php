@@ -1,138 +1,160 @@
 @extends('layouts.main')
 
 @section('content')
-<header class="yp-header brown">
-    <h1>
-        <i class="fa fa-file-text"></i>
-        <span>Reportes</span>
-    </h1>
-</header>
+<x-mobile-header title="Reportes" />
 
-<section class="content" style="background-color: #444 !important; padding: 15px !important;">
-    <div class="container-fluid" style="max-width: 100%; overflow-x: hidden;">
-        <h5 style="color: #fff !important; font-size: 16px !important; font-weight: 400 !important; margin-bottom: 10px !important; margin-top: 20px !important;">Caja</h5>
-        <div class="reports-grid">
-            <a href="{{ route('reportes.cashflow') }}" class="report-card">
-                <i class="fa fa-exchange"></i>
-                <h5>Flujo de Caja</h5>
-            </a>
-            <a href="{{ route('reportes.summary') }}" class="report-card">
-                <i class="fa fa-book"></i>
-                <h5>Resumen de Caja</h5>
-            </a>
-            <button class="report-card" onclick="openModal('deposito')">
-                <i class="fa fa-long-arrow-right"></i>
-                <h5>Registrar depósito</h5>
-            </button>
-            <button class="report-card" onclick="openModal('retiro')">
-                <i class="fa fa-long-arrow-left"></i>
-                <h5>Registrar retiro</h5>
-            </button>
-            <button class="report-card" onclick="openModal('gasto')">
-                <i class="fa fa-money"></i>
-                <h5>Registrar gasto</h5>
-            </button>
-        </div>
-
-        <h5 class="mt-4" style="color: #fff !important; font-size: 16px !important; font-weight: 400 !important; margin-bottom: 10px !important; margin-top: 20px !important;">Clientes</h5>
-        <div class="reports-grid">
-            <a href="{{ route('clientes.index', ['sort' => 'az']) }}" class="report-card">
-                <i class="fa fa-sort-alpha-asc"></i>
-                <h5>Por orden alfabético</h5>
-            </a>
-            <a href="{{ route('clientes.index', ['sort' => 'score']) }}" class="report-card">
-                <i class="fa fa-star"></i>
-                <h5>Por mejor puntuación</h5>
-            </a>
-            <a href="{{ route('clientes.index', ['filter' => 'birthday']) }}" class="report-card">
-                <i class="fa fa-calendar"></i>
-                <h5>Cumpleañeros del mes</h5>
-            </a>
-            <a href="{{ route('clientes.index', ['filter' => 'inactive']) }}" class="report-card">
-                <i class="fa fa-user-times"></i>
-                <h5>Sin actividad reciente</h5>
-            </a>
-        </div>
-
-        <h5 class="mt-4" style="color: #fff !important; font-size: 16px !important; font-weight: 400 !important; margin-bottom: 10px !important; margin-top: 20px !important;">Préstamos</h5>
-        <div class="reports-grid">
-            <a href="{{ route('reportes.prestamos.vigentes') }}" class="report-card">
-                <i class="fa fa-calendar-check-o"></i>
-                <h5>Préstamos vigentes</h5>
-            </a>
-            <a href="{{ route('reportes.prestamos.por-vencer') }}" class="report-card">
-                <i class="fa fa-calendar-minus-o"></i>
-                <h5>Préstamos por vencer</h5>
-            </a>
-            <a href="{{ route('reportes.prestamos.vencidos') }}" class="report-card">
-                <i class="fa fa-calendar-times-o"></i>
-                <h5>Préstamos vencidos</h5>
-            </a>
-            <a href="{{ route('reportes.prestamos.expirados') }}" class="report-card">
-                <i class="fa fa-tag"></i>
-                <h5>Préstamos expirados</h5>
-            </a>
-            <a href="{{ route('reportes.prestamos.liquidados') }}" class="report-card">
-                <i class="fa fa-legal"></i>
-                <h5>Préstamos liquidados</h5>
-            </a>
-        </div>
-
-        <h5 class="mt-4" style="color: #fff !important; font-size: 16px !important; font-weight: 400 !important; margin-bottom: 10px !important; margin-top: 20px !important;">Compras, ventas y apartados</h5>
-        <div class="reports-grid">
-            <a href="{{ route('compras.index') }}" class="report-card">
-                <i class="fa fa-shopping-cart"></i>
-                <h5>Compras</h5>
-            </a>
-            <a href="{{ route('ventas.index') }}" class="report-card">
-                <i class="fa fa-credit-card"></i>
-                <h5>Ventas</h5>
-            </a>
-            <a href="{{ route('reportes.apartados.vigentes') }}" class="report-card">
-                <i class="fa fa-bookmark"></i>
-                <h5>Apartados vigentes</h5>
-            </a>
-            <a href="{{ route('reportes.apartados.vencidos') }}" class="report-card">
-                <i class="fa fa-bookmark-o"></i>
-                <h5>Apartados vencidos</h5>
-            </a>
-        </div>
-
-        <h5 class="mt-4" style="color: #fff !important; font-size: 16px !important; font-weight: 400 !important; margin-bottom: 10px !important; margin-top: 20px !important;">Inventario</h5>
-        <div class="reports-grid">
-            <a href="{{ route('inventario.index', ['status' => 'loan']) }}" class="report-card">
-                <i class="fa fa-archive"></i>
-                <h5>Prendas empeñadas</h5>
-            </a>
-            <a href="{{ route('inventario.index', ['status' => 'loan', 'type' => 'jewl']) }}" class="report-card">
-                <i class="fa fa-star"></i>
-                <h5>Joyas empeñadas</h5>
-            </a>
-            <a href="{{ route('inventario.index', ['status' => 'forSale']) }}" class="report-card">
-                <i class="fa fa-star"></i>
-                <h5>Prendas en venta</h5>
-            </a>
-            <a href="{{ route('inventario.index', ['status' => 'forSale', 'type' => 'jewl']) }}" class="report-card">
-                <i class="fa fa-star"></i>
-                <h5>Joyas en venta</h5>
-            </a>
-            <a href="{{ route('inventario.index', ['status' => 'layaway']) }}" class="report-card">
-                <i class="fa fa-bookmark"></i>
-                <h5>Prendas apartadas</h5>
-            </a>
-        </div>
-
-        <h5 class="mt-4" style="color: #fff !important; font-size: 16px !important; font-weight: 400 !important; margin-bottom: 10px !important; margin-top: 20px !important;">Respaldo</h5>
-        <div class="reports-grid">
-            <a href="{{ route('reportes.excel') }}" target="_blank" class="report-card">
-                <i class="fa fa-file-excel-o"></i>
-                <h5>Respaldo en Excel</h5>
-            </a>
-        </div>
+<div class="mobile-content">
+    <div class="section-title">
+        <h3>Caja</h3>
     </div>
-</section>
+    <div class="reports-grid">
+        <a href="{{ route('reportes.cashflow') }}" class="report-card">
+            <i class="fa fa-exchange"></i>
+            <h5>Flujo de Caja</h5>
+        </a>
+        <a href="{{ route('reportes.summary') }}" class="report-card">
+            <i class="fa fa-book"></i>
+            <h5>Resumen de Caja</h5>
+        </a>
+        <button class="report-card" onclick="openModal('deposito')">
+            <i class="fa fa-long-arrow-right"></i>
+            <h5>Registrar depósito</h5>
+        </button>
+        <button class="report-card" onclick="openModal('retiro')">
+            <i class="fa fa-long-arrow-left"></i>
+            <h5>Registrar retiro</h5>
+        </button>
+        <button class="report-card" onclick="openModal('gasto')">
+            <i class="fa fa-money"></i>
+            <h5>Registrar gasto</h5>
+        </button>
+    </div>
+
+    <div class="section-title">
+        <h3>Clientes</h3>
+    </div>
+    <div class="reports-grid">
+        <a href="{{ route('clientes.index', ['sort' => 'az']) }}" class="report-card">
+            <i class="fa fa-sort-alpha-asc"></i>
+            <h5>Por orden alfabético</h5>
+        </a>
+        <a href="{{ route('clientes.index', ['sort' => 'score']) }}" class="report-card">
+            <i class="fa fa-star"></i>
+            <h5>Por mejor puntuación</h5>
+        </a>
+        <a href="{{ route('clientes.index', ['filter' => 'birthday']) }}" class="report-card">
+            <i class="fa fa-calendar"></i>
+            <h5>Cumpleañeros del mes</h5>
+        </a>
+        <a href="{{ route('clientes.index', ['filter' => 'inactive']) }}" class="report-card">
+            <i class="fa fa-user-times"></i>
+            <h5>Sin actividad reciente</h5>
+        </a>
+    </div>
+
+    <div class="section-title">
+        <h3>Préstamos</h3>
+    </div>
+    <div class="reports-grid">
+        <a href="{{ route('reportes.prestamos.vigentes') }}" class="report-card">
+            <i class="fa fa-calendar-check-o"></i>
+            <h5>Préstamos vigentes</h5>
+        </a>
+        <a href="{{ route('reportes.prestamos.por-vencer') }}" class="report-card">
+            <i class="fa fa-calendar-minus-o"></i>
+            <h5>Préstamos por vencer</h5>
+        </a>
+        <a href="{{ route('reportes.prestamos.vencidos') }}" class="report-card">
+            <i class="fa fa-calendar-times-o"></i>
+            <h5>Préstamos vencidos</h5>
+        </a>
+        <a href="{{ route('reportes.prestamos.expirados') }}" class="report-card">
+            <i class="fa fa-tag"></i>
+            <h5>Préstamos expirados</h5>
+        </a>
+        <a href="{{ route('reportes.prestamos.liquidados') }}" class="report-card">
+            <i class="fa fa-legal"></i>
+            <h5>Préstamos liquidados</h5>
+        </a>
+    </div>
+
+    <div class="section-title">
+        <h3>Compras, ventas y apartados</h3>
+    </div>
+    <div class="reports-grid">
+        <a href="{{ route('compras.index') }}" class="report-card">
+            <i class="fa fa-shopping-cart"></i>
+            <h5>Compras</h5>
+        </a>
+        <a href="{{ route('ventas.index') }}" class="report-card">
+            <i class="fa fa-credit-card"></i>
+            <h5>Ventas</h5>
+        </a>
+        <a href="{{ route('reportes.apartados.vigentes') }}" class="report-card">
+            <i class="fa fa-bookmark"></i>
+            <h5>Apartados vigentes</h5>
+        </a>
+        <a href="{{ route('reportes.apartados.vencidos') }}" class="report-card">
+            <i class="fa fa-bookmark-o"></i>
+            <h5>Apartados vencidos</h5>
+        </a>
+    </div>
+
+    <div class="section-title">
+        <h3>Inventario</h3>
+    </div>
+    <div class="reports-grid">
+        <a href="{{ route('inventario.index', ['status' => 'loan']) }}" class="report-card">
+            <i class="fa fa-archive"></i>
+            <h5>Prendas empeñadas</h5>
+        </a>
+        <a href="{{ route('inventario.index', ['status' => 'loan', 'type' => 'jewl']) }}" class="report-card">
+            <i class="fa fa-star"></i>
+            <h5>Joyas empeñadas</h5>
+        </a>
+        <a href="{{ route('inventario.index', ['status' => 'forSale']) }}" class="report-card">
+            <i class="fa fa-star"></i>
+            <h5>Prendas en venta</h5>
+        </a>
+        <a href="{{ route('inventario.index', ['status' => 'forSale', 'type' => 'jewl']) }}" class="report-card">
+            <i class="fa fa-star"></i>
+            <h5>Joyas en venta</h5>
+        </a>
+        <a href="{{ route('inventario.index', ['status' => 'layaway']) }}" class="report-card">
+            <i class="fa fa-bookmark"></i>
+            <h5>Prendas apartadas</h5>
+        </a>
+    </div>
+
+    <div class="section-title">
+        <h3>Respaldo</h3>
+    </div>
+    <div class="reports-grid">
+        <a href="{{ route('reportes.excel') }}" target="_blank" class="report-card">
+            <i class="fa fa-file-excel-o"></i>
+            <h5>Respaldo en Excel</h5>
+        </a>
+    </div>
+</div>
 
 <style>
+.section-title {
+    margin: 30px 0 15px 0;
+}
+
+.section-title:first-child {
+    margin-top: 0;
+}
+
+.section-title h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
 .reports-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -141,40 +163,42 @@
 }
 
 .report-card {
-    background: #2a2a2a !important;
-    border: 1px solid #3a3a3a !important;
-    border-radius: 8px !important;
-    padding: 20px 15px !important;
-    text-align: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-height: 100px !important;
-    text-decoration: none !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: 20px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
 }
 
 .report-card:hover {
-    background: #3a3a3a !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2) !important;
+    background: var(--gray-50);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
 }
 
 .report-card i {
-    font-size: 32px !important;
-    color: #dc2626 !important;
-    margin-bottom: 10px !important;
-    display: block !important;
+    font-size: 32px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: block;
 }
 
 .report-card h5 {
-    color: #ccc !important;
-    margin: 0 !important;
-    font-size: 12px !important;
-    font-weight: 400 !important;
-    line-height: 1.3 !important;
+    color: var(--gray-800);
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
 }
 
 @media (max-width: 768px) {
@@ -184,17 +208,17 @@
     }
     
     .report-card {
-        padding: 15px 10px !important;
-        min-height: 80px !important;
+        padding: 15px 10px;
+        min-height: 80px;
     }
     
     .report-card i {
-        font-size: 24px !important;
-        margin-bottom: 8px !important;
+        font-size: 24px;
+        margin-bottom: 8px;
     }
     
     .report-card h5 {
-        font-size: 11px !important;
+        font-size: 11px;
     }
 }
 </style>

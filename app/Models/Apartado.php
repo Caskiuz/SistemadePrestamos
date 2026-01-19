@@ -15,11 +15,20 @@ class Apartado extends Model
         'producto_id',
         'almacen_id',
         'anticipo',
+        'saldo',
         'monto_total',
         'fecha_apartado',
         'fecha_vencimiento',
         'estado',
         'observaciones',
+    ];
+    
+    protected $casts = [
+        'fecha_apartado' => 'date',
+        'fecha_vencimiento' => 'date',
+        'anticipo' => 'decimal:2',
+        'saldo' => 'decimal:2',
+        'monto_total' => 'decimal:2',
     ];
 
     public function cliente()

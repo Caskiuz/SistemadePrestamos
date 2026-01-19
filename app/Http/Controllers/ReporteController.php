@@ -93,8 +93,13 @@ class ReporteController extends Controller
 
     public function apartadosVigentes()
     {
-        $apartados = Apartado::with(['cliente', 'producto'])
-            ->where('estado', 'activo')
+        // Actualizar apartados vencidos
+        Apartado::where('estado', 'VIGENTE')
+            ->whereDate('fecha_vencimiento', '<', now())
+            ->update(['estado' => 'VENCIDO']);
+            
+        $apartados = Apartado::with(['cliente', 'producto', 'almacen'])
+            ->where('estado', 'VIGENTE')
             ->orderBy('fecha_vencimiento', 'asc')
             ->get();
         
@@ -103,8 +108,13 @@ class ReporteController extends Controller
 
     public function apartadosVencidos()
     {
-        $apartados = Apartado::with(['cliente', 'producto'])
-            ->where('estado', 'vencido')
+        // Actualizar apartados vencidos
+        Apartado::where('estado', 'VIGENTE')
+            ->whereDate('fecha_vencimiento', '<', now())
+            ->update(['estado' => 'VENCIDO']);
+            
+        $apartados = Apartado::with(['cliente', 'producto', 'almacen'])
+            ->where('estado', 'VENCIDO')
             ->orderBy('fecha_vencimiento', 'desc')
             ->get();
         

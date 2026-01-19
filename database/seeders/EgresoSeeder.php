@@ -13,13 +13,13 @@ class EgresoSeeder extends Seeder
             'concepto' => 'Pago de proveedor',
             'monto' => 600.00,
             'fecha' => now()->toDateString(),
-            'observaciones' => 'Egreso de ejemplo generado por el seeder.'
+            'observaciones' => 'Pago realizado a proveedor principal.'
         ]);
         Egreso::create([
             'concepto' => 'Compra de insumos',
             'monto' => 200.00,
             'fecha' => now()->toDateString(),
-            'observaciones' => 'Egreso por compra de insumos.'
+            'observaciones' => 'Compra de materiales para operación.'
         ]);
     }
 }

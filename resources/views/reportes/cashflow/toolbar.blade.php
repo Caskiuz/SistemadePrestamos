@@ -26,22 +26,22 @@
     <div class="tool-group">
         <span class="group-name">Tipo</span>
         <select id="tipo_concepto" name="tipo_concepto" class="form-control input-sm" onchange="filtrarConcepto()">
-            <option value="">Todos</option>
-            <option value="0">Préstamo</option>
-            <option value="1">Pago de interés extemporáneo</option>
-            <option value="2">Pago de intereses</option>
-            <option value="3">Abono a capital</option>
-            <option value="4">Abono a apartado</option>
-            <option value="5">Venta</option>
-            <option value="6">Compra</option>
-            <option value="7">Cancelación de préstamo</option>
-            <option value="8">Depósito</option>
-            <option value="9">Retiro</option>
-            <option value="10">Cancelación de compra</option>
-            <option value="11">Apartado expirado</option>
-            <option value="12">Cancelación de venta</option>
-            <option value="13">Gasto</option>
-            <option value="14">Reposición de boleta</option>
+            <option value="" {{ $tipo_filtro == '' ? 'selected' : '' }}>Todos</option>
+            <option value="0" {{ $tipo_filtro == '0' ? 'selected' : '' }}>Préstamo</option>
+            <option value="1" {{ $tipo_filtro == '1' ? 'selected' : '' }}>Pago de interés extemporáneo</option>
+            <option value="2" {{ $tipo_filtro == '2' ? 'selected' : '' }}>Pago de intereses</option>
+            <option value="3" {{ $tipo_filtro == '3' ? 'selected' : '' }}>Abono a capital</option>
+            <option value="4" {{ $tipo_filtro == '4' ? 'selected' : '' }}>Abono a apartado</option>
+            <option value="5" {{ $tipo_filtro == '5' ? 'selected' : '' }}>Venta</option>
+            <option value="6" {{ $tipo_filtro == '6' ? 'selected' : '' }}>Compra</option>
+            <option value="7" {{ $tipo_filtro == '7' ? 'selected' : '' }}>Cancelación de préstamo</option>
+            <option value="8" {{ $tipo_filtro == '8' ? 'selected' : '' }}>Depósito</option>
+            <option value="9" {{ $tipo_filtro == '9' ? 'selected' : '' }}>Retiro</option>
+            <option value="10" {{ $tipo_filtro == '10' ? 'selected' : '' }}>Cancelación de compra</option>
+            <option value="11" {{ $tipo_filtro == '11' ? 'selected' : '' }}>Apartado expirado</option>
+            <option value="12" {{ $tipo_filtro == '12' ? 'selected' : '' }}>Cancelación de venta</option>
+            <option value="13" {{ $tipo_filtro == '13' ? 'selected' : '' }}>Gasto</option>
+            <option value="14" {{ $tipo_filtro == '14' ? 'selected' : '' }}>Reposición de boleta</option>
         </select>
     </div>
     

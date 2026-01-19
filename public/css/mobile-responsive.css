@@ -1,0 +1,566 @@
+/* ===== RESPONSIVE MOBILE & TABLET STYLES ===== */
+
+/* Variables CSS para consistencia */
+:root {
+    --primary-color: #dc2626;
+    --secondary-color: #111827;
+    --success-color: #16a34a;
+    --warning-color: #f59e0b;
+    --danger-color: #dc2626;
+    --info-color: #0ea5e9;
+    --light-color: #f8fafc;
+    --dark-color: #1f2937;
+    --border-radius: 8px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --navbar-height: 70px;
+}
+
+/* ===== BASE RESPONSIVE STYLES ===== */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    font-size: 14px;
+}
+
+/* ===== MOBILE STYLES (320px - 768px) ===== */
+@media (max-width: 768px) {
+    
+    /* Layout principal */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 10px !important;
+        margin-top: var(--navbar-height) !important;
+        width: 100% !important;
+    }
+    
+    /* Cards responsive */
+    .card {
+        margin-bottom: 15px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+    
+    .card-header {
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+    
+    .card-header .card-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .card-header .card-tools {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    /* Botones responsive */
+    .btn {
+        padding: 10px 15px;
+        font-size: 14px;
+        border-radius: var(--border-radius);
+        margin-bottom: 5px;
+        white-space: nowrap;
+    }
+    
+    .btn-sm {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 5px;
+        border-radius: var(--border-radius) !important;
+    }
+    
+    /* Tablas responsive */
+    .table-responsive {
+        border: none;
+        margin-bottom: 0;
+    }
+    
+    .table {
+        font-size: 12px;
+        margin-bottom: 0;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 6px;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .table th {
+        font-size: 11px;
+        font-weight: 600;
+        background-color: var(--light-color);
+    }
+    
+    /* Ocultar columnas menos importantes en móvil */
+    .table .d-none-mobile {
+        display: none !important;
+    }
+    
+    /* Formularios responsive */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-control {
+        padding: 12px;
+        font-size: 16px; /* Evita zoom en iOS */
+        border-radius: var(--border-radius);
+    }
+    
+    .form-control-sm {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+    
+    /* Grid responsive */
+    .row {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    
+    .col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+    .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+    .col-auto, .col-sm, .col-sm-1, .col-sm-2, .col-sm-3,
+    .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8,
+    .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-auto,
+    .col-md, .col-md-1, .col-md-2, .col-md-3, .col-md-4,
+    .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9,
+    .col-md-10, .col-md-11, .col-md-12, .col-md-auto {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* Modales responsive */
+    .modal-dialog {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .modal-content {
+        border-radius: var(--border-radius);
+    }
+    
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .modal-body {
+        padding: 15px;
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+        border-top: 1px solid #dee2e6;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        margin: 0;
+    }
+    
+    /* Alertas responsive */
+    .alert {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border-radius: var(--border-radius);
+        font-size: 14px;
+    }
+    
+    /* Badges responsive */
+    .badge {
+        padding: 6px 10px;
+        font-size: 11px;
+        border-radius: 12px;
+    }
+    
+    /* Navegación responsive */
+    .nav-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+        border-radius: var(--border-radius);
+        margin-bottom: 5px;
+        text-align: center;
+    }
+    
+    .nav-tabs .nav-link.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    
+    /* Paginación responsive */
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .page-link {
+        padding: 8px 12px;
+        font-size: 14px;
+        margin: 2px;
+        border-radius: var(--border-radius);
+    }
+    
+    /* Breadcrumb responsive */
+    .breadcrumb {
+        padding: 10px 0;
+        margin-bottom: 15px;
+        background: transparent;
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+    
+    /* Dropdown responsive */
+    .dropdown-menu {
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border: 1px solid #dee2e6;
+    }
+    
+    .dropdown-item {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    /* Progress bars responsive */
+    .progress {
+        height: 8px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    
+    /* List groups responsive */
+    .list-group-item {
+        padding: 12px 15px;
+        font-size: 14px;
+        border-radius: var(--border-radius);
+        margin-bottom: 2px;
+    }
+    
+    /* Texto responsive */
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 18px; }
+    h4 { font-size: 16px; }
+    h5 { font-size: 14px; }
+    h6 { font-size: 12px; }
+    
+    .lead {
+        font-size: 16px;
+    }
+    
+    /* Utilidades responsive */
+    .text-truncate-mobile {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+    
+    .hide-mobile {
+        display: none !important;
+    }
+    
+    .show-mobile {
+        display: block !important;
+    }
+}
+
+/* ===== TABLET STYLES (769px - 1024px) ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    
+    .main-content {
+        padding: 20px;
+        margin-top: var(--navbar-height);
+    }
+    
+    .card-header {
+        padding: 20px;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 10px 8px;
+    }
+    
+    .form-control {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .modal-dialog {
+        max-width: 90%;
+        margin: 30px auto;
+    }
+    
+    /* Mostrar más columnas en tablet */
+    .table .d-none-tablet {
+        display: none !important;
+    }
+}
+
+/* ===== DESKTOP STYLES (1025px+) ===== */
+@media (min-width: 1025px) {
+    
+    .main-content {
+        margin-left: 250px;
+        padding: 30px;
+        margin-top: var(--navbar-height);
+    }
+    
+    .hide-desktop {
+        display: none !important;
+    }
+    
+    .show-desktop {
+        display: block !important;
+    }
+}
+
+/* ===== COMPONENTES ESPECÍFICOS RESPONSIVE ===== */
+
+/* Botones flotantes responsive */
+@media (max-width: 768px) {
+    .action {
+        width: 50px !important;
+        height: 50px !important;
+        bottom: 15px !important;
+        right: 15px !important;
+        font-size: 20px !important;
+    }
+    
+    #subActions {
+        bottom: 75px !important;
+        right: 15px !important;
+    }
+    
+    #subActions li {
+        margin-bottom: 8px !important;
+    }
+    
+    #subActions button {
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 16px !important;
+    }
+    
+    #subActions span {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+        margin-right: 8px !important;
+    }
+}
+
+/* Visor PDF responsive */
+@media (max-width: 768px) {
+    #modalVisorPDF .modal-header {
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    #modalVisorPDF .modal-header h4 {
+        font-size: 16px;
+        margin: 0;
+    }
+    
+    #modalVisorPDF .modal-header div {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+    
+    #modalVisorPDF .modal-header button {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Grids de fotos responsive */
+@media (max-width: 768px) {
+    .fotos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+        margin-top: 10px;
+    }
+    
+    .foto-item {
+        position: relative;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+    
+    .foto-item img {
+        width: 100%;
+        height: 80px;
+        object-fit: cover;
+    }
+    
+    .foto-item button {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+}
+
+/* Inputs de archivo responsive */
+@media (max-width: 768px) {
+    .file-upload-area {
+        padding: 20px;
+        text-align: center;
+        border: 2px dashed #dee2e6;
+        border-radius: var(--border-radius);
+        background: var(--light-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .file-upload-area:hover {
+        border-color: var(--primary-color);
+        background: rgba(220, 38, 38, 0.05);
+    }
+    
+    .file-upload-area i {
+        font-size: 24px;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+    
+    .file-upload-area .upload-text {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
+    
+    .file-upload-area .upload-subtext {
+        font-size: 11px;
+        color: #9ca3af;
+    }
+}
+
+/* Estados y badges responsive */
+@media (max-width: 768px) {
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-activo { background: #dcfce7; color: #166534; }
+    .status-vencido { background: #fef3c7; color: #92400e; }
+    .status-expirado { background: #fee2e2; color: #991b1b; }
+    .status-liquidado { background: #e5e7eb; color: #374151; }
+    .status-cancelado { background: #f3f4f6; color: #6b7280; }
+}
+
+/* Animaciones suaves */
+@media (max-width: 768px) {
+    .fade-in {
+        animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-in {
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(0); }
+    }
+}
+
+/* Touch-friendly interactions */
+@media (max-width: 768px) {
+    .btn, .form-control, .dropdown-toggle, .nav-link {
+        min-height: 44px; /* Tamaño mínimo recomendado para touch */
+    }
+    
+    .clickable {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        tap-highlight-color: rgba(0,0,0,0.1);
+    }
+    
+    .clickable:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* Scrollbars personalizados para móvil */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 2px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+}

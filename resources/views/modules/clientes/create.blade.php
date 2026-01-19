@@ -13,55 +13,57 @@
         <form action="{{ route('clientes.store') }}" method="POST" id="createClient">
             @csrf
             <div class="form-group">
-                <label for="first">Nombre</label>
-                <input required type="text" id="first" name="first" placeholder="Nombre(s) del cliente" class="form-control">
+                <label for="tipo">Tipo de cliente</label>
+                <select id="tipo" name="tipo" class="form-control" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="PERSONA">Persona</option>
+                    <option value="EMPRESA">Empresa</option>
+                </select>
             </div>
             <div class="form-group">
-                <label for="last">Apellidos</label>
-                <input required type="text" id="last" name="last" placeholder="Apellidos del cliente" class="form-control">
+                <label for="nombre">Nombre completo</label>
+                <input required type="text" id="nombre" name="nombre" placeholder="Nombre completo del cliente" class="form-control">
             </div>
             <div class="form-group">
-                <label for="birth">Fecha de nacimiento</label>
-                <input type="date" id="birth" name="birth" class="form-control">
+                <label for="tipo_documento">Tipo de documento</label>
+                <select id="tipo_documento" name="tipo_documento" class="form-control" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="CI">Cédula de Identidad (CI)</option>
+                    <option value="NIT">NIT</option>
+                    <option value="PASAPORTE">Pasaporte</option>
+                    <option value="OTRO">Otro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="numero_documento">Número de documento</label>
+                <input type="text" id="numero_documento" name="numero_documento" placeholder="Número de documento" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono_1">Teléfono principal</label>
+                <input type="text" id="telefono_1" name="telefono_1" placeholder="Teléfono principal" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono_2">Teléfono secundario</label>
+                <input type="text" id="telefono_2" name="telefono_2" placeholder="Teléfono secundario (opcional)" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="telefono_3">Teléfono adicional</label>
+                <input type="text" id="telefono_3" name="telefono_3" placeholder="Teléfono adicional (opcional)" class="form-control">
             </div>
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
                 <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" class="form-control">
             </div>
             <div class="form-group">
-                <label for="phone">Teléfono</label>
-                <input type="text" id="phone" name="phone" placeholder="5 (555) 555-5555" class="form-control">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad" placeholder="Ciudad" class="form-control" value="Santa Cruz">
             </div>
             <div class="form-group">
-                <label for="address">Domicilio</label>
-                <input type="text" id="address" name="address" placeholder="Calle, número, colonia" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="zip">Código postal</label>
-                <input type="text" id="zip" name="zip" placeholder="Código postal" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="city">Ciudad</label>
-                <input type="text" id="city" name="city" placeholder="Ciudad y estado/provincia" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="typeOfId">Tipo de ID</label>
-                <select id="typeOfId" name="typeOfId" class="form-control">
-                    <option value="">Selecciona una opción</option>
-                    <option value="id">Identificación oficial</option>
-                    <option value="license">Licencia de conducir</option>
-                    <option value="passport">Pasaporte</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="personalId">ID</label>
-                <input type="text" id="personalId" name="personalId" placeholder="Número de identificación oficial" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="coOwner">Cotitular</label>
-                <input type="text" id="coOwner" name="coOwner" placeholder="Cotitular (opcional)" class="form-control">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" placeholder="Dirección completa" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{{ route('clientes.index') }}" class="btn btn-default">Cancelar</a>
         </form>
     </div>
 </body>

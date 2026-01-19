@@ -54,6 +54,57 @@
                                         <small class="text-muted">Activar o desactivar el sistema de notificaciones automáticas</small>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Proveedor SMS</label>
+                                        <select name="sms_provider" class="form-control">
+                                            <option value="local" {{ ($configuraciones['sms_provider']->valor ?? 'local') == 'local' ? 'selected' : '' }}>API Local</option>
+                                            <option value="twilio" {{ ($configuraciones['sms_provider']->valor ?? 'local') == 'twilio' ? 'selected' : '' }}>Twilio</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>API Key SMS</label>
+                                        <input type="text" name="sms_api_key" class="form-control" 
+                                               value="{{ $configuraciones['sms_api_key']->valor ?? '' }}" 
+                                               placeholder="Clave API para SMS">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>WhatsApp Token</label>
+                                        <input type="text" name="whatsapp_token" class="form-control" 
+                                               value="{{ $configuraciones['whatsapp_token']->valor ?? '' }}" 
+                                               placeholder="Token de WhatsApp Business">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Canales de Notificación</label>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="canales[]" value="email" class="form-check-input" 
+                                                   {{ in_array('email', explode(',', $configuraciones['canales_notif']->valor ?? 'email,sms')) ? 'checked' : '' }}>
+                                            <label class="form-check-label">Email</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="canales[]" value="sms" class="form-check-input" 
+                                                   {{ in_array('sms', explode(',', $configuraciones['canales_notif']->valor ?? 'email,sms')) ? 'checked' : '' }}>
+                                            <label class="form-check-label">SMS</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="canales[]" value="whatsapp" class="form-check-input" 
+                                                   {{ in_array('whatsapp', explode(',', $configuraciones['canales_notif']->valor ?? 'email,sms')) ? 'checked' : '' }}>
+                                            <label class="form-check-label">WhatsApp</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">

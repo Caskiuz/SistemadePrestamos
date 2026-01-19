@@ -4,12 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PRÉSTAMOS SANTA ANA</title>
     <link rel="icon" href="{{ asset('img/logoICO.ico') }}" type="image/x-icon">
 
     <!-- CSS Responsive Global -->
     <link rel="stylesheet" href="{{ asset('css/responsive-global.css') }}">
     <link rel="stylesheet" href="{{ asset('css/mobile-components.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/global-mobile-components.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/desktop-optimization.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/desktop-sidebar.css') }}">
     
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('dist/assets/modules/bootstrap/css/bootstrap.min.css') }}">
@@ -114,6 +119,10 @@
         .navbar-user .user-name {
             display: none;
         }
+        
+        .navbar-user .doc-btn {
+            display: block;
+        }
     }
     
     /* Tablet styles */
@@ -121,6 +130,140 @@
         .main-content {
             padding: 15px;
         }
+    }
+    
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .navbar-user .doc-btn {
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background 0.3s;
+        font-size: 16px;
+    }
+    
+    .navbar-user .doc-btn:hover {
+        background: rgba(255,255,255,0.2);
+        text-decoration: none;
+        color: white;
+    }
+    
+    .navbar-user .user-icon {
+        color: white;
+        font-size: 16px;
+    }
+    
+    .navbar-user .user-name {
+        color: white;
+        font-weight: 500;
+    }
+    
+    .navbar-user .logout-btn {
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background 0.3s;
+        font-size: 16px;
+    }
+    
+    .navbar-user .logout-btn:hover {
+        background: rgba(255,255,255,0.2);
+        text-decoration: none;
+        color: white;
+    }
+    
+    /* User Dropdown Styles */
+    .user-dropdown {
+        position: relative;
+    }
+    
+    .user-toggle {
+        background: none;
+        border: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-size: 14px;
+    }
+    
+    .user-toggle:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    .user-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        min-width: 200px;
+        z-index: 1001;
+        display: none;
+        margin-top: 5px;
+    }
+    
+    .user-menu.show {
+        display: block;
+    }
+    
+    .user-info {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .user-info strong {
+        display: block;
+        color: #333;
+        font-size: 14px;
+    }
+    
+    .user-info small {
+        color: #666;
+        font-size: 12px;
+    }
+    
+    .user-menu hr {
+        margin: 0;
+        border-color: #eee;
+    }
+    
+    .user-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
+        color: #333;
+        text-decoration: none;
+        transition: background 0.3s;
+        font-size: 14px;
+    }
+    
+    .user-menu-item:hover {
+        background: #f8f9fa;
+        text-decoration: none;
+        color: #333;
+    }
+    
+    .user-menu-item.logout {
+        color: #dc2626;
+        border-top: 1px solid #eee;
+    }
+    
+    .user-menu-item.logout:hover {
+        background: #fef2f2;
+        color: #dc2626;
     }
     </style>
 </head>
@@ -132,16 +275,34 @@
             <button class="menu-toggle" onclick="toggleMenu()">
                 <i class="fa fa-bars"></i>
             </button>
-            <div class="navbar-brand ml-2">
+            <a href="{{ route('dashboard.index') }}" class="navbar-brand ml-2">
                 <img src="{{ asset('images/prestamos-santana-neon.svg') }}" alt="Préstamos Santa Ana" style="height: 40px;">
-            </div>
+            </a>
         </div>
         <div class="navbar-user">
-            <span class="user-icon"><i class="fa fa-user"></i></span>
-            <span class="user-name">{{ Auth::user()->name ?? 'Usuario' }}</span>
-            <a href="{{ route('logout') }}" class="logout-btn" title="Cerrar sesión">
-                <i class="fa fa-sign-out"></i>
+            <a href="{{ route('documentacion.index') }}" class="doc-btn" title="Documentación">
+                <i class="fa fa-book"></i>
             </a>
+            <div class="user-dropdown">
+                <button class="user-toggle" onclick="toggleUserMenu()">
+                    <i class="fa fa-user"></i>
+                    <span class="user-name">{{ Auth::user()->nombre ?? Auth::user()->name ?? 'Usuario' }}</span>
+                    <i class="fa fa-chevron-down"></i>
+                </button>
+                <div class="user-menu" id="userMenu">
+                    <div class="user-info">
+                        <strong>{{ Auth::user()->nombre ?? Auth::user()->name ?? 'Usuario' }}</strong>
+                        <small>{{ Auth::user()->rol ?? 'Sin rol' }}</small>
+                    </div>
+                    <hr>
+                    <a href="{{ route('usuarios.edit', Auth::id()) }}" class="user-menu-item">
+                        <i class="fa fa-edit"></i> Mi Perfil (ID: {{ Auth::id() }})
+                    </a>
+                    <a href="{{ route('logout') }}" class="user-menu-item logout">
+                        <i class="fa fa-sign-out"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -166,15 +327,26 @@
         document.querySelector('.side-menu').classList.toggle('active');
     }
     
+    function toggleUserMenu() {
+        document.getElementById('userMenu').classList.toggle('show');
+    }
+    
     // Cerrar menú al hacer clic fuera en móvil
     document.addEventListener('click', function(event) {
         const sidebar = document.querySelector('.side-menu');
         const toggle = document.querySelector('.menu-toggle');
+        const userMenu = document.getElementById('userMenu');
+        const userToggle = document.querySelector('.user-toggle');
         
         if (window.innerWidth <= 768) {
             if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
                 sidebar.classList.remove('active');
             }
+        }
+        
+        // Cerrar dropdown de usuario al hacer clic fuera
+        if (!userMenu.contains(event.target) && !userToggle.contains(event.target)) {
+            userMenu.classList.remove('show');
         }
     });
     

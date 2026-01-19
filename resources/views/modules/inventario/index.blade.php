@@ -1,78 +1,203 @@
 @extends('layouts.main')
 
 @section('content')
-<header class="yp-header" style="background: #673AB7;">
-    <h1>
-        <i class="fa fa-list-alt"></i>
-        <span style="color: white;">Prendas</span>
-    </h1>
-</header>
+<x-mobile-header title="Prendas" />
 
-<section class="content" style="background: #2c2c2c; min-height: calc(100vh - 60px); padding: 20px;">
-    <button onclick="window.location='{{ route('inventario.create') }}'" class="action" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: #f44336; border: none; color: white; font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
-        <i class="fa fa-plus"></i>
-    </button>
+<x-horizontal-filters 
+    :filters="[
+        'forSale' => ['label' => 'En venta'],
+        'layaway' => ['label' => 'Apartadas'],
+        'loan' => ['label' => 'Empeñadas'],
+        'available' => ['label' => 'Disponibles']
+    ]"
+    :current-filter="request('status')"
+    route="inventario.index"
+    parameter="status" />
 
-    <div style="margin-bottom: 20px;">
-        <a href="{{ route('inventario.index', ['status' => 'forSale']) }}" style="color: {{ request('status') == 'forSale' || !request('status') ? '#fff' : '#999' }}; text-decoration: none; margin-right: 20px; padding-bottom: 5px; border-bottom: {{ request('status') == 'forSale' || !request('status') ? '2px solid #fff' : 'none' }};">En venta</a>
-        <a href="{{ route('inventario.index', ['status' => 'layaway']) }}" style="color: {{ request('status') == 'layaway' ? '#fff' : '#999' }}; text-decoration: none; margin-right: 20px; padding-bottom: 5px; border-bottom: {{ request('status') == 'layaway' ? '2px solid #fff' : 'none' }};">Apartados</a>
-        <a href="{{ route('inventario.index', ['status' => 'loan']) }}" style="color: {{ request('status') == 'loan' ? '#2196f3' : '#999' }}; text-decoration: none; padding-bottom: 5px; border-bottom: {{ request('status') == 'loan' ? '2px solid #2196f3' : 'none' }};">Empeñados</a>
-    </div>
-
-    <form class="input-group" action="{{ route('inventario.index') }}" method="GET" style="margin-bottom: 20px; max-width: 600px;">
-        <input type="hidden" name="status" value="{{ request('status') }}">
-        <input type="search" class="form-control" placeholder="Buscar" name="q" value="{{ request('q') }}" style="background: #1e1e1e; color: white; border: 1px solid #444;">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" style="background: #444; color: white; border: 1px solid #444;">
-                <i class="fa fa-search"></i>
-            </button>
-        </span>
-    </form>
-
-    <h6 style="color: white; margin-bottom: 20px; text-transform: uppercase; font-size: 12px;">
-        @if(request('status') == 'forSale' || !request('status'))
-            TODAS LAS PRENDAS EN VENTA
-        @elseif(request('status') == 'layaway')
-            TODAS LAS PRENDAS APARTADAS
-        @elseif(request('status') == 'loan')
-            TODAS LAS PRENDAS EMPEÑADAS
-        @endif
-    </h6>
-
+<div class="mobile-content">
     @if($productos->isEmpty())
-        <div style="color: white; padding: 20px; text-align: center;">
-            <p>No se encontraron prendas</p>
+        <div class="empty-state">
+            <i class="fa fa-archive"></i>
+            <h4>Registra tu primera prenda</h4>
+            <p>Agrega productos al inventario</p>
+            <a href="{{ route('inventario.create') }}" class="action-btn primary">
+                <i class="fa fa-plus"></i>
+                <span>Nueva Prenda</span>
+            </a>
         </div>
     @else
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        <x-search-box 
+            placeholder="Buscar prenda o tipo"
+            route="inventario.index"
+            :value="request('q')" />
+
+        <div class="list-mobile">
             @foreach($productos as $producto)
-                <a href="{{ route('inventario.show', $producto->id) }}" style="text-decoration: none; color: inherit;">
-                    <div style="background: #1e1e1e; border-radius: 8px; padding: 20px; position: relative; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="position: absolute; top: 10px; left: 10px; background: #444; color: white; padding: 5px 10px; border-radius: 4px; font-size: 14px; font-weight: bold;">
-                            {{ $producto->id }}-1
-                        </div>
-                        <div style="position: absolute; top: 10px; right: 10px; background: #4caf50; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px;">
-                            Empeño
-                        </div>
-                        <div style="margin-top: 50px;">
-                            <h4 style="color: white; margin: 0 0 10px 0; font-size: 18px;">{{ $producto->nombre }}</h4>
-                            <p style="color: #999; margin: 0 0 5px 0; font-size: 14px;">
-                                @if($producto->peso && $producto->quilates)
-                                    {{ $producto->peso }} g {{ $producto->quilates }}
-                                @else
-                                    {{ $producto->descripcion ?? 'Sin descripción' }}
-                                @endif
-                            </p>
-                            <p style="color: #666; margin: 0; font-size: 12px;">{{ $producto->created_at->format('d M Y') }}</p>
-                        </div>
+            <a href="{{ route('inventario.show', $producto->id) }}" class="list-item">
+                <div class="list-item-header">
+                    <div>
+                        <h4 class="list-item-title">{{ $producto->nombre }}</h4>
+                        <span class="list-item-subtitle">{{ $producto->tipo ?? 'Producto' }}</span>
                     </div>
-                </a>
+                    <div class="status-badge status-{{ strtolower(str_replace('_', '-', $producto->estado)) }}">
+                        {{ ucfirst(str_replace('_', ' ', $producto->estado)) }}
+                    </div>
+                </div>
+                
+                <div class="prenda-info">
+                    @if($producto->fotos && $producto->fotos->count() > 0)
+                    <div class="prenda-image">
+                        <img src="{{ asset($producto->fotos->first()->ruta) }}" alt="{{ $producto->nombre }}">
+                    </div>
+                    @else
+                    <div class="prenda-image">
+                        @php
+                            $tipo = strtolower($producto->tipo ?? 'articulo');
+                            $svgMap = [
+                                'joya' => 'joya.svg', 'joyas' => 'joya.svg',
+                                'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
+                                'garrafa' => 'garrafa.svg', 'garrafas' => 'garrafa.svg',
+                                'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
+                                'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
+                            ];
+                            $svg = isset($svgMap[$tipo]) ? $svgMap[$tipo] : 'articulo.svg';
+                        @endphp
+                        <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" class="svg-icon">
+                    </div>
+                    @endif
+                    
+                    <div class="prenda-details">
+                        <div class="detail-item">
+                            <span class="label">Almacén:</span>
+                            <span class="value">{{ $producto->almacen->nombre ?? 'Sin almacén' }}</span>
+                        </div>
+                        @if($producto->valuacion)
+                        <div class="detail-item">
+                            <span class="label">Valuación:</span>
+                            <span class="value">{{ formatCurrency($producto->valuacion) }}</span>
+                        </div>
+                        @endif
+                        @if($producto->peso && $producto->quilates)
+                        <div class="detail-item">
+                            <span class="label">Peso/Quilates:</span>
+                            <span class="value">{{ $producto->peso }}g {{ $producto->quilates }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                @if($producto->descripcion)
+                <div class="prenda-description">
+                    <p>{{ Str::limit($producto->descripcion, 100) }}</p>
+                </div>
+                @endif
+
+                <div class="list-item-footer">
+                    <i class="fa fa-calendar"></i>
+                    <span>Registrado: {{ optional($producto->created_at)->format('d/m/Y') ?? 'Sin fecha' }}</span>
+                </div>
+            </a>
             @endforeach
         </div>
 
-        <div style="margin-top: 30px;">
+        @if($productos->hasPages())
+        <div class="pagination-wrapper">
             {{ $productos->links() }}
         </div>
+        @endif
     @endif
-</section>
+</div>
+
+<style>
+.prenda-info {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.prenda-image {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prenda-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.prenda-image img.svg-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.prenda-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-item .label {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+.detail-item .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.prenda-description {
+    margin-bottom: 15px;
+}
+
+.prenda-description p {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.status-badge.status-en-venta {
+    background-color: #10b981;
+    color: white;
+}
+
+.status-badge.status-loan {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.status-badge.status-layaway {
+    background-color: #8b5cf6;
+    color: white;
+}
+
+.status-badge.status-available {
+    background-color: #6b7280;
+    color: white;
+}
+
+.pagination-wrapper {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+</style>
 @endsection

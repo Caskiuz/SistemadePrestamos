@@ -11,26 +11,39 @@
 </header>
 
 <section class="content" style="background: #1e1e1e; min-height: calc(100vh - 120px); padding: 20px;">
-    <form action="{{ route('prestamos.store') }}" method="POST" id="formPrestamo">
+    <form action="{{ route('prestamos.store') }}" method="POST" id="formPrestamo" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="cliente_id" value="{{ $cliente_id ?? '' }}">
         
         <div style="max-width: 800px; margin: 0 auto;">
+            <!-- Selector de Cliente -->
+            @if(!isset($cliente_id))
+            <div style="margin-bottom: 20px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Cliente</label>
+                <select name="cliente_id" id="cliente_id" class="form-control" style="background: #2c2c2c; color: white; border: 1px solid #444; padding: 10px;" required>
+                    <option value="">Seleccione un cliente...</option>
+                    @foreach(\App\Models\Cliente::all() as $cliente)
+                    <option value="{{ $cliente->id }}">{{ $cliente->nombre }} - {{ $cliente->documento }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+            
             <!-- Selector de Almacén -->
             <div style="margin-bottom: 20px;">
                 <label style="color: white; display: block; margin-bottom: 5px;">Almacén</label>
                 <select name="almacen_id" id="almacen_id" class="form-control" style="background: #2c2c2c; color: white; border: 1px solid #444; padding: 10px;" required>
                     <option value="">Seleccione un almacén...</option>
-                    <option value="1">Santa Ana - Paurito (Av Paurito frente a la línea 59 roja)</option>
-                    <option value="2">Santa Ana - Las Américas (Av Las Américas a lado del mercado paraíso)</option>
-                    <option value="3">Santa Ana - El Fuerte (Av El Fuerte diagonal mercado el fuerte)</option>
+                    @foreach(\App\Models\Almacen::all() as $almacen)
+                    <option value="{{ $almacen->id }}">{{ $almacen->nombre }} - {{ $almacen->direccion }}</option>
+                    @endforeach
                 </select>
             </div>
 
             <!-- Resumen -->
             <div style="margin-bottom: 20px; padding: 15px; background: #2c2c2c; border-radius: 4px;">
                 <div style="color: #2196f3; font-weight: bold; margin-bottom: 5px;">Resumen</div>
-                <div id="resumenInteres" style="color: white; font-size: 14px;">10% de interés mensual durante 1 mes</div>
+                <div id="resumenInteres" style="color: white; font-size: 14px;">10% de interés mensual durante 1 mes (vehículos: libre del 1% al 10%)</div>
             </div>
 
             <!-- Fecha -->
@@ -51,11 +64,11 @@
             <!-- Monto total -->
             <div style="background: #2c2c2c; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                 <div style="color: #999; font-size: 14px; margin-bottom: 5px;">Préstamo total</div>
-                <h3 style="color: white; margin: 0 0 15px 0; font-size: 32px;" id="montoTotal">$0.00</h3>
+                <h3 style="color: white; margin: 0 0 15px 0; font-size: 32px;" id="montoTotal">Bs 0.00</h3>
                 <div style="color: #999; font-size: 14px; margin-bottom: 5px;">Interés al finalizar el plazo</div>
-                <h4 style="color: white; margin: 0 0 15px 0; font-size: 24px;" id="montoInteres">$0.00</h4>
+                <h4 style="color: white; margin: 0 0 15px 0; font-size: 24px;" id="montoInteres">Bs 0.00</h4>
                 <div style="color: #999; font-size: 14px; margin-bottom: 5px;">Total a pagar al finalizar el plazo</div>
-                <h4 style="color: white; margin: 0; font-size: 24px;" id="montoTotalConInteres">$0.00</h4>
+                <h4 style="color: white; margin: 0; font-size: 24px;" id="montoTotalConInteres">Bs 0.00</h4>
             </div>
 
             <!-- Botones -->
@@ -93,6 +106,7 @@ function agregarPrenda() {
                 <option value="articulo">Artículo</option>
                 <option value="joya">Joya</option>
                 <option value="vehiculo">Vehículo</option>
+                <option value="garrafa">Garrafa</option>
             </select>
         </div>
         
@@ -236,6 +250,11 @@ function cambiarTipoPrenda(id, tipo) {
                 <input type="text" name="prendas[${id}][kilometraje]" placeholder="Como lo marca el tablero" class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;">
             </div>
             <div style="margin-bottom: 10px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Interés (%)</label>
+                <input type="number" name="prendas[${id}][interes_personalizado]" step="0.01" min="1" max="10" placeholder="Ej: 5.5" class="form-control interes-vehiculo" onchange="calcularTotalVehiculo(${id})" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;" required>
+                <small style="color: #999; font-size: 11px;">Para vehículos el interés es libre del 1% al 10%</small>
+            </div>
+            <div style="margin-bottom: 10px;">
                 <label style="color: white; display: block; margin-bottom: 5px;">Observaciones</label>
                 <textarea name="prendas[${id}][observaciones]" placeholder="Estado actual, marcas de deterioro, defectos." class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px; min-height: 80px;"></textarea>
             </div>
@@ -269,6 +288,41 @@ function cambiarTipoPrenda(id, tipo) {
                 <input type="number" name="prendas[${id}][valuacion]" step="0.01" class="form-control valuacion" onchange="calcularTotal()" placeholder="Monto a prestar por esta prenda" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;" required>
             </div>
         `;
+    } else if (tipo === 'garrafa') {
+        html = `
+            <div style="margin-bottom: 10px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Descripción</label>
+                <textarea name="prendas[${id}][descripcion]" placeholder="Descripción de la garrafa" class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px; min-height: 80px;" required></textarea>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="color: white; display: block; margin-bottom: 10px;">Fotos de la Garrafa</label>
+                <div class="foto-upload-area" id="fotoUploadArea${id}" style="border: 2px dashed #dc2626; border-radius: 8px; padding: 30px; text-align: center; background: #2c2c2c; cursor: pointer; margin-bottom: 10px;">
+                    <i class="fa fa-camera" style="font-size: 36px; color: #dc2626; margin-bottom: 10px;"></i>
+                    <div style="color: white; margin-bottom: 5px;">Subir Fotos</div>
+                    <div style="color: #999; font-size: 12px;">Desde PC, galería o cámara</div>
+                    <input type="file" id="fotoInput${id}" name="prendas[${id}][fotos][]" multiple accept="image/*" capture="environment" style="display: none;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button type="button" onclick="document.getElementById('fotoInput${id}').click();" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-folder-open"></i> Galería
+                    </button>
+                    <button type="button" onclick="abrirCamara(${id})" style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        <i class="fa fa-camera"></i> Cámara
+                    </button>
+                </div>
+                <div class="fotos-preview" id="fotosPreview${id}" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;"></div>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Avalúo</label>
+                <input type="number" name="prendas[${id}][avaluo]" step="0.01" placeholder="Valor de apreciación de la garrafa" class="form-control" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label style="color: white; display: block; margin-bottom: 5px;">Valuación</label>
+                <input type="number" name="prendas[${id}][valuacion]" step="0.01" class="form-control valuacion" onchange="calcularTotal()" placeholder="Monto a prestar por esta prenda" style="background: #1e1e1e; color: white; border: 1px solid #444; padding: 10px;" required>
+            </div>
+        `;
     }
     
     camposDiv.innerHTML = html;
@@ -279,21 +333,54 @@ function cambiarTipoPrenda(id, tipo) {
     }
 }
 
+function calcularTotalVehiculo(id) {
+    const interesInput = document.querySelector(`input[name="prendas[${id}][interes_personalizado]"]`);
+    const valuacionInput = document.querySelector(`input[name="prendas[${id}][valuacion]"]`);
+    
+    if (interesInput && valuacionInput && interesInput.value && valuacionInput.value) {
+        const interes = parseFloat(interesInput.value);
+        const valuacion = parseFloat(valuacionInput.value);
+        
+        // Actualizar resumen para vehículos
+        const resumenDiv = document.getElementById('resumenInteres');
+        resumenDiv.textContent = `${interes}% de interés mensual para vehículo (libre del 1% al 10%) durante 1 mes`;
+    }
+    
+    calcularTotal();
+}
+
 function calcularTotal() {
     const valuaciones = document.querySelectorAll('.valuacion');
+    const interesesVehiculos = document.querySelectorAll('.interes-vehiculo');
+    
     let total = 0;
+    let interesTotal = 0;
+    
+    // Calcular total de valuaciones
     valuaciones.forEach(input => {
         total += parseFloat(input.value) || 0;
     });
-    document.getElementById('montoTotal').textContent = '$' + total.toFixed(2);
     
-    // Calcular interés fijo del 10%
-    const porcentaje = 10;
-    const interes = total * (porcentaje / 100);
-    const totalConInteres = total + interes;
+    // Calcular interés (usar personalizado para vehículos, 10% para otros)
+    valuaciones.forEach((valuacionInput, index) => {
+        const valuacion = parseFloat(valuacionInput.value) || 0;
+        const interesVehiculoInput = interesesVehiculos[index];
+        
+        if (interesVehiculoInput && interesVehiculoInput.value) {
+            // Usar interés personalizado para vehículos
+            const interesPersonalizado = parseFloat(interesVehiculoInput.value) || 10;
+            interesTotal += valuacion * (interesPersonalizado / 100);
+        } else {
+            // Usar 10% para otros tipos de prendas
+            interesTotal += valuacion * 0.10;
+        }
+    });
     
-    document.getElementById('montoInteres').textContent = '$' + interes.toFixed(2);
-    document.getElementById('montoTotalConInteres').textContent = '$' + totalConInteres.toFixed(2);
+    const totalConInteres = total + interesTotal;
+    
+    document.getElementById('montoTotal').textContent = 'Bs ' + total.toFixed(2);
+    document.getElementById('montoInteres').textContent = 'Bs ' + interesTotal.toFixed(2);
+    document.getElementById('montoTotalConInteres').textContent = 'Bs ' + totalConInteres.toFixed(2);
     
     actualizarResumen();
 }
@@ -314,7 +401,7 @@ function actualizarResumen() {
         const mes = meses[fecha.getMonth()];
         const año = fecha.getFullYear();
         
-        const resumen = `${porcentaje}% de interés mensual durante 1 mes, finalizando el ${diaSemana}, ${dia} de ${mes} de ${año}`;
+        const resumen = `${porcentaje}% de interés mensual durante 1 mes, finalizando el ${diaSemana}, ${dia} de ${mes} de ${año} (vehículos: libre del 1% al 10%)`;
         document.getElementById('resumenInteres').textContent = resumen;
     }
 }

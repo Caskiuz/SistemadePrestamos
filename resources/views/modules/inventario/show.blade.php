@@ -25,7 +25,18 @@
                         @if($producto->foto)
                             <img src="{{ asset('storage/' . $producto->foto) }}" alt="{{ $producto->nombre }}" class="img-fluid" style="max-height: 300px;">
                         @else
-                            <i class="fa fa-image" style="font-size: 150px; color: #ccc;"></i>
+                            @php
+                                $tipo = strtolower($producto->tipo);
+                                $svgMap = [
+                                    'joya' => 'joya.svg', 'joyas' => 'joya.svg',
+                                    'articulo' => 'articulo.svg', 'articulos' => 'articulo.svg',
+                                    'garrafa' => 'garrafa.svg', 'garrafas' => 'garrafa.svg',
+                                    'vehiculo' => 'vehiculo.svg', 'vehiculos' => 'vehiculo.svg',
+                                    'auto' => 'vehiculo.svg', 'carro' => 'vehiculo.svg', 'moto' => 'vehiculo.svg'
+                                ];
+                                $svg = isset($svgMap[$tipo]) ? $svgMap[$tipo] : 'articulo.svg';
+                            @endphp
+                            <img src="{{ asset('images/svg/' . $svg) }}" alt="{{ $producto->tipo }}" class="img-fluid" style="max-height: 300px; object-fit: contain;">
                         @endif
                     </div>
                 </div>
@@ -98,15 +109,15 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <strong>Precio Compra:</strong><br>
-                                <h4 class="text-info">${{ number_format($producto->precio_compra ?? 0, 2) }}</h4>
+                                <h4 class="text-info">{{ formatCurrency($producto->precio_compra ?? 0) }}</h4>
                             </div>
                             <div class="col-md-4">
                                 <strong>Precio Venta:</strong><br>
-                                <h4 class="text-success">${{ number_format($producto->precio_venta ?? 0, 2) }}</h4>
+                                <h4 class="text-success">{{ formatCurrency($producto->precio_venta ?? 0) }}</h4>
                             </div>
                             <div class="col-md-4">
                                 <strong>Valuación:</strong><br>
-                                <h4 class="text-primary">${{ number_format($producto->valuacion ?? 0, 2) }}</h4>
+                                <h4 class="text-primary">{{ formatCurrency($producto->valuacion ?? 0) }}</h4>
                             </div>
                         </div>
 
@@ -148,7 +159,7 @@
                                         </td>
                                         <td>{{ $prestamo->cliente->nombre }}</td>
                                         <td>{{ $prestamo->fecha_prestamo->format('d/m/Y') }}</td>
-                                        <td>${{ number_format($prestamo->monto, 2) }}</td>
+                                        <td>{{ formatCurrency($prestamo->monto) }}</td>
                                         <td>
                                             <span class="badge badge-{{ $prestamo->estado == 'activo' ? 'success' : 'secondary' }}">
                                                 {{ ucfirst($prestamo->estado) }}

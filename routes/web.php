@@ -117,7 +117,7 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/pdf', [\App\Http\Controllers\CotizacionController::class, 'generarPdf'])->name('cotizaciones.pdf');
     Route::delete('/{id}', [\App\Http\Controllers\CotizacionController::class, 'destroy'])->name('cotizaciones.destroy');
 });
- Route::prefix('contabilidad/ingresos')->middleware(['auth', 'rol.contable'])->group(function () {
+ Route::prefix('contabilidad/ingresos')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\IngresosController::class, 'index'])->name('ingresos.index');
     Route::get('/create', [\App\Http\Controllers\IngresosController::class, 'create'])->name('ingresos.create');
     Route::post('/', [\App\Http\Controllers\IngresosController::class, 'store'])->name('ingresos.store');
@@ -127,7 +127,7 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/show', [\App\Http\Controllers\IngresosController::class, 'show'])->name('ingresos.show');
     
 });
-Route::prefix('contabilidad/egresos')->middleware(['auth', 'rol.contable'])->group(function () {
+Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\EgresosController::class, 'index'])->name('egresos.index');
     Route::get('/create', [\App\Http\Controllers\EgresosController::class, 'create'])->name('egresos.create');
     Route::post('/', [\App\Http\Controllers\EgresosController::class, 'store'])->name('egresos.store');
@@ -139,11 +139,11 @@ Route::prefix('contabilidad/egresos')->middleware(['auth', 'rol.contable'])->gro
     Route::delete('/{id}', [\App\Http\Controllers\EgresosController::class, 'destroy'])->name('egresos.destroy');
 });
 
-Route::prefix('contabilidad/libro-diario')->middleware(['auth', 'rol.contable'])->group(function () {
+Route::prefix('contabilidad/libro-diario')->middleware('auth')->group(function () {
     Route::get('/', [LibroDiarioController::class, 'index'])->name('libro-diario.index');
 });
 
-Route::prefix('contabilidad/sueldos')->middleware(['auth', 'rol.contable'])->group(function () {
+Route::prefix('contabilidad/sueldos')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\SueldosHcController::class, 'index'])->name('sueldos.index');
     Route::post('/trabajadores', [\App\Http\Controllers\SueldosHcController::class, 'storeTrabajador'])->name('trabajadores.store');
     Route::post('/pagos', [\App\Http\Controllers\SueldosHcController::class, 'storeSueldo'])->name('sueldos.store');
@@ -181,11 +181,28 @@ Route::prefix('prestamos')->middleware('auth')->group(function () {
     Route::post('/', [PrestamoController::class, 'store'])->name('prestamos.store');
     Route::get('/{prestamo}', [PrestamoController::class, 'show'])->name('prestamos.show');
     Route::get('/{prestamo}/pdf', [PrestamoController::class, 'pdf'])->name('prestamos.pdf');
+    Route::get('/{prestamo}/contrato', [PrestamoController::class, 'contrato'])->name('prestamos.contrato');
+    Route::get('/{prestamo}/contrato/download', [PrestamoController::class, 'contratoDownload'])->name('prestamos.contrato.download');
     Route::post('/{prestamo}/pagar', [PrestamoController::class, 'registrarPago'])->name('prestamos.pagar');
     Route::post('/{prestamo}/cancelar', [PrestamoController::class, 'cancelar'])->name('prestamos.cancelar');
     Route::post('/{prestamo}/expirar', [PrestamoController::class, 'expirar'])->name('prestamos.expirar');
     Route::post('/{prestamo}/descuento', [PrestamoController::class, 'aplicarDescuento'])->name('prestamos.descuento');
+    Route::post('/productos/{producto}/fotos', [PrestamoController::class, 'subirFotos'])->name('productos.fotos.subir');
+    Route::delete('/fotos/{foto}', [PrestamoController::class, 'eliminarFoto'])->name('productos.fotos.eliminar');
+    Route::post('/productos/{producto}/limpiar-fotos-rotas', [PrestamoController::class, 'limpiarFotosRotas'])->name('productos.fotos.limpiar');
 });
+
+// Ruta para servir imágenes directamente
+Route::get('/foto/{filename}', function ($filename) {
+    $path = public_path('fotos/' . $filename);
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    return response()->file($path);
+});
+
+// Ruta de prueba para fotos
+Route::get('/test-fotos', [PrestamoController::class, 'testFotos']);
 
 // Apartados
 Route::prefix('apartados')->middleware('auth')->group(function () {
@@ -201,6 +218,8 @@ Route::prefix('compras')->middleware('auth')->group(function () {
     Route::get('/create', [CompraController::class, 'create'])->name('compras.create');
     Route::post('/', [CompraController::class, 'store'])->name('compras.store');
     Route::get('/{compra}', [CompraController::class, 'show'])->name('compras.show');
+    Route::get('/{compra}/contrato', [CompraController::class, 'generarContrato'])->name('compras.contrato');
+    Route::get('/{compra}/contrato/download', [CompraController::class, 'descargarContrato'])->name('compras.contrato.download');
 });
 
 // Ventas
@@ -209,6 +228,8 @@ Route::prefix('ventas')->middleware('auth')->group(function () {
     Route::get('/create', [VentaController::class, 'create'])->name('ventas.create');
     Route::post('/', [VentaController::class, 'store'])->name('ventas.store');
     Route::get('/{venta}', [VentaController::class, 'show'])->name('ventas.show');
+    Route::get('/{venta}/factura', [VentaController::class, 'factura'])->name('ventas.factura');
+    Route::get('/{venta}/factura/download', [VentaController::class, 'facturaDownload'])->name('ventas.factura.download');
 });
 
 // Reportes avanzados
@@ -314,11 +335,27 @@ Route::prefix('workflow')->middleware('auth')->group(function () {
 });
 
 // Backup y Seguridad
-Route::prefix('sistema')->middleware(['auth', 'rol.admin'])->group(function () {
+Route::prefix('sistema')->middleware('auth')->group(function () {
     Route::get('/backups', [\App\Http\Controllers\BackupController::class, 'index'])->name('sistema.backups');
     Route::post('/backup/generar', [\App\Http\Controllers\BackupController::class, 'generar'])->name('sistema.backup.generar');
     Route::get('/auditoria', [\App\Http\Controllers\AuditoriaController::class, 'index'])->name('sistema.auditoria');
 });
 
-// Sucursales / Almacenes (vista web)
-Route::get('/almacenes', [AlmacenController::class, 'index'])->name('almacenes.index');
+// Automatización
+Route::prefix('automatizacion')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\AutomatizacionController::class, 'index'])->name('automatizacion.index');
+    Route::post('/notificacion-manual', [\App\Http\Controllers\AutomatizacionController::class, 'enviarNotificacionManual'])->name('automatizacion.notificacion-manual');
+    Route::post('/ejecutar-proceso', [\App\Http\Controllers\AutomatizacionController::class, 'ejecutarProcesoBatch'])->name('automatizacion.ejecutar-proceso');
+    Route::get('/estadisticas', [\App\Http\Controllers\AutomatizacionController::class, 'getEstadisticasAjax'])->name('automatizacion.estadisticas');
+});
+
+// Dashboard Avanzado
+Route::prefix('dashboard-avanzado')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\DashboardAvanzadoController::class, 'index'])->name('dashboard.avanzado');
+    Route::get('/data', [\App\Http\Controllers\DashboardAvanzadoController::class, 'getDataAjax'])->name('dashboard.avanzado.data');
+});
+
+// Documentación
+Route::prefix('documentacion')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\DocumentacionController::class, 'index'])->name('documentacion.index');
+});

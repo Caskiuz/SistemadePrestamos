@@ -1,0 +1,219 @@
+/* Desktop Sidebar Improvements */
+
+@media (min-width: 1024px) {
+    /* Sidebar positioning and sizing for desktop */
+    .side-menu {
+        position: fixed;
+        left: 0;
+        top: 70px;
+        width: 280px;
+        height: calc(100vh - 70px);
+        background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+        overflow-y: auto;
+        z-index: 998;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transform: translateX(0);
+        transition: all 0.3s ease;
+    }
+    
+    /* Main content adjustment for desktop */
+    .main-content {
+        margin-left: 280px;
+        padding: 20px;
+        margin-top: 70px;
+        min-height: calc(100vh - 70px);
+        background: #f8fafc;
+    }
+    
+    /* Company logo improvements */
+    .current-branch {
+        padding: 25px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.05);
+    }
+    
+    .company-logo {
+        width: 140px !important;
+        height: 90px !important;
+        background: white !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .company-logo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+    }
+    
+    .company-logo img {
+        max-width: 120px !important;
+        max-height: 80px !important;
+    }
+    
+    /* Menu improvements */
+    .menu {
+        padding: 20px 0;
+        list-style: none;
+        margin: 0;
+    }
+    
+    .menu li {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .menu li a {
+        display: flex;
+        align-items: center;
+        padding: 15px 25px;
+        color: #d1d5db;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        position: relative;
+    }
+    
+    .menu li a:hover {
+        background: rgba(220, 38, 38, 0.1);
+        color: #dc2626;
+        border-left-color: #dc2626;
+        text-decoration: none;
+        transform: translateX(5px);
+    }
+    
+    .menu li a.active {
+        background: rgba(220, 38, 38, 0.15);
+        color: #dc2626;
+        border-left-color: #dc2626;
+        font-weight: 600;
+    }
+    
+    .menu li a.active::after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        background: #dc2626;
+        border-radius: 50%;
+    }
+    
+    .menu li a i {
+        width: 20px;
+        margin-right: 15px;
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    /* Logout section styling */
+    .menu li[style*="border-top"] {
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+    }
+    
+    .menu li[style*="border-top"] a {
+        color: #f87171;
+    }
+    
+    .menu li[style*="border-top"] a:hover {
+        background: rgba(248, 113, 113, 0.1);
+        color: #ef4444;
+        border-left-color: #ef4444;
+    }
+    
+    /* Scrollbar styling for sidebar */
+    .side-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .side-menu::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .side-menu::-webkit-scrollbar-thumb {
+        background: rgba(220, 38, 38, 0.5);
+        border-radius: 3px;
+    }
+    
+    .side-menu::-webkit-scrollbar-thumb:hover {
+        background: rgba(220, 38, 38, 0.7);
+    }
+}
+
+/* Large desktop sidebar adjustments */
+@media (min-width: 1440px) {
+    .side-menu {
+        width: 300px;
+    }
+    
+    .main-content {
+        margin-left: 300px;
+        padding: 30px;
+    }
+    
+    .menu li a {
+        padding: 18px 30px;
+        font-size: 16px;
+    }
+    
+    .menu li a i {
+        width: 22px;
+        margin-right: 18px;
+        font-size: 17px;
+    }
+    
+    .company-logo {
+        width: 160px !important;
+        height: 100px !important;
+    }
+    
+    .company-logo img {
+        max-width: 140px !important;
+        max-height: 90px !important;
+    }
+}
+
+/* Sidebar collapse functionality for smaller desktops */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .side-menu.collapsed {
+        width: 70px;
+    }
+    
+    .side-menu.collapsed .main-content {
+        margin-left: 70px;
+    }
+    
+    .side-menu.collapsed .current-branch {
+        padding: 15px 10px;
+    }
+    
+    .side-menu.collapsed .company-logo {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .side-menu.collapsed .company-logo img {
+        max-width: 40px !important;
+        max-height: 40px !important;
+    }
+    
+    .side-menu.collapsed .menu li a {
+        padding: 15px;
+        justify-content: center;
+    }
+    
+    .side-menu.collapsed .menu li a span {
+        display: none;
+    }
+    
+    .side-menu.collapsed .menu li a i {
+        margin-right: 0;
+        font-size: 18px;
+    }
+}

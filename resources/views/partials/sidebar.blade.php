@@ -11,6 +11,12 @@
     
     <ul class="menu">
         <li>
+            <a href="{{ route('dashboard.avanzado') }}" class="{{ request()->routeIs('dashboard.avanzado') ? 'active' : '' }}">
+                <i class="fa fa-dashboard"></i>
+                Dashboard Ejecutivo
+            </a>
+        </li>
+        <li>
             <a href="{{ route('clientes.index') }}" class="{{ request()->routeIs('clientes.*') ? 'active' : '' }}">
                 <i class="fa fa-user"></i>
                 Clientes

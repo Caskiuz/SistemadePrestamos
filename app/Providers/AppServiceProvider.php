@@ -28,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
             return base_path('public_html');
         });
         
+        // Cargar helpers de Bolivia
+        require_once app_path('Helpers/BoliviaConfig.php');
+        require_once app_path('Helpers/BoliviaHelper.php');
+        require_once app_path('Helpers/CurrencyHelper.php');
+        
         // CONFIGURACIÓN HTTPS PARA RENDER Y TÚNELES
         if (env('APP_ENV') === 'production' || request()->isSecure() || request()->header('X-Forwarded-Proto') === 'https') {
             URL::forceScheme('https');

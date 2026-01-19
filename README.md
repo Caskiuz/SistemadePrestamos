@@ -6,35 +6,40 @@ Sistema de gestión para préstamos, inventario y contabilidad.
 - Email: admin@admin.com
 - Password: 12345678
 
-## Despliegue en Railway
+## Instalación Local
 
-### 1. Preparar Repositorio
+### 1. Clonar Repositorio
 ```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/tu-usuario/tu-repo.git
-git push -u origin main
+git clone https://github.com/tu-usuario/tu-repo.git
+cd app-hc
 ```
 
-### 2. Crear Proyecto en Railway
-1. Ve a [railway.app](https://railway.app)
-2. "Start a New Project" → "Deploy from GitHub repo"
-3. Selecciona tu repositorio
-
-### 3. Agregar Base de Datos
-1. En tu proyecto: "New" → "Database" → "Add MySQL"
-2. Railway creará las variables automáticamente
-
-### 4. Configurar Variables de Entorno
-Copia las variables de `RAILWAY_ENV.txt` en Railway Dashboard → Variables
-
-### 5. Generar Dominio
-Settings → Networking → "Generate Domain"
-
-### 6. Ejecutar Migraciones (opcional)
+### 2. Instalar Dependencias
 ```bash
-railway run php artisan migrate --seed
+composer install
+npm install
+```
+
+### 3. Configurar Base de Datos
+1. Crear base de datos MySQL local
+2. Copiar `.env.example` a `.env`
+3. Configurar variables de base de datos en `.env`
+
+### 4. Ejecutar Migraciones
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
+
+### 5. Iniciar Servidor Local
+```bash
+php artisan serve
+```
+
+### 6. Acceso Remoto con Cloudflare Tunnel
+Para compartir acceso remoto, usar Cloudflare Tunnel:
+```bash
+cloudflared tunnel --url http://localhost:8000
 ```
 
 ## Tecnologías

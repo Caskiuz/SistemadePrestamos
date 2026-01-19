@@ -37,7 +37,7 @@ class UsuariosController extends Controller
             'nombre' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'rol' => 'required|in:Gerente,Contabilidad,Supervisor',
+            'rol' => 'required|in:Gerente,Contabilidad,Operario',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'email.required' => 'El correo electrónico es obligatorio.',
@@ -51,6 +51,7 @@ class UsuariosController extends Controller
 
         try {
             $user = User::create([
+                'name' => $validatedData['nombre'], // Laravel requiere 'name'
                 'nombre' => $validatedData['nombre'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
@@ -87,31 +88,58 @@ class UsuariosController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'password' => 'required|string|min:8|confirmed',
-        ], [
-            'password.required' => 'La contraseña es obligatoria.',
+        $user = User::findOrFail($id);
+        
+        $rules = [
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'rol' => 'required|in:Gerente,Contabilidad,Operario',
+        ];
+        
+        // Solo validar contraseña si se proporciona
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+        
+        $validated = $request->validate($rules, [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.unique' => 'Este correo electrónico ya está registrado.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
+            'rol.required' => 'El rol es obligatorio.',
         ]);
 
         try {
-            $user = User::findOrFail($id);
-            $user->password = \Hash::make($request->password);
+            $user->name = $validated['nombre'];
+            $user->nombre = $validated['nombre'];
+            $user->email = $validated['email'];
+            $user->rol = $validated['rol'];
+            
+            // Solo actualizar contraseña si se proporciona
+            if ($request->filled('password')) {
+                $user->password = \Hash::make($validated['password']);
+            }
+            
             $user->save();
+            
+            // Actualizar la sesión si es el usuario actual
+            if (auth()->id() == $user->id) {
+                auth()->setUser($user);
+            }
 
             return redirect()->route('usuarios.index')
                 ->with('swal', [
                     'icon' => 'success',
-                    'title' => 'Contraseña actualizada',
-                    'text' => 'La contraseña del usuario se actualizó correctamente.'
+                    'title' => 'Usuario actualizado',
+                    'text' => 'Los datos del usuario se actualizaron correctamente.'
                 ]);
         } catch (\Exception $e) {
             return back()->withInput()
                 ->with('swal', [
                     'icon' => 'error',
                     'title' => 'Error',
-                    'text' => 'No se pudo actualizar la contraseña: ' . $e->getMessage()
+                    'text' => 'No se pudo actualizar el usuario: ' . $e->getMessage()
                 ]);
         }
     }

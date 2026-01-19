@@ -122,16 +122,16 @@
                 <td>{{ $producto->tipo }}</td>
                 <td>{{ $producto->marca ?? 'N/A' }}</td>
                 <td>{{ $producto->modelo ?? 'N/A' }}</td>
-                <td>${{ number_format($producto->pivot->valuacion, 2) }}</td>
+                <td>{{ formatCurrency($producto->pivot->valuacion) }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="totals">
-        <div><strong>Monto Prestado:</strong> ${{ number_format($prestamo->monto, 2) }}</div>
-        <div><strong>Interés ({{ $prestamo->interes_mensual }}%):</strong> ${{ number_format($prestamo->monto_total - $prestamo->monto, 2) }}</div>
-        <div class="total-final"><strong>Total a Pagar:</strong> ${{ number_format($prestamo->monto_total, 2) }}</div>
+        <div><strong>Monto Prestado:</strong> {{ formatCurrency($prestamo->monto) }}</div>
+        <div><strong>Interés ({{ $prestamo->interes_mensual }}%):</strong> {{ formatCurrency($prestamo->monto_total - $prestamo->monto) }}</div>
+        <div class="total-final"><strong>Total a Pagar:</strong> {{ formatCurrency($prestamo->monto_total) }}</div>
     </div>
 
     @if($prestamo->observaciones)

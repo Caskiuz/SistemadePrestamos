@@ -1,208 +1,205 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="main-content fade-in">
-    <section class="section">
-        <div class="section-header">
-            <h1>Panel de Configuración</h1>
-            <div class="section-header-breadcrumb">
-                <span class="badge badge-primary">Solo Gerentes</span>
-            </div>
-        </div>
+<x-mobile-header title="Configuración" />
 
-        <div class="row">
-            <!-- Configuración de Empresa -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-primary">
-                        <i class="fa fa-building"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Empresa</h4>
-                        </div>
-                        <div class="card-body">
-                            Información corporativa
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.empresa') }}" class="btn btn-primary btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="mobile-content">
+    <div class="section-title">
+        <h3>Configuración General</h3>
+    </div>
+    <div class="config-grid">
+        <a href="{{ route('configuracion.empresa') }}" class="config-card">
+            <i class="fa fa-building"></i>
+            <h5>Empresa</h5>
+            <p>Información corporativa</p>
+        </a>
+        <a href="{{ route('configuracion.prestamos') }}" class="config-card">
+            <i class="fa fa-money"></i>
+            <h5>Préstamos</h5>
+            <p>Tasas e intereses</p>
+        </a>
+        <a href="{{ route('configuracion.tarifas') }}" class="config-card">
+            <i class="fa fa-percent"></i>
+            <h5>Tarifas</h5>
+            <p>Comisiones y cargos</p>
+        </a>
+        <a href="{{ route('configuracion.notificaciones') }}" class="config-card">
+            <i class="fa fa-bell"></i>
+            <h5>Notificaciones</h5>
+            <p>Alertas y avisos</p>
+        </a>
+    </div>
 
-            <!-- Configuración de Préstamos -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-success">
-                        <i class="fa fa-money"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Préstamos</h4>
-                        </div>
-                        <div class="card-body">
-                            Tasas e intereses
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.prestamos') }}" class="btn btn-success btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="section-title">
+        <h3>Sistema y Seguridad</h3>
+    </div>
+    <div class="config-grid">
+        <a href="{{ route('almacenes.index') }}" class="config-card">
+            <i class="fa fa-map-marker"></i>
+            <h5>Sucursales</h5>
+            <p>Almacenes y ubicaciones</p>
+        </a>
+        <a href="{{ route('configuracion.sistema') }}" class="config-card">
+            <i class="fa fa-server"></i>
+            <h5>Sistema</h5>
+            <p>Configuración general</p>
+        </a>
+        <a href="{{ route('configuracion.seguridad') }}" class="config-card">
+            <i class="fa fa-shield"></i>
+            <h5>Seguridad</h5>
+            <p>Acceso y auditoría</p>
+        </a>
+        <a href="{{ route('configuracion.reportes') }}" class="config-card">
+            <i class="fa fa-file-text"></i>
+            <h5>Reportes</h5>
+            <p>Formatos y automatización</p>
+        </a>
+    </div>
 
-            <!-- Configuración de Tarifas -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-warning">
-                        <i class="fa fa-percent"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Tarifas</h4>
-                        </div>
-                        <div class="card-body">
-                            Comisiones y cargos
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.tarifas') }}" class="btn btn-warning btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Configuración de Notificaciones -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-info">
-                        <i class="fa fa-bell"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Notificaciones</h4>
-                        </div>
-                        <div class="card-body">
-                            Alertas y avisos
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.notificaciones') }}" class="btn btn-info btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Configuración de Sucursales -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-secondary">
-                        <i class="fa fa-map-marker"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Sucursales</h4>
-                        </div>
-                        <div class="card-body">
-                            Almacenes y ubicaciones
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('almacenes.index') }}" class="btn btn-secondary btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Configuración del Sistema -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-dark">
-                        <i class="fa fa-server"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Sistema</h4>
-                        </div>
-                        <div class="card-body">
-                            Configuración general
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.sistema') }}" class="btn btn-dark btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Configuración de Seguridad -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-danger">
-                        <i class="fa fa-shield"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Seguridad</h4>
-                        </div>
-                        <div class="card-body">
-                            Acceso y auditoría
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.seguridad') }}" class="btn btn-danger btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Configuración de Reportes -->
-            <div class="col-lg-4 col-md-6 col-sm-12">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-purple">
-                        <i class="fa fa-file-text"></i>
-                    </div>
-                    <div class="card-wrap">
-                        <div class="card-header">
-                            <h4>Reportes</h4>
-                        </div>
-                        <div class="card-body">
-                            Formatos y automatización
-                        </div>
-                        <div class="card-footer">
-                            <a href="{{ route('configuracion.reportes') }}" class="btn btn-purple btn-sm">
-                                <i class="fa fa-cog"></i> Configurar
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    @if(auth()->user()->rol === 'Gerente')
+    <div class="section-title">
+        <h3>Administración</h3>
+    </div>
+    <div class="config-grid">
+        <a href="{{ route('usuarios.index') }}" class="config-card">
+            <i class="fa fa-users"></i>
+            <h5>Usuarios</h5>
+            <p>Gestión de cuentas</p>
+        </a>
+        <a href="{{ route('sistema.backups') }}" class="config-card">
+            <i class="fa fa-database"></i>
+            <h5>Respaldos</h5>
+            <p>Backup y restauración</p>
+        </a>
+        <a href="{{ route('sistema.auditoria') }}" class="config-card">
+            <i class="fa fa-history"></i>
+            <h5>Auditoría</h5>
+            <p>Registro de actividades</p>
+        </a>
+    </div>
+    @endif
 </div>
 
 <style>
-.btn-purple {
-    background-color: #6f42c1;
-    border-color: #6f42c1;
-    color: #fff;
+.section-title {
+    margin: 30px 0 15px 0;
 }
-.btn-purple:hover {
-    background-color: #5a32a3;
-    border-color: #5a32a3;
-    color: #fff;
+
+.section-title:first-child {
+    margin-top: 0;
 }
-.bg-purple {
-    background-color: #6f42c1 !important;
+
+.section-title h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.config-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: 25px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.config-card:hover {
+    background: var(--gray-50);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+}
+
+.config-card i {
+    font-size: 36px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.config-card h5 {
+    color: var(--gray-800);
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.config-card p {
+    color: var(--gray-600);
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+    .config-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    
+    .config-card {
+        padding: 20px 15px;
+        min-height: 120px;
+    }
+    
+    .config-card i {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+    
+    .config-card h5 {
+        font-size: 14px;
+    }
+    
+    .config-card p {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .config-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+    
+    .config-card {
+        padding: 15px 10px;
+        min-height: 100px;
+    }
+    
+    .config-card i {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .config-card h5 {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+    
+    .config-card p {
+        font-size: 10px;
+    }
 }
 </style>
 @endsection

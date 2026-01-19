@@ -8,7 +8,7 @@ use App\Models\Almacen;
 class AlmacenController extends Controller
 {
     public function index() {
-        $almacenes = \App\Models\Almacen::all();
+        $almacenes = Almacen::all();
         return view('modules.almacenes.index', compact('almacenes'));
     }
     public function show($id) {

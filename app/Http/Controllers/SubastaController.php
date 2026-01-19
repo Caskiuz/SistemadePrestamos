@@ -95,6 +95,17 @@ class SubastaController extends Controller
                 'estado' => 'finalizada',
                 'ganador_id' => $mejorOferta->cliente_id
             ]);
+            
+            // Registrar venta por subasta en flujo de caja
+            \App\Models\CashFlow::create([
+                'fecha' => now(),
+                'usuario_id' => auth()->id(),
+                'concepto' => 'Subasta - Venta',
+                'detalles' => 'Subasta #' . $subasta->codigo . ' - Ganador: ' . $mejorOferta->cliente->nombre,
+                'monto' => $mejorOferta->monto,
+                'tipo_movimiento' => 'entrada',
+                'branch_id' => $subasta->prestamo->almacen_id
+            ]);
         } else {
             $subasta->update(['estado' => 'cancelada']);
         }

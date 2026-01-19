@@ -39,9 +39,10 @@
                                     <div class="form-group">
                                         <label>Zona Horaria</label>
                                         <select name="sistema_zona_horaria" class="form-control">
-                                            <option value="America/Caracas" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/Caracas') == 'America/Caracas' ? 'selected' : '' }}>Venezuela (UTC-4)</option>
-                                            <option value="America/New_York" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/Caracas') == 'America/New_York' ? 'selected' : '' }}>New York (UTC-5)</option>
-                                            <option value="America/Mexico_City" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/Caracas') == 'America/Mexico_City' ? 'selected' : '' }}>México (UTC-6)</option>
+                                            <option value="America/La_Paz" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/La_Paz') == 'America/La_Paz' ? 'selected' : '' }}>La Paz, Bolivia (UTC-4)</option>
+                                            <option value="America/Caracas" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/La_Paz') == 'America/Caracas' ? 'selected' : '' }}>Caracas, Venezuela (UTC-4)</option>
+                                            <option value="America/New_York" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/La_Paz') == 'America/New_York' ? 'selected' : '' }}>New York (UTC-5)</option>
+                                            <option value="America/Mexico_City" {{ ($configuraciones['sistema_zona_horaria']->valor ?? 'America/La_Paz') == 'America/Mexico_City' ? 'selected' : '' }}>México (UTC-6)</option>
                                         </select>
                                         <small class="text-muted">Zona horaria del sistema</small>
                                     </div>
@@ -53,9 +54,10 @@
                                     <div class="form-group">
                                         <label>Moneda del Sistema</label>
                                         <select name="sistema_moneda" class="form-control">
-                                            <option value="USD" {{ ($configuraciones['sistema_moneda']->valor ?? 'USD') == 'USD' ? 'selected' : '' }}>Dólar (USD)</option>
-                                            <option value="VES" {{ ($configuraciones['sistema_moneda']->valor ?? 'USD') == 'VES' ? 'selected' : '' }}>Bolívar (VES)</option>
-                                            <option value="EUR" {{ ($configuraciones['sistema_moneda']->valor ?? 'USD') == 'EUR' ? 'selected' : '' }}>Euro (EUR)</option>
+                                            <option value="BOB" {{ ($configuraciones['sistema_moneda']->valor ?? 'BOB') == 'BOB' ? 'selected' : '' }}>Boliviano (Bs)</option>
+                                            <option value="USD" {{ ($configuraciones['sistema_moneda']->valor ?? 'BOB') == 'USD' ? 'selected' : '' }}>Dólar (USD)</option>
+                                            <option value="VES" {{ ($configuraciones['sistema_moneda']->valor ?? 'BOB') == 'VES' ? 'selected' : '' }}>Bolívar (VES)</option>
+                                            <option value="EUR" {{ ($configuraciones['sistema_moneda']->valor ?? 'BOB') == 'EUR' ? 'selected' : '' }}>Euro (EUR)</option>
                                         </select>
                                         <small class="text-muted">Moneda principal para transacciones</small>
                                     </div>

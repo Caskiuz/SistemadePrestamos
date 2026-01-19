@@ -104,7 +104,7 @@
                   <div style="color: #666; font-size: 14px;">{{ $prestamo->fecha_prestamo->format('d/m/Y') }}</div>
                 </div>
                 <div style="text-align: right;">
-                  <div style="font-size: 18px; font-weight: bold;">${{ number_format($prestamo->monto, 2) }}</div>
+                  <div style="font-size: 18px; font-weight: bold;">{{ formatCurrency($prestamo->monto) }}</div>
                   <span class="badge badge-{{ $prestamo->estado === 'activo' ? 'success' : ($prestamo->estado === 'liquidado' ? 'primary' : 'danger') }}">
                     {{ ucfirst($prestamo->estado) }}
                   </span>

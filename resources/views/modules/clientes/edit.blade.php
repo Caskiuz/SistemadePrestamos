@@ -17,18 +17,38 @@
             @method('PUT')
             
             <div class="form-group">
+                <label>Tipo de cliente</label>
+                <select name="tipo" class="form-control" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="PERSONA" {{ $cliente->tipo == 'PERSONA' ? 'selected' : '' }}>Persona</option>
+                    <option value="EMPRESA" {{ $cliente->tipo == 'EMPRESA' ? 'selected' : '' }}>Empresa</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="{{ $cliente->nombre }}" class="form-control" required>
             </div>
             
             <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" value="{{ $cliente->email }}" class="form-control">
+                <label>Tipo de documento</label>
+                <select name="tipo_documento" class="form-control" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="CI" {{ $cliente->tipo_documento == 'CI' ? 'selected' : '' }}>Cédula de Identidad (CI)</option>
+                    <option value="NIT" {{ $cliente->tipo_documento == 'NIT' ? 'selected' : '' }}>NIT</option>
+                    <option value="PASAPORTE" {{ $cliente->tipo_documento == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte</option>
+                    <option value="OTRO" {{ $cliente->tipo_documento == 'OTRO' ? 'selected' : '' }}>Otro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Número de documento</label>
+                <input type="text" name="numero_documento" value="{{ $cliente->numero_documento }}" class="form-control" required>
             </div>
             
             <div class="form-group">
                 <label>Teléfono 1</label>
-                <input type="text" name="telefono_1" value="{{ $cliente->telefono_1 }}" class="form-control">
+                <input type="text" name="telefono_1" value="{{ $cliente->telefono_1 }}" class="form-control" required>
             </div>
             
             <div class="form-group">
@@ -37,8 +57,13 @@
             </div>
             
             <div class="form-group">
-                <label>Dirección</label>
-                <input type="text" name="direccion" value="{{ $cliente->direccion }}" class="form-control">
+                <label>Teléfono 3</label>
+                <input type="text" name="telefono_3" value="{{ $cliente->telefono_3 }}" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ $cliente->email }}" class="form-control">
             </div>
             
             <div class="form-group">
@@ -47,18 +72,8 @@
             </div>
             
             <div class="form-group">
-                <label>Tipo de documento</label>
-                <select name="tipo_documento" class="form-control">
-                    <option value="">Seleccionar</option>
-                    <option value="DNI" {{ $cliente->tipo_documento == 'DNI' ? 'selected' : '' }}>DNI</option>
-                    <option value="Pasaporte" {{ $cliente->tipo_documento == 'Pasaporte' ? 'selected' : '' }}>Pasaporte</option>
-                    <option value="Licencia" {{ $cliente->tipo_documento == 'Licencia' ? 'selected' : '' }}>Licencia</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Número de documento</label>
-                <input type="text" name="numero_documento" value="{{ $cliente->numero_documento }}" class="form-control">
+                <label>Dirección</label>
+                <input type="text" name="direccion" value="{{ $cliente->direccion }}" class="form-control" required>
             </div>
             
             <div style="display: flex; gap: 10px; margin-top: 20px;">

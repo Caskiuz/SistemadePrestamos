@@ -32,7 +32,7 @@
                                     <option value="">Seleccione un producto</option>
                                     @foreach($productos as $producto)
                                         <option value="{{ $producto->id }}" data-precio="{{ $producto->precio_venta }}">
-                                            {{ $producto->nombre }} - ${{ number_format($producto->precio_venta, 2) }}
+                                            {{ $producto->nombre }} - {{ formatCurrency($producto->precio_venta) }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -1,74 +1,70 @@
 @extends('layouts.main')
-@section('content')
-<header class="yp-header">
-    <h1><i class="fa fa-user"></i> <span>Clientes</span></h1>
-</header>
 
-<section class="content">
-    <button onclick="openModal()" class="action red" title="Nuevo cliente" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: #e74c3c; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index: 999; border: none; cursor: pointer;">
-        <i class="fa fa-plus"></i>
-    </button>
-    
-    <form class="input-group search" method="GET" action="{{ route('clientes.index') }}" style="margin-bottom: 20px;">
-        <input type="search" class="search-query form-control" placeholder="Buscar" name="q" value="{{ request('q') }}">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-        </span>
-    </form>
-    
-    @if(request('q'))
-        <h6 class="query-label">Resultados de la búsqueda "{{ request('q') }}"</h6>
-    @else
-        <h6 class="query-label">Todos los clientes</h6>
-    @endif
-    
-    @if($clientes->isEmpty())
-        <div class="first-action" style="text-align: center; padding: 50px;">
-            <div class="prompt">
-                <i class="fa fa-user-plus" style="font-size: 48px; color: #ccc;"></i>
-                <h5>Añade un nuevo cliente para registrar un préstamo</h5>
-            </div>
+@section('content')
+<x-mobile-header title="Clientes" />
+
+<div class="mobile-content">
+    @if($clientes->isEmpty() && !request('q'))
+        <div class="empty-state">
+            <i class="fa fa-user-plus"></i>
+            <h4>Registra tu primer cliente</h4>
+            <p>Para poder crear préstamos necesitas clientes</p>
+            <button onclick="openModal()" class="action-btn primary">
+                <i class="fa fa-plus"></i>
+                <span>Nuevo Cliente</span>
+            </button>
         </div>
-    @endif
-    
-    <ul class="clients search-results" style="list-style: none; padding: 0;">
-        @foreach($clientes as $cliente)
-            <li class="card" style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
-                <a href="{{ route('clientes.show', $cliente) }}" style="display: flex; align-items: center; padding: 15px; text-decoration: none; color: inherit;">
-                    <div class="picture" style="width: 50px; height: 50px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-right: 15px;">
-                        <i class="fa fa-user"></i>
+    @else
+        <x-search-box 
+            placeholder="Buscar cliente"
+            route="clientes.index"
+            :value="request('q')" />
+
+        <div class="list-mobile">
+            @foreach($clientes as $cliente)
+            <a href="{{ route('clientes.show', $cliente->id) }}" class="list-item">
+                <div class="list-item-header">
+                    <div>
+                        <h4 class="list-item-title">{{ $cliente->nombre }}</h4>
+                        <span class="list-item-subtitle">{{ $cliente->tipo ?? 'Cliente' }}</span>
                     </div>
-                    <div class="info" style="flex: 1;">
-                        <h4 class="name" style="margin: 0 0 5px; font-size: 16px; font-weight: 500;">{{ $cliente->nombre }}</h4>
-                        @if($cliente->telefono_1)
-                            <span class="more" style="font-size: 14px; color: #666;"><i class="fa fa-phone"></i> {{ $cliente->telefono_1 }}</span>
-                        @elseif($cliente->email)
-                            <span class="more" style="font-size: 14px; color: #666;"><i class="fa fa-envelope"></i> {{ $cliente->email }}</span>
-                        @elseif($cliente->direccion)
-                            <span class="more" style="font-size: 14px; color: #666;"><i class="fa fa-home"></i> {{ $cliente->direccion }}</span>
-                        @endif
+                    <div class="client-score">
+                        @for($i = 0; $i < 5; $i++)
+                            @if($i < ($cliente->puntuacion ?? 5))
+                                <span class="ball green"></span>
+                            @else
+                                <span class="ball gray"></span>
+                            @endif
+                        @endfor
                     </div>
-                </a>
-            </li>
-        @endforeach
-    </ul>
-    
-    @if($clientes->hasPages())
-    <ul class="pagination" style="display: flex; justify-content: center; list-style: none; padding: 0;">
-        <li class="{{ $clientes->onFirstPage() ? 'disabled' : '' }}" style="margin: 0 5px;">
-            <a href="{{ $clientes->previousPageUrl() ?: '#' }}" aria-label="Previous" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;"><span aria-hidden="true">«</span></a>
-        </li>
-        @foreach ($clientes->getUrlRange(1, $clientes->lastPage()) as $page => $url)
-            <li class="{{ $clientes->currentPage() == $page ? 'active' : '' }}" style="margin: 0 5px;">
-                <a href="{{ $url }}" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; {{ $clientes->currentPage() == $page ? 'background: #3498db; color: white;' : '' }}">{{ $page }}</a>
-            </li>
-        @endforeach
-        <li class="{{ $clientes->currentPage() == $clientes->lastPage() ? 'disabled' : '' }}" style="margin: 0 5px;">
-            <a href="{{ $clientes->nextPageUrl() ?: '#' }}" aria-label="Next" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none;"><span aria-hidden="true">»</span></a>
-        </li>
-    </ul>
+                </div>
+                
+                <div class="client-info">
+                    <div class="info-item">
+                        <i class="fa fa-phone"></i>
+                        <span>{{ $cliente->telefono_1 ?? 'Sin teléfono' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa fa-map-marker"></i>
+                        <span>{{ $cliente->direccion ?? 'Sin dirección' }}</span>
+                    </div>
+                </div>
+
+                <div class="list-item-footer">
+                    <i class="fa fa-id-card"></i>
+                    <span>{{ $cliente->tipo_documento ?? 'CI' }}: {{ $cliente->numero_documento ?? 'Sin documento' }}</span>
+                </div>
+            </a>
+            @endforeach
+        </div>
+
+        @if($clientes->hasPages())
+        <div class="pagination-wrapper">
+            {{ $clientes->links() }}
+        </div>
+        @endif
     @endif
-</section>
+</div>
 
 <!-- Modal Nuevo Cliente -->
 <div id="modalCliente" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
@@ -80,32 +76,54 @@
         <form action="{{ route('clientes.store') }}" method="POST" style="padding: 20px;">
             @csrf
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Nombre</label>
-                <input type="text" name="nombre" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Nombre(s) del cliente">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Tipo de cliente</label>
+                <select name="tipo" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;">
+                    <option value="">Seleccionar...</option>
+                    <option value="PERSONA">Persona</option>
+                    <option value="EMPRESA">Empresa</option>
+                </select>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Apellidos</label>
-                <input type="text" name="apellidos" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Apellidos del cliente">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Nombre completo</label>
+                <input type="text" name="nombre" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Nombre completo del cliente">
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nacimiento" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Tipo de documento</label>
+                <select name="tipo_documento" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;">
+                    <option value="">Seleccionar...</option>
+                    <option value="CI">Cédula de Identidad (CI)</option>
+                    <option value="NIT">NIT</option>
+                    <option value="PASAPORTE">Pasaporte</option>
+                    <option value="OTRO">Otro</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Número de documento</label>
+                <input type="text" name="numero_documento" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Número de documento">
             </div>
             <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 5px; font-size: 14px;">Correo electrónico</label>
                 <input type="email" name="email" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="correo@ejemplo.com">
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono</label>
-                <input type="tel" name="telefono_1" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="5 (555) 555-5555">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono principal</label>
+                <input type="tel" name="telefono_1" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Teléfono principal">
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Domicilio</label>
-                <input type="text" name="direccion" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Calle, número, colonia">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono secundario</label>
+                <input type="tel" name="telefono_2" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Teléfono secundario (opcional)">
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Código postal</label>
-                <input type="text" name="codigo_postal" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Código postal">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Teléfono adicional</label>
+                <input type="tel" name="telefono_3" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Teléfono adicional (opcional)">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Ciudad</label>
+                <input type="text" name="ciudad" style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Ciudad" value="Santa Cruz">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-size: 14px;">Dirección</label>
+                <input type="text" name="direccion" required style="width: 100%; padding: 10px; border: 1px solid #555; border-radius: 4px; background: #34495e; color: white;" placeholder="Dirección completa">
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" onclick="closeModal()" style="padding: 10px 20px; background: #7f8c8d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
@@ -114,6 +132,55 @@
         </form>
     </div>
 </div>
+
+<style>
+.client-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.info-item i {
+    width: 16px;
+    color: var(--gray-500);
+}
+
+.client-score {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.ball {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.ball.green {
+    background-color: #10b981;
+}
+
+.ball.gray {
+    background-color: #d1d5db;
+}
+
+.pagination-wrapper {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+</style>
 
 <script>
 function openModal() {
