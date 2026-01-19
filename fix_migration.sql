@@ -1,0 +1,1 @@
+INSERT INTO migrations (migration, batch) VALUES ('2026_01_16_000001_add_almacen_to_equipos_table', 2);
