@@ -33,33 +33,12 @@ Thumbs.db
 /public/fotos/*
 !/public/fotos/.gitkeep
 
-# ARCHIVOS GRANDES - NUNCA SUBIR
+# ARCHIVOS GRANDES
+cloudflared-windows-amd64.exe
 *.exe
 *.rar
 *.zip
 *.tar.gz
-*.7z
-*.iso
-*.dmg
-*.pkg
-*.deb
-*.rpm
-
-# Bases de datos
 *.sql
 *.sqlite
 *.db
-*.dump
-
-# Backups
-*backup*
-*respaldo*
-laravel-project.*
-app-hc.*
-cloudflared*
-
-# Temporales
-*.tmp
-*.temp
-*.log
-*.cache
