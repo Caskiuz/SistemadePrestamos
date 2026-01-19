@@ -1,12 +1,10 @@
-# Laravel
+# Laravel Core
 /node_modules
 /public/hot
 /public/storage
 /storage/*.key
 /vendor
-.env
-.env.backup
-.env.production
+.env*
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -22,47 +20,46 @@ yarn-error.log
 
 # OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Logs
+# Cache & Logs
 /storage/logs/*.log
 /storage/framework/cache/data/*
 /storage/framework/sessions/*
 /storage/framework/views/*
-
-# Compiled assets
-/public/css/app.css
-/public/js/app.js
-/public/mix-manifest.json
-
-# Cache
 /bootstrap/cache/*.php
-/storage/framework/cache/*
-!/storage/framework/cache/.gitkeep
 
-# Uploads (keep structure but ignore files)
+# Fotos (mantener estructura)
 /public/fotos/*
 !/public/fotos/.gitkeep
-/storage/app/public/*
-!/storage/app/public/.gitkeep
 
-# Testing
-/coverage
-/.phpunit.cache
-
-# Deployment
-/public_html
-
-# Large files that shouldn't be in git
+# ARCHIVOS GRANDES - NUNCA SUBIR
 *.exe
 *.rar
 *.zip
 *.tar.gz
+*.7z
+*.iso
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# Bases de datos
 *.sql
 *.sqlite
 *.db
+*.dump
+
+# Backups
+*backup*
+*respaldo*
+laravel-project.*
+app-hc.*
+cloudflared*
+
+# Temporales
+*.tmp
+*.temp
+*.log
+*.cache
