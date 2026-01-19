@@ -58,12 +58,11 @@ Thumbs.db
 # Deployment
 /public_html
 
-# Git repositories in vendor (should not be there)
-/vendor/**/.git
-/vendor/**/.github
-
 # Large files that shouldn't be in git
-*.log
+*.exe
+*.rar
+*.zip
+*.tar.gz
 *.sql
 *.sqlite
 *.db
