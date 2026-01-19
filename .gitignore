@@ -9,6 +9,12 @@
 # App móvil (repositorio separado)
 /mobile-app/
 
+# Archivos grandes y ejecutables
+*.rar
+*.zip
+*.exe
+*.msi
+
 # Logs
 /storage/logs/*
 !/storage/logs/.gitignore
@@ -37,3 +43,6 @@
 # OS
 .DS_Store
 Thumbs.db
+
+# SQL files
+*.sql
