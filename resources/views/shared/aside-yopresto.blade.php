@@ -41,7 +41,7 @@
         <i class="fa fa-cog"></i> <span>Configuración</span>
       </a>
     </li>
-    @if(auth()->user()->rol === 'Gerente' || auth()->user()->rol === 'Admin')
+    @if(auth()->check() && auth()->user() && (auth()->user()->rol === 'Gerente' || auth()->user()->rol === 'Admin'))
     <li>
       <a href="{{ route('usuarios.index') }}" class="@if(request()->routeIs('usuarios.*')) active @endif">
         <i class="fa fa-users"></i> <span>Usuarios</span>

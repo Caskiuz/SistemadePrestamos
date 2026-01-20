@@ -288,6 +288,7 @@
             </a>
         </div>
         <div class="navbar-user">
+            @auth
             <a href="{{ route('documentacion.index') }}" class="doc-btn" title="Documentación">
                 <i class="fa fa-book"></i>
             </a>
@@ -303,14 +304,17 @@
                         <small>{{ Auth::user()->rol ?? 'Sin rol' }}</small>
                     </div>
                     <hr>
+                    @if(Auth::id())
                     <a href="{{ route('usuarios.edit', Auth::id()) }}" class="user-menu-item">
                         <i class="fa fa-edit"></i> Mi Perfil (ID: {{ Auth::id() }})
                     </a>
+                    @endif
                     <a href="{{ route('logout') }}" class="user-menu-item logout">
                         <i class="fa fa-sign-out"></i> Cerrar Sesión
                     </a>
                 </div>
             </div>
+            @endauth
         </div>
     </nav>
 
@@ -318,7 +322,9 @@
         <div class="main-wrapper main-wrapper-1">
 
             <!-- Sidebar -->
+            @auth
             @include('shared.aside-yopresto')
+            @endauth
             <!--end Sidebar-->
             
             <!-- Main Content -->
